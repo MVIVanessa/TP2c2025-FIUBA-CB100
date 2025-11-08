@@ -12,9 +12,6 @@ public class Lista<T> {
      */
     public Lista() {
         // Implementar.
-        primero = null;
-        ultimo= null;
-        cantidadDatos = 0;
     }
 
     /**
@@ -26,13 +23,6 @@ public class Lista<T> {
      */
     public Lista(Lista<T> lista) {
         // Implementar.
-
-        if(lista == null)
-            throw new ExcepcionLista("Lista nula");
-        this.primero = new Nodo (lista.dato(0));
-        // modifica el nodo dato por el dato ultimo de la lista;
-        this.ultimo = new Nodo (lista.dato(lista.tamanio()));
-        this.cantidadDatos= lista.tamanio();
     }
 
     /**
@@ -42,7 +32,6 @@ public class Lista<T> {
      */
     public void agregar(T dato) {
         // Implementar.
-        
     }
 
     /**
@@ -65,7 +54,6 @@ public class Lista<T> {
      */
     public void agregar(T dato, int indice) {
         // Implementar.
-
     }
 
     /**

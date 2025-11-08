@@ -2,6 +2,7 @@ package org.ayed.tda.diccionario;
 
 import org.ayed.tda.comparador.Comparador;
 import org.ayed.tda.lista.Lista;
+import org.ayed.tda.lista.Cola;
 import org.ayed.tda.tupla.Tupla;
 
 /**
@@ -32,6 +33,12 @@ public class DiccionarioOrdenado<C, V> {
      */
     public DiccionarioOrdenado(Comparador<C> comparador) {
         // Implementar.
+        if( comparador == null)
+            throw new ExcepcionDiccionario("Comparador nulo");
+        this.comparador = comparador;
+        raiz=null;
+        cantidadDatos= 0;
+
     }
 
     /**
@@ -45,6 +52,28 @@ public class DiccionarioOrdenado<C, V> {
      */
     public DiccionarioOrdenado(DiccionarioOrdenado<C, V> diccionarioOrdenado) {
         // Implementar.
+        if(diccionarioOrdenado==null)
+            throw new ExcepcionDiccionario("Diccionario nulo");
+        this.comparador= diccionarioOrdenado.comparador;
+        this.raiz= diccionarioOrdenado.raiz;
+        if(!vacio())
+            agregarNodos(diccionarioOrdenado.raiz);
+    }
+
+    /**
+     * Agrega todos los nodos apartir de un nodo.
+     * @param raiz Nodo inicial, apartir de este se agregaran los elementos
+     */
+    private void agregarNodos(Nodo<C,V> raiz){
+        
+        agregar(raiz.clave, raiz.valor);
+
+        if(raiz.hijoDerecho!= null){
+            agregarNodos(raiz.hijoDerecho);
+        }
+        if(raiz.hijoIzquierdo!=null)
+            agregarNodos(raiz.hijoIzquierdo);
+
     }
 
     /**
@@ -55,7 +84,17 @@ public class DiccionarioOrdenado<C, V> {
      */
     private Nodo<C, V> obtenerSucesorInmediato(Nodo<C, V> nodo) {
         // Implementar.
-        return new Nodo<>((C) new Object(), (V) new Object());
+        Nodo<C,V> sucesor = null;
+        
+        if(nodo.hijoDerecho!=null){
+            nodo = nodo.hijoDerecho;
+            while(nodo.hijoIzquierdo!= null){
+                nodo= nodo.hijoIzquierdo;
+            }
+            sucesor= nodo;
+        }
+
+        return sucesor;
     }
 
     /**
@@ -70,7 +109,41 @@ public class DiccionarioOrdenado<C, V> {
      */
     public V agregar(C clave, V valor) {
         // Implementar.
-        return (V) new Object();
+        V repetido= null;
+        boolean insertado=false;
+        if(vacio()){
+            raiz =new  Nodo<C,V> (clave,valor);
+            cantidadDatos++;
+        }else{    Nodo<C,V> cursor = raiz;
+            while( cursor!=null && !insertado){
+                if(comparador.comparar(cursor.clave, clave)<0){
+                    if(cursor.hijoDerecho==null){
+                        cursor.hijoDerecho= new Nodo<C,V>(clave,valor);
+                        insertado=true;
+                        cantidadDatos++;
+
+                    }else
+                        cursor= cursor.hijoDerecho;
+
+
+                }else if( comparador.comparar(cursor.clave, clave)>0){
+                    if(cursor.hijoIzquierdo==null){
+                        cursor.hijoIzquierdo=new Nodo<C,V>(clave,valor);
+                        insertado=true;
+                        cantidadDatos++;
+                    }else
+                        cursor= cursor.hijoIzquierdo;
+                }else{
+                    insertado=true;
+                    repetido= cursor.valor;
+                    cursor.valor= valor;
+                }
+
+            }
+
+        }
+
+        return repetido;
     }
 
     /**
@@ -87,7 +160,74 @@ public class DiccionarioOrdenado<C, V> {
      */
     public V eliminar(C clave) {
         // Implementar.
-        return (V) new Object();
+        V eliminado= null;
+        if(!vacio()){
+            Nodo <C,V> cursor= raiz;
+            Nodo <C,V> padreCursor= null;
+            while( cursor!=null && eliminado==null){
+                if(comparador.comparar(cursor.clave, clave)<0){
+                    padreCursor=cursor;
+                    cursor=cursor.hijoDerecho;
+                }else if( comparador.comparar(cursor.clave, clave)>0){
+                    padreCursor=cursor;
+                    cursor= cursor.hijoIzquierdo;
+                }else
+                    eliminado= cursor.valor;
+            }
+
+            if(eliminado!=null){
+
+                //caso de se tenga el cursor 0 hijos
+                if(cursor.hijoDerecho==null && cursor.hijoIzquierdo==null)
+                    reemplazaCursor(padreCursor,cursor,null);
+                //caso de se tenga el cursor 1 hijo
+                else if( cursor.hijoDerecho==null || cursor.hijoIzquierdo==null){
+                    if(cursor.hijoIzquierdo!=null)
+                        reemplazaCursor(padreCursor, cursor, cursor.hijoIzquierdo);
+                    else
+                        reemplazaCursor(padreCursor, cursor, cursor.hijoDerecho);
+                     
+
+                //caso de se tenga el cursor 2 hijos=> ir a por el sucesor
+                }else{  
+                        Nodo <C,V> sucesor= obtenerSucesorInmediato(cursor);
+                        cursor.clave=sucesor.clave;
+                        cursor.valor=sucesor.valor;
+                        cambioNodoHastaEliminar(cursor.hijoDerecho, sucesor);
+                    
+                }
+                cantidadDatos--;
+            }
+        }
+        return eliminado;
+    }
+
+    /** Funcion que se encarga de remplazar los valores en caso de q el sucesor tenga hijo
+     * @param padre padre del cursor;
+     * @param sucesor Sucesor del cursor que se calculo anteriorimente
+     */
+    private void cambioNodoHastaEliminar(Nodo<C,V> padre, Nodo<C,V>sucesor){
+        if(padre.hijoIzquierdo==sucesor){
+            padre.hijoIzquierdo=sucesor.hijoDerecho;
+        }
+        else if(padre.hijoIzquierdo!=null)
+            cambioNodoHastaEliminar(padre.hijoIzquierdo, sucesor);
+        else if(padre.hijoDerecho!=null) 
+            cambioNodoHastaEliminar(padre.hijoDerecho,sucesor);
+    }
+
+    /** Reemplaza el nodo sin afectar al resto del arbol
+     *  @param padre Padre del nodo
+     *  @param nodo El nodo a reemplazar
+     *  @param remplazo el valor/nodo por el que remplazaremos nuestro nodo puede ser hasta null
+     */
+    private void reemplazaCursor(Nodo<C,V> padre, Nodo<C,V> nodo, Nodo<C,V>remplazo){
+        if(padre == null)
+            raiz= remplazo;
+        else if(padre.hijoDerecho== nodo)
+            padre.hijoDerecho=remplazo;
+        else if( padre.hijoIzquierdo == nodo)
+            padre.hijoIzquierdo=remplazo;
     }
 
     /**
@@ -100,7 +240,30 @@ public class DiccionarioOrdenado<C, V> {
      */
     public V obtenerValor(C clave) {
         // Implementar.
-        return (V) new Object();
+
+        return !vacio() ? buscandoValor(clave, raiz, cantidadDatos) : null;
+    }
+    /**
+     * Metodo que usa la recursividad para hayar ek valor buscado segun la clave
+     * @param clave clave con la que se busca
+     * @param raiz Nodo por el donde avanzamos
+     * @param cant contador de la cantidad de datos que tenermos para tener un alto
+     */
+    private V buscandoValor( C clave, Nodo <C,V> raiz, int cant){
+        V encontrado=null;
+        if(cant>0){
+            if( raiz.clave==clave)
+                return raiz.valor;
+            if( raiz.hijoDerecho != null){
+                encontrado=buscandoValor(clave, raiz.hijoDerecho,cant--); 
+            }
+            if( raiz.hijoIzquierdo != null && encontrado==null){
+                encontrado=buscandoValor(clave, raiz.hijoIzquierdo,cant--); 
+            }
+        }
+
+            
+        return encontrado;
     }
 
     /**
@@ -110,9 +273,19 @@ public class DiccionarioOrdenado<C, V> {
      */
     public Lista<Tupla<C, V>> inorder() {
         // Implementar.
-        return new Lista<>();
+        Lista <Tupla<C,V>> lista=new Lista<Tupla<C,V>>();
+        valoresEnInorden(raiz, lista);
+        return lista;
     }
 
+    private void valoresEnInorden(Nodo<C,V> raiz, Lista<Tupla<C,V>> lista){
+        if(raiz.hijoIzquierdo!=null)
+            valoresEnInorden(raiz.hijoIzquierdo, lista);
+        Tupla <C,V> agregarTupla= new Tupla<>(raiz.clave, raiz.valor);
+        lista.agregar(agregarTupla);
+        if(raiz.hijoDerecho!=null)
+            valoresEnInorden(raiz.hijoDerecho, lista);
+    }
     /**
      * Devuelve el recorrido preorder del árbol.
      *
@@ -120,9 +293,19 @@ public class DiccionarioOrdenado<C, V> {
      */
     public Lista<Tupla<C, V>> preorder() {
         // Implementar.
-        return new Lista<>();
+        Lista <Tupla<C,V>> lista=new Lista<Tupla<C,V>>();
+        recorridoPreorden(raiz, lista);
+        return lista;
     }
-
+    private void recorridoPreorden(Nodo<C,V> raiz, Lista<Tupla<C,V>> lista){
+        Tupla <C,V> agregarTupla= new Tupla<>(raiz.clave, raiz.valor);
+        lista.agregar(agregarTupla);
+        if(raiz.hijoIzquierdo!=null)
+            recorridoPreorden(raiz.hijoIzquierdo, lista);
+        if(raiz.hijoDerecho!=null)
+            recorridoPreorden(raiz.hijoDerecho, lista);
+        
+    }
     /**
      * Devuelve el recorrido postorder del árbol.
      *
@@ -130,7 +313,18 @@ public class DiccionarioOrdenado<C, V> {
      */
     public Lista<Tupla<C, V>> postorder() {
         // Implementar.
-        return new Lista<>();
+        Lista <Tupla<C,V>> lista=new Lista<Tupla<C,V>>();
+        recorridoPostorden(raiz, lista);
+        return lista;
+    }
+
+    private void recorridoPostorden(Nodo<C,V> raiz, Lista<Tupla<C,V>> lista){
+        Tupla <C,V> agregarTupla= new Tupla<>(raiz.clave, raiz.valor);
+        if(raiz.hijoIzquierdo!=null)
+            recorridoPreorden(raiz.hijoIzquierdo, lista);
+        if(raiz.hijoDerecho!=null)
+            recorridoPreorden(raiz.hijoDerecho, lista);
+        lista.agregar(agregarTupla);
     }
 
     /**
@@ -140,7 +334,22 @@ public class DiccionarioOrdenado<C, V> {
      */
     public Lista<Tupla<C, V>> ancho() {
         // Implementar.
-        return new Lista<>();
+        Lista <Tupla<C,V>> lista=new Lista<Tupla<C,V>>();
+        Tupla <C,V> agregarTupla;
+
+        Cola <Nodo<C,V>> cola= new Cola();
+        cola.agregar(raiz);
+        Nodo <C,V> cursor;
+        while(!cola.vacio()){
+            cursor= cola.eliminar();
+            agregarTupla= new Tupla<>(cursor.clave, cursor.valor);
+            lista.agregar(agregarTupla);
+            if(cursor.hijoIzquierdo!=null)
+                cola.agregar(cursor.hijoIzquierdo);
+            if(cursor.hijoDerecho!=null)
+                cola.agregar(cursor.hijoDerecho);
+        }
+        return lista;
     }
 
     /**
@@ -150,7 +359,7 @@ public class DiccionarioOrdenado<C, V> {
      */
     public int tamanio() {
         // Implementar.
-        return 0;
+        return cantidadDatos;
     }
 
     /**
@@ -160,6 +369,7 @@ public class DiccionarioOrdenado<C, V> {
      */
     public boolean vacio() {
         // Implementar.
-        return true;
+        return cantidadDatos==0;  //voy a asumir que si no hay raiz entonces el diccionario esta vacio
     }
+
 }
