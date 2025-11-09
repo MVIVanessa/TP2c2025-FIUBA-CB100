@@ -1,6 +1,6 @@
 package org.ayed.tda.vector;
 
-public class VectorEstatico<T> {
+public class VectorEstatico <T> {
     private T[] datos;
     private int tamanioFisico;
     private int tamanioLogico;
@@ -15,7 +15,15 @@ public class VectorEstatico<T> {
     @SuppressWarnings("unchecked")
     public VectorEstatico(int tamanio) {
         // Implementar.
+        if(tamanio <0 )
+            throw new ExcepcionVector("Tamanio Invalido! NO puede ser negativo el tamanio del vector");
+
+        this.tamanioLogico = 0; // aun no hay nada en el el vector
+        this.tamanioFisico= tamanio;
+        // java no me dejara crear un objeto T porque o existe, pero puedo usar Object para que acepte mi T
+        this.datos = (T[]) new Object[tamanio];
     }
+    
 
     /**
      * Constructor de copia de Vector Estático.
@@ -25,8 +33,16 @@ public class VectorEstatico<T> {
      * @throws ExcepcionVector si el vector es nulo.
      */
     @SuppressWarnings("unchecked")
-    public VectorEstatico(VectorEstatico<T> vectorEstatico) {
+    public VectorEstatico(VectorEstatico <T> vectorEstatico) {
         // Implementar.
+        if (vectorEstatico == null)
+            throw new ExcepcionVector("Vector es null");
+        this.tamanioLogico= vectorEstatico.tamanioLogico;
+        this.tamanioFisico= vectorEstatico.tamanioFisico;
+
+        this.datos = (T[]) new Object[tamanioFisico];
+        
+        System.arraycopy(vectorEstatico.datos, 0, this.datos, 0, tamanioLogico);
     }
 
     /**
@@ -37,6 +53,17 @@ public class VectorEstatico<T> {
      */
     public void agregar(T dato) {
         // Implementar.
+        // por si el dato es nulo
+        if (dato == null)
+            throw new ExcepcionVector("Vector es null");
+        // veo si el vector ya esta lleno al checar que no sea igual al tamanio Fisico
+        if( tamanioLogico == tamanioFisico)
+            throw new ExcepcionVector("Vector lleno");
+
+        datos[tamanioLogico]= dato;
+        tamanioLogico++;   // hay que actualizar tamanio logico.
+        
+
     }
 
     /**
@@ -60,6 +87,20 @@ public class VectorEstatico<T> {
      */
     public void agregar(T dato, int indice) {
         // Implementar.
+        if( indice > tamanioLogico || indice <0)
+            throw new ExcepcionVector("Indice fuera del rango del vector");
+        // no tiene sentido agregar un dato basura.
+        else if(dato == null)
+            throw new ExcepcionVector("Dato invalido al ser Nulo");
+        else if(tamanioLogico == tamanioFisico)
+            throw new ExcepcionVector("Vector lleno. NO es posible agregar dato.");
+        else {
+            for (int i= tamanioLogico-1; indice<=i; i--){
+                datos[i+1] = datos[i];  //es posible si no el anterior if me votaba
+            }
+            datos[indice] = dato;
+            tamanioLogico++;
+        }
     }
 
     /**
@@ -70,7 +111,13 @@ public class VectorEstatico<T> {
      */
     public T eliminar() {
         // Implementar.
-        return (T) new Object();
+        if( tamanioLogico == 0)
+            throw new ExcepcionVector("Vector vacio. No se puede eliminar elemento");
+        T eliminado = datos[tamanioLogico-1];
+        datos[tamanioLogico-1]=null;
+        tamanioLogico--;
+        
+        return eliminado;
     }
 
     /**
@@ -94,7 +141,20 @@ public class VectorEstatico<T> {
      */
     public T eliminar(int indice) {
         // Implementar.
-        return (T) new Object();
+        if( tamanioLogico == 0)
+            throw new ExcepcionVector("Vector vacio. No se puede eliminar elemento");
+        if( indice >= tamanioLogico || indice <0)
+            throw new ExcepcionVector("Indice fuera del rango del vector");
+        // no tiene sentido agregar un dato basura.
+        T eliminado = datos[indice];
+        if(eliminado == null)
+            throw new ExcepcionVector("Dato a eliminar es nulo");
+
+        for (int i=indice; i<tamanioLogico-1; i++){
+            datos[i] = datos[i+1];  //es posible si no el anterior if me votaba
+        }
+        tamanioLogico--;
+        return eliminado;
     }
 
     /**
@@ -108,7 +168,10 @@ public class VectorEstatico<T> {
      */
     public T dato(int indice) {
         // Implementar.
-        return (T) new Object();
+        if(indice <0 || indice >= tamanioLogico)
+            throw new ExcepcionVector("Indice fuera del rango del vector");
+
+        return datos[indice];
     }
 
     /**
@@ -122,6 +185,9 @@ public class VectorEstatico<T> {
      */
     public void modificarDato(T dato, int indice) {
         // Implementar.
+        if(indice <0 || indice >= tamanioLogico)    
+            throw new ExcepcionVector("Indice fuera del rango del vector");
+        datos[indice]= dato;
     }
 
     /**
@@ -131,7 +197,7 @@ public class VectorEstatico<T> {
      */
     public int tamanio() {
         // Implementar.
-        return 0;
+        return tamanioLogico;
     }
 
     /**
@@ -141,7 +207,7 @@ public class VectorEstatico<T> {
      */
     public int tamanioMaximo() {
         // Implementar.
-        return 0;
+        return tamanioFisico;
     }
 
     /**
@@ -151,6 +217,7 @@ public class VectorEstatico<T> {
      */
     public boolean vacio() {
         // Implementar.
-        return true;
+        boolean noHay= tamanioLogico==0;
+        return noHay;
     }
 }

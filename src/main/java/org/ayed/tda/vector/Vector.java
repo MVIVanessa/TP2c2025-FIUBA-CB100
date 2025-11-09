@@ -11,6 +11,10 @@ public class Vector<T> {
     @SuppressWarnings("unchecked")
     public Vector() {
         // Implementar.
+        this.tamanioLogico=0;
+        this.tamanioFisico= 0;
+        // java no me dejara crear un objeto T porque o existe, pero puedo usar Object para que acepte mi T
+        this.datos = (T[]) new Object[0];
     }
 
     /**
@@ -18,13 +22,42 @@ public class Vector<T> {
      *
      * @param vector Vector a copiar.
      *               No puede ser nulo.
-     * @throws ExcepcionVector si el vector es nulo.
+    //  * @throws ExcepcionVector si el vector es nulo.
      */
     @SuppressWarnings("unchecked")
     public Vector(Vector<T> vector) {
         // Implementar.
-    }
+        if ( vector == null)
+            throw new ExcepcionVector("Vector es null");
 
+        this.tamanioLogico= vector.tamanioLogico;
+        this.tamanioFisico= vector.tamanioFisico;
+
+        this.datos = (T[]) new Object[tamanioFisico];
+        
+        System.arraycopy(vector.datos, 0, this.datos, 0, tamanioLogico);
+
+    }
+    /**
+     * Redicmencionar el tamanio del vector. De USO PRIVADO
+     * @param nuevaCapacidad Dato de nuevo tamanio deseado para el vector.
+     */
+    private void redimencionar(int nuevaCapacidad){
+        // if( nuevaCapacidad < 0 )
+        //     throw new ExcepcionVector("Problemas al redimencionar vector");        
+        
+        if(nuevaCapacidad == 0)
+            nuevaCapacidad=1;
+        T[] copia = (T[]) new Object[nuevaCapacidad]; 
+        int i=0;
+        while (i<tamanioLogico){
+            copia[i]= datos[i]; 
+            i++;
+        }
+        datos= copia;
+        tamanioFisico = nuevaCapacidad;
+        
+    }
     /**
      * Agrega un dato al final del vector.
      *
@@ -32,6 +65,16 @@ public class Vector<T> {
      */
     public void agregar(T dato) {
         // Implementar.
+        // no tiene sentido agregar un dato basura.
+        if(dato == null)
+           throw new ExcepcionVector("Dato recibido es invalido al ser Nulo");
+                
+        if (tamanioFisico == tamanioLogico){
+            redimencionar(tamanioFisico*2); //duplico
+        }
+        datos[tamanioLogico]= dato;
+        tamanioLogico++;   // hay que actualizar tamanio logico.
+        
     }
 
     /**
@@ -54,6 +97,23 @@ public class Vector<T> {
      */
     public void agregar(T dato, int indice) {
         // Implementar.
+        // porque pongo los dos tamaños? evito asi que me metan los numeros en cualqueir lado. Ej: [1,2,3,4, nul,nul,5]
+        if( indice > tamanioLogico || indice <0)
+            throw new ExcepcionVector("Indice fuera del rango del vector");
+        // no tiene sentido agregar un dato basura.
+        if(dato == null)
+            throw new ExcepcionVector("Dato invalido al ser Nulo");
+        
+        if (tamanioFisico == tamanioLogico){
+            redimencionar(tamanioFisico*2); //duplico
+        }
+        
+        for (int i= tamanioLogico-1; indice<=i; i--){
+            datos[i+1] = datos[i];
+        }
+        datos[indice] = dato;
+        tamanioLogico++;
+        
     }
 
     /**
@@ -64,7 +124,14 @@ public class Vector<T> {
      */
     public T eliminar() {
         // Implementar.
-        return (T) new Object();
+        if( tamanioLogico == 0)
+            throw new ExcepcionVector("Vector vacio. No se puede eliminar elemento");
+        T elemento = datos[tamanioLogico-1];
+        datos[tamanioLogico-1]=null;
+        tamanioLogico--;
+        if(tamanioFisico/2 > tamanioLogico)
+            redimencionar(tamanioFisico/2);
+        return elemento;
     }
 
     /**
@@ -88,7 +155,24 @@ public class Vector<T> {
      */
     public T eliminar(int indice) {
         // Implementar.
-        return (T) new Object();
+        if( tamanioLogico == 0)
+            throw new ExcepcionVector("Vector vacio. No se puede eliminar elemento");
+        if( indice >= tamanioLogico || indice <0)
+            throw new ExcepcionVector("Indice fuera del rango del vector");
+        // no tiene sentido agregar un dato basura.
+
+        T eliminado = datos[indice];
+        if(eliminado == null)
+            throw new ExcepcionVector("Dato a eliminar es nulo");
+        for (int i=indice; i<tamanioLogico-1; i++){
+            datos[i] = datos[i+1];  //es posible si no el anterior if me votaba
+        }
+        tamanioLogico--;
+
+        if(tamanioLogico<tamanioFisico/2)
+            redimencionar(tamanioFisico/2);
+        
+        return eliminado;
     }
 
     /**
@@ -102,7 +186,10 @@ public class Vector<T> {
      */
     public T dato(int indice) {
         // Implementar.
-        return (T) new Object();
+        if(indice <0 || indice >= tamanioLogico)
+            throw new ExcepcionVector("Indice fuera del rango del vector");
+
+        return datos[indice];
     }
 
     /**
@@ -116,6 +203,9 @@ public class Vector<T> {
      */
     public void modificarDato(T dato, int indice) {
         // Implementar.
+        if(indice <0 || indice >= tamanioLogico)    
+            throw new ExcepcionVector("Indice fuera del rango del vector");
+        datos[indice]= dato;
     }
 
     /**
@@ -125,7 +215,7 @@ public class Vector<T> {
      */
     public int tamanio() {
         // Implementar.
-        return 0;
+        return tamanioLogico;
     }
 
     /**
@@ -137,6 +227,7 @@ public class Vector<T> {
      * @return el tamaño máximo del vector.
      */
     public int tamanioMaximo() {
+        // Implementar.
         return tamanioFisico;
     }
 
@@ -147,6 +238,10 @@ public class Vector<T> {
      */
     public boolean vacio() {
         // Implementar.
-        return true;
+        boolean noHay= tamanioLogico==0;
+        return noHay;
     }
+
+
+
 }

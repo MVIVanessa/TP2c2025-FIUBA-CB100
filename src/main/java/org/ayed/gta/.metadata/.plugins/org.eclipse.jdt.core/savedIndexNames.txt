@@ -1,0 +1,2 @@
+INDEX VERSION 1.134+D:\FIUBA\Algoritmo y Estructura de Datos\CODIGO\repoclase\src\main\java\org\ayed\gta\.metadata\.plugins\org.eclipse.jdt.core
+1865797976.index

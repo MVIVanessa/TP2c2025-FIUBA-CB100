@@ -278,6 +278,9 @@ public class DiccionarioOrdenado<C, V> {
         return lista;
     }
 
+    /**
+     * Se encarga de de agregar los valores en tipo de recorrido Inorden a la lista
+     */
     private void valoresEnInorden(Nodo<C,V> raiz, Lista<Tupla<C,V>> lista){
         if(raiz.hijoIzquierdo!=null)
             valoresEnInorden(raiz.hijoIzquierdo, lista);
@@ -297,6 +300,10 @@ public class DiccionarioOrdenado<C, V> {
         recorridoPreorden(raiz, lista);
         return lista;
     }
+
+    /**
+     * Se encarga de de agregar los valores en tipo de recorrido Preorden a la lista
+     */
     private void recorridoPreorden(Nodo<C,V> raiz, Lista<Tupla<C,V>> lista){
         Tupla <C,V> agregarTupla= new Tupla<>(raiz.clave, raiz.valor);
         lista.agregar(agregarTupla);
@@ -318,6 +325,9 @@ public class DiccionarioOrdenado<C, V> {
         return lista;
     }
 
+    /**
+     * Se encarga de de agregar los valores en tipo de recorrido Postorden a la lista
+     */
     private void recorridoPostorden(Nodo<C,V> raiz, Lista<Tupla<C,V>> lista){
         Tupla <C,V> agregarTupla= new Tupla<>(raiz.clave, raiz.valor);
         if(raiz.hijoIzquierdo!=null)
