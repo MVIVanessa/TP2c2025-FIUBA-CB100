@@ -12,6 +12,9 @@ public abstract class Vehiculo {
         private int ruedas;
         private String marca;
         private String tipo;
+        private int kilometraje;
+        private int velocidadMax;
+        private int tanqueGasolina;
     /**
      * Constructor de Vehiculo.
      * @param nombre nombre de marca/modelo del vehiculo.
@@ -21,7 +24,7 @@ public abstract class Vehiculo {
      * @param capacidadGasolina capacidad de vehiculo que tiene para Gasolina
      * @param tipo entre MOTO o AUTO o EXOTICO
      */
-    public Vehiculo(String nombre,String marca, int ruedas, int precio, int capacidadGasolina, String tipo) {
+    public Vehiculo(String nombre,String marca, int ruedas, int precio, int capacidadGasolina, String tipo, int maximo) {
         // Implementar.
         this.nombre = nombre;
         this.marca=marca;
@@ -29,6 +32,9 @@ public abstract class Vehiculo {
         capacidadGas= capacidadGasolina;
         this.ruedas=ruedas;
         this.tipo=tipo;
+        kilometraje=0;          //kilometraje empieza desde cero
+        tanqueGasolina=0;       //tomare que el tanque esta vacio al inicio
+        velocidadMax=maximo;
     }
 
     /**
@@ -44,6 +50,20 @@ public abstract class Vehiculo {
      */
     abstract public int costoMantenimientoVehiculo();
     
+    /**
+     * Llenar en tanque de gasolina al maximo
+     */
+    public void llenarGasolinaMax(){
+        tanqueGasolina=capacidadGas;
+    }
+
+    /**
+     * LLeganar el tanque hasta cierta parte
+     */
+    public void llenarGasolina(int litros){
+        tanqueGasolina=litros;
+    }
+
     //devolucion de mis atributos, podran ver lso datos pero no modificarlos!
     
     /**
@@ -52,11 +72,24 @@ public abstract class Vehiculo {
     public String nombreVehiculo(){
         return nombre;
     }
+    /**
+     * @return nombre de Vehiculo
+     */
+    public String marcaVehiculo(){
+        return marca;
+    }
 
     /**
      * @return precio del Vehiculo */
     public int precioVehiculo(){
         return precio;
     }
+
+        /**
+     * @return capacidad de gasolina del Vehiculo */
+    public int capacidadGasolina(){
+        return capacidadGas;
+    }
+
 
 }
