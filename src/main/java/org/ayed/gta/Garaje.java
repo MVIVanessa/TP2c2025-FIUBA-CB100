@@ -1,4 +1,5 @@
 package org.ayed.gta;
+import org.ayed.gta.Vehiculos.Vehiculo;
 import org.ayed.tda.vector.Vector;
 
 public class Garaje {

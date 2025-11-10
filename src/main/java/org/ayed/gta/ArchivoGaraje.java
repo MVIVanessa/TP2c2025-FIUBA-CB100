@@ -4,6 +4,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Scanner;
 
+import org.ayed.gta.Vehiculos.Vehiculo;
 import org.ayed.tda.vector.Vector;
 
 public class ArchivoGaraje{
@@ -45,7 +46,7 @@ public class ArchivoGaraje{
 	 * @return tipo de vehiculo ya vuelto objeto TipoVehiculo 
 	* * throw ExcepcionArchivoGaraje el tipo de dato es irreconocible
 	 */
-	private TipoVehiculo procesarTipoVehiculo(String t){
+	private int procesarTipoVehiculo(String t){
 		TipoVehiculo tipo;
                 switch (t) {
                     case "AUTO":
