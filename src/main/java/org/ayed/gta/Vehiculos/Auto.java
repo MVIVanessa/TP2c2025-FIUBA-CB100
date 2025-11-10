@@ -12,6 +12,9 @@ public class Auto extends Vehiculo{
 	private int  capacidadGas;
 	private int ruedas;
 	private String marca;
+	private int kilometraje;
+	private int velocidadMax;
+	private int tanqueGasolina;
 
 	/**
 	 * Constructor de Auto
@@ -26,7 +29,11 @@ public class Auto extends Vehiculo{
 	}
 	@Override
 	public int costoMantenimientoVehiculo(){
-		int costoM= this.capacidadGas*COSTO_GASOLINA + COSTO_AUTO*this.ruedas + CADAKM * COSTO_X_KM_AUTO ;
+	
+		int costoM= this.capacidadGas*COSTO_GASOLINA + COSTO_AUTO*this.ruedas;
+		
+		if(CADAKM >= kilometraje)
+			costoM+= CADAKM * COSTO_X_KM_AUTO;
 		return costoM;
 	}
 

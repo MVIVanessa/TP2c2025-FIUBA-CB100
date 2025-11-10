@@ -23,6 +23,7 @@ public abstract class Vehiculo {
      * @param precio el valor del costo por litro que requiere como mantenimiento
      * @param capacidadGasolina capacidad de vehiculo que tiene para Gasolina
      * @param tipo entre MOTO o AUTO o EXOTICO
+     * @param maximo velocidad maxima que puede alcanzar el vehiculo.
      */
     public Vehiculo(String nombre,String marca, int ruedas, int precio, int capacidadGasolina, String tipo, int maximo) {
         // Implementar.
@@ -31,7 +32,7 @@ public abstract class Vehiculo {
         this.precio=precio;
         capacidadGas= capacidadGasolina;
         this.ruedas=ruedas;
-        this.tipo=tipo;
+        this.tipo=tipo;         
         kilometraje=0;          //kilometraje empieza desde cero
         tanqueGasolina=0;       //tomare que el tanque esta vacio al inicio
         velocidadMax=maximo;
