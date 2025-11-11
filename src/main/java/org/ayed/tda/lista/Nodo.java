@@ -29,4 +29,8 @@ class Nodo<T> {
     public Nodo(T dato) {
         this(dato, null, null);
     }
+    
+    public T obtenerDato() {
+		return dato;
+    }
 }

@@ -163,4 +163,23 @@ public class Lista<T> {
         // Implementar.
         return (Iterador<T>) new Object();
     }
+    
+    
+    /**
+     * Agrego este método para la clase iterador.
+     * Devuelve el Nodo que se se encuentra en la posición índice.
+     * 
+     * @param indice Índice del nodo inicial del iterador.
+     * @return el nodo en la posición.
+     * 
+     */
+    
+    public Nodo<T> obtenerNodo(int indice){
+    	Nodo<T> actual = primero;
+    	for (int i = 0; i < indice; i++) {
+    		actual = actual.siguiente;
+    	}
+    	
+    	return actual;
+    }
 }
