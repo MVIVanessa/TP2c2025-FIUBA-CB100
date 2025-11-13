@@ -43,7 +43,12 @@ public class ArchivoGaraje{
 
 	/**
 	 * Interpreta los Las palabras del tipo de Vehiculo
+	 * @param nom nombre del vehiculo
+	 * @param marc marca del Vehiculo
 	 * @param t tipo de Vehiculo que se dice en el archivo
+	 * @param int prec precio del vehiculo
+	 * @param c capacidad de Gasolina del vehiculo
+	 * @param v velocidad del Vehiculo
 	 * @return tipo de vehiculo ya vuelto objeto TipoVehiculo 
 	* * throw ExcepcionArchivoGaraje el tipo de dato es irreconocible
 	 */
@@ -94,8 +99,8 @@ public class ArchivoGaraje{
 
 					String tipo = partes[3].trim().toUpperCase(); // procesara la enumeracion y vaolvera a tipoVehiculo 	
 					//no necesito la Lectura de CANTIDAD RUEDAS en mi constructor lo hace de na
-					int capacidadGas = Integer.parseInt(partes[4].trim());
-					int velocidad= Integer.parseInt(partes[5].trim());
+					int capacidadGas = Integer.parseInt(partes[5].trim());
+					int velocidad= Integer.parseInt(partes[6].trim());
 					Vehiculo v = crearVehiculo(nombre,marca, tipo, precio, capacidadGas,velocidad);
 					vec.agregar(v);
 

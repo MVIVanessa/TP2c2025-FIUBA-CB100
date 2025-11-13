@@ -42,7 +42,7 @@ public abstract class Vehiculo {
      * @return informacion del Vehiculo
      */
     public String informacionVehiculo(){
-        String info= nombre +", " +precio+", "+ tipo +", "+ ruedas+ ", "+ capacidadGas;
+        String info= nombre +", "+ marca+", " +precio+", "+ tipo +", "+ ruedas+ ", "+ capacidadGas + ", "+ velocidadMax;
         return info;
     }
 
@@ -93,6 +93,5 @@ public abstract class Vehiculo {
     public int capacidadGasolina(){
         return capacidadGas;
     }
-
 
 }
