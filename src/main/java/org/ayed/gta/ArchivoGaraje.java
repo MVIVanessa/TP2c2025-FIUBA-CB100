@@ -4,6 +4,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Scanner;
 
+import org.ayed.gta.Vehiculos.Auto;
 import org.ayed.gta.Vehiculos.Vehiculo;
 import org.ayed.tda.vector.Vector;
 
@@ -46,19 +47,22 @@ public class ArchivoGaraje{
 	 * @return tipo de vehiculo ya vuelto objeto TipoVehiculo 
 	* * throw ExcepcionArchivoGaraje el tipo de dato es irreconocible
 	 */
-	private int procesarTipoVehiculo(String t){
-		TipoVehiculo tipo;
-                switch (t) {
+	private Vehiculo crearVehiculo(String nom, String marc, String t, int prec,int c, int v){
+                Vehiculo vehiculo=null;
+				switch (t) {
                     case "AUTO":
-                        tipo = TipoVehiculo.AUTO;
+                        vehiculo = new Auto(nom,marc,prec,c,v);
                         break;
                     case "MOTO":
-                        tipo = TipoVehiculo.MOTO;
+                        //vehiculo = new Moto(nom,marc,prec,c,v);
                         break;
-                    default:
+					case "EXOTICO":
+						//vehiculo= new Exotico(nom,marc,prec,c,v);
+					break;
+					default:
                         throw new ExcepcionArchivoGaraje("Tipo de Vehiculo desconocido: " + t);
                 }
-		return tipo;
+		return vehiculo;
 	}
 
 	/** Pocesa el archivo csv detectando los "," para seccionarlo en partes
@@ -85,11 +89,14 @@ public class ArchivoGaraje{
 				partes = linea.split(",");
 				try {
 					String nombre = partes[0].trim();
-					int precio = Integer.parseInt(partes[1].trim());
-					TipoVehiculo tipo = procesarTipoVehiculo(partes[2].trim().toUpperCase()); // procesara la enumeracion y volvera a tipoVehiculo 	
-					//no necesito la Lectura de CANTIDAD RUEDAS en mi constructor lo hace de una
+					String marca = partes[1].trim();
+					int precio = Integer.parseInt(partes[2].trim());
+
+					String tipo = partes[3].trim().toUpperCase(); // procesara la enumeracion y vaolvera a tipoVehiculo 	
+					//no necesito la Lectura de CANTIDAD RUEDAS en mi constructor lo hace de na
 					int capacidadGas = Integer.parseInt(partes[4].trim());
-					Vehiculo v = new Vehiculo(nombre, tipo, precio, capacidadGas);
+					int velocidad= Integer.parseInt(partes[5].trim());
+					Vehiculo v = crearVehiculo(nombre,marca, tipo, precio, capacidadGas,velocidad);
 					vec.agregar(v);
 
 				} catch (NumberFormatException e) {

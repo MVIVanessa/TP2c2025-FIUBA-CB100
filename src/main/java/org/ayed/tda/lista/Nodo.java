@@ -44,32 +44,4 @@ class Nodo <T> {
 	public void cambiarDato(T dato) {
 		this.dato = dato;
 	}
-	
-    /**
-     * Devuelve el nodo siguiente
-     */
-	public Nodo<T> obtenerSiguiente() {
-		return siguiente;
-	}
-    /**
-     * Cambia el nodo siguiente
-     * @param primero el nodo que sera el siguiente del nodo actual
-     */
-	public void cambiarSiguiente(Nodo<T> primero) {
-		this.siguiente = primero;
-	}
-    /**
-     * Devuelve el nodo anterior
-     */
-    	public Nodo<T> obtenerAnterior() {
-		return anterior;
-	}
-    /**
-     * Cambia el nodo anterior
-     * @param primero el nodo que sera el anterior del nodo actual
-     */
-	public void cambiarAnterior(Nodo<T> dato) {
-		this.anterior = dato;
-	}
-
 }

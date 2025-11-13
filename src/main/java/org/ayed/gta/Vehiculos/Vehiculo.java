@@ -62,6 +62,8 @@ public abstract class Vehiculo {
      * LLeganar el tanque hasta cierta parte
      */
     public void llenarGasolina(int litros){
+        if(capacidadGas<litros)
+            throw new ExcepcionVehiculo("Litros mayor a la capacidad de Gasolina del " + tipo);
         tanqueGasolina=litros;
     }
 

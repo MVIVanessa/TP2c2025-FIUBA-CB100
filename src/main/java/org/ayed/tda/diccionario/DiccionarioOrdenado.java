@@ -240,7 +240,6 @@ public class DiccionarioOrdenado<C, V> {
      */
     public V obtenerValor(C clave) {
         // Implementar.
-
         return !vacio() ? buscandoValor(clave, raiz, cantidadDatos) : null;
     }
     /**

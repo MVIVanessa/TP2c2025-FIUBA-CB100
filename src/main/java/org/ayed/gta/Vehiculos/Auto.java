@@ -23,7 +23,7 @@ public class Auto extends Vehiculo{
 	 * @param precio el valor del costo por litro que requiere como mantenimiento
      * @param capacidadGasolina capacidad de auto que tiene para Gasolina
 	 */
-	Auto(String nombre, String marca, int precio, int capacidadGasolina, int velocidadMax) {
+	public Auto(String nombre, String marca, int precio, int capacidadGasolina, int velocidadMax) {
 		
 		super(nombre, marca, RUEDA_AUTO, precio, capacidadGasolina , TIPO, velocidadMax);
 	}

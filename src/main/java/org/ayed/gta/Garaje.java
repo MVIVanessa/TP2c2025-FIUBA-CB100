@@ -5,10 +5,12 @@ import org.ayed.tda.vector.Vector;
 public class Garaje {
     private final int CAPACIDAD_INICIAL = 5;
     private final int COSTO_MEJORA = 50;
+    private final int PRECIO_G = 1;
 
     private int capacidad;      // difiere de la capacidad max de clase vector
     private Vector<Vehiculo> vehiculos;
     private int creditos;
+
 
     // Constructor de Garaje
     public Garaje(){
@@ -142,6 +144,13 @@ public class Garaje {
             System.out.println(info);
         }
 
+    }
+
+    public void cargarGasolinaVehiculo(int litros, int indice){
+        if(litros*PRECIO_G > creditos)
+            throw new ExcepcionGaraje("Credito insuficiente para la operacion");
+        vehiculos.dato(indice).llenarGasolina(litros);
+        creditos-=litros*PRECIO_G;
     }
 
     //Para uso de archivo
