@@ -9,7 +9,9 @@ public class Cola<T> {
      * Constructor de Cola.
      */
     public Cola() {
-        // Implementar.
+        primero = null;
+        ultimo = null;
+        cantidadDatos = 0;
     }
 
     /**
@@ -20,7 +22,27 @@ public class Cola<T> {
      * @throws ExcepcionLista si la cola es nula.
      */
     public Cola(Cola<T> cola) {
-        // Implementar.
+        if (cola == null) {
+        throw new ExcepcionLista("La cola es nula.");
+        }
+
+        this.primero = null;
+        this.ultimo = null;
+        this.cantidadDatos = 0;
+
+        Nodo<T> actual = cola.primero;
+        while (actual != null) {
+            Nodo<T> nuevo = new Nodo<>(actual.dato);
+            if (this.ultimo == null) {
+                this.primero = nuevo;
+            } else {
+                this.ultimo.siguiente = nuevo;
+                nuevo.anterior = this.ultimo;
+            }
+            this.ultimo = nuevo;
+            this.cantidadDatos++;
+            actual = actual.siguiente;
+        }
     }
 
     /**
@@ -29,7 +51,18 @@ public class Cola<T> {
      * @param dato Dato a agregar.
      */
     public void agregar(T dato) {
-        // Implementar.
+        Nodo<T> nuevo = new Nodo<>(dato);
+        if (cantidadDatos == 0) {
+            primero= nuevo;
+            ultimo= nuevo;
+        }
+        else {
+            ultimo.siguiente = nuevo;
+            nuevo.siguiente = null;
+            nuevo.anterior = ultimo;
+            ultimo = nuevo;
+        }
+        cantidadDatos++;
     }
 
     /**
@@ -39,8 +72,22 @@ public class Cola<T> {
      * @throws ExcepcionLista si la cola está vacía.
      */
     public T eliminar() {
-        // Implementar.
-        return (T) new Object();
+        if (cantidadDatos == 0) {
+            throw new ExcepcionLista("La cola está vacía.");
+        }
+
+        T datoEliminado = primero.dato;
+
+		if (primero == ultimo) {
+            primero = null;
+			ultimo = null;
+        }
+        else {
+            primero = primero.siguiente;
+            primero.anterior = null;
+        }
+        cantidadDatos--;
+		return datoEliminado;
     }
 
     /**
@@ -50,8 +97,10 @@ public class Cola<T> {
      * @throws ExcepcionLista si la cola está vacía.
      */
     public T siguiente() {
-        // Implementar.
-        return (T) new Object();
+        if (cantidadDatos == 0) {
+            throw new ExcepcionLista("La cola está vacía.");
+        }
+        return primero.dato;
     }
 
     /**
@@ -60,8 +109,7 @@ public class Cola<T> {
      * @return el tamaño de la cola.
      */
     public int tamanio() {
-        // Implementar.
-        return 0;
+        return cantidadDatos;
     }
 
     /**
@@ -70,7 +118,6 @@ public class Cola<T> {
      * @return true si la cola está vacía.
      */
     public boolean vacio() {
-        // Implementar.
-        return true;
+        return (cantidadDatos==0);
     }
 }
