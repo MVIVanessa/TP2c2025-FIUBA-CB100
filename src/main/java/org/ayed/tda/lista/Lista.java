@@ -27,11 +27,12 @@ public class Lista<T> {
         if (lista == null) {
             throw new ExcepcionLista("La lista a copiar no puede ser nula.");
         }
-        
+        int tamanio = lista.tamanio();
         Iterador<T> iterador = lista.iterador();
 
-        while (iterador.haySiguiente()) {
-            this.agregar(iterador.dato());
+        for (int i = 0; i < tamanio; i++) {
+            T dato = iterador.dato();
+            this.agregar(dato);
             iterador.siguiente();
         }
     }
@@ -295,11 +296,7 @@ public class Lista<T> {
             throw new ExcepcionLista("Índice no válido.");
         }
 
-        Iterador<T> iterador = new IteradorLista<>(this);
+        return new IteradorLista<>(this, indice);
         
-        for (int i = 0; i < indice; i++) {
-            iterador.siguiente();
-        }
-        return iterador;
     }
 }
