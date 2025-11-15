@@ -276,8 +276,7 @@ public class Lista<T> {
      * @see Iterador
      */
     public Iterador<T> iterador() {
-        // Implementar.
-        return (Iterador<T>) new Object();
+        return new IteradorLista<>(this);
     }
 
     /**
@@ -292,7 +291,15 @@ public class Lista<T> {
      * @see Iterador
      */
     public Iterador<T> iterador(int indice) {
-        // Implementar.
-        return (Iterador<T>) new Object();
+        if (indice < 0 || indice >= cantidadDatos) {
+            throw new ExcepcionLista("Índice no válido.");
+        }
+
+        Iterador<T> iterador = new IteradorLista<>(this);
+        
+        for (int i = 0; i < indice; i++) {
+            iterador.siguiente();
+        }
+        return iterador;
     }
 }
