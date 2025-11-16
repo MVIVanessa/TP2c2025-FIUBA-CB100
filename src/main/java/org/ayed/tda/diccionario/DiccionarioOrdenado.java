@@ -52,10 +52,11 @@ public class DiccionarioOrdenado<C, V> {
      */
     public DiccionarioOrdenado(DiccionarioOrdenado<C, V> diccionarioOrdenado) {
         // Implementar.
-        if(diccionarioOrdenado==null)
+        if(diccionarioOrdenado == null)
             throw new ExcepcionDiccionario("Diccionario nulo");
         this.comparador= diccionarioOrdenado.comparador;
         this.raiz= diccionarioOrdenado.raiz;
+        this.cantidadDatos=0;
         if(!vacio())
             agregarNodos(diccionarioOrdenado.raiz);
     }
@@ -112,7 +113,7 @@ public class DiccionarioOrdenado<C, V> {
         V repetido= null;
         boolean insertado=false;
         if(vacio()){
-            raiz =new  Nodo<C,V> (clave,valor);
+            raiz =new Nodo<C,V> (clave,valor);
             cantidadDatos++;
         }else{    Nodo<C,V> cursor = raiz;
             while( cursor!=null && !insertado){
@@ -272,7 +273,7 @@ public class DiccionarioOrdenado<C, V> {
      */
     public Lista<Tupla<C, V>> inorder() {
         // Implementar.
-        Lista <Tupla<C,V>> lista=new Lista<Tupla<C,V>>();
+        Lista <Tupla<C,V>> lista= new Lista<Tupla<C,V>>();
         valoresEnInorden(raiz, lista);
         return lista;
     }
@@ -281,6 +282,8 @@ public class DiccionarioOrdenado<C, V> {
      * Se encarga de de agregar los valores en tipo de recorrido Inorden a la lista
      */
     private void valoresEnInorden(Nodo<C,V> raiz, Lista<Tupla<C,V>> lista){
+        if(raiz==null)
+            return;
         if(raiz.hijoIzquierdo!=null)
             valoresEnInorden(raiz.hijoIzquierdo, lista);
         Tupla <C,V> agregarTupla= new Tupla<>(raiz.clave, raiz.valor);
@@ -304,6 +307,8 @@ public class DiccionarioOrdenado<C, V> {
      * Se encarga de de agregar los valores en tipo de recorrido Preorden a la lista
      */
     private void recorridoPreorden(Nodo<C,V> raiz, Lista<Tupla<C,V>> lista){
+        if(raiz==null)
+            return;
         Tupla <C,V> agregarTupla= new Tupla<>(raiz.clave, raiz.valor);
         lista.agregar(agregarTupla);
         if(raiz.hijoIzquierdo!=null)
@@ -328,11 +333,14 @@ public class DiccionarioOrdenado<C, V> {
      * Se encarga de de agregar los valores en tipo de recorrido Postorden a la lista
      */
     private void recorridoPostorden(Nodo<C,V> raiz, Lista<Tupla<C,V>> lista){
-        Tupla <C,V> agregarTupla= new Tupla<>(raiz.clave, raiz.valor);
+        if(raiz==null)
+            return;
+        
         if(raiz.hijoIzquierdo!=null)
-            recorridoPreorden(raiz.hijoIzquierdo, lista);
+            recorridoPostorden(raiz.hijoIzquierdo, lista);
         if(raiz.hijoDerecho!=null)
-            recorridoPreorden(raiz.hijoDerecho, lista);
+            recorridoPostorden(raiz.hijoDerecho, lista);
+        Tupla <C,V> agregarTupla= new Tupla<>(raiz.clave, raiz.valor);
         lista.agregar(agregarTupla);
     }
 
@@ -342,21 +350,24 @@ public class DiccionarioOrdenado<C, V> {
      * @return el recorrido.
      */
     public Lista<Tupla<C, V>> ancho() {
-        // Implementar.
+        // Implementar.            ;
         Lista <Tupla<C,V>> lista=new Lista<Tupla<C,V>>();
-        Tupla <C,V> agregarTupla;
+        
+        if(raiz !=null){
+            Tupla <C,V> agregarTupla;
 
-        Cola <Nodo<C,V>> cola= new Cola();
-        cola.agregar(raiz);
-        Nodo <C,V> cursor;
-        while(!cola.vacio()){
-            cursor= cola.eliminar();
-            agregarTupla= new Tupla<>(cursor.clave, cursor.valor);
-            lista.agregar(agregarTupla);
-            if(cursor.hijoIzquierdo!=null)
-                cola.agregar(cursor.hijoIzquierdo);
-            if(cursor.hijoDerecho!=null)
-                cola.agregar(cursor.hijoDerecho);
+            Cola <Nodo<C,V>> cola= new Cola();
+            cola.agregar(raiz);
+            Nodo <C,V> cursor;
+            while(!cola.vacio()){
+                cursor= cola.eliminar();
+                agregarTupla= new Tupla<>(cursor.clave, cursor.valor);
+                lista.agregar(agregarTupla);
+                if(cursor.hijoIzquierdo!=null)
+                    cola.agregar(cursor.hijoIzquierdo);
+                if(cursor.hijoDerecho!=null)
+                    cola.agregar(cursor.hijoDerecho);
+            }
         }
         return lista;
     }
