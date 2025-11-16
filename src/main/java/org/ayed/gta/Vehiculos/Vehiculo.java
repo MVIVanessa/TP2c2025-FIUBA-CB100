@@ -59,12 +59,12 @@ public abstract class Vehiculo {
     }
 
     /**
-     * LLeganar el tanque hasta cierta parte
+     * Cargar en tanque una cantidad especifica de gasolina
      */
     public void llenarGasolina(int litros){
-        if(capacidadGas<litros)
+        if(capacidadGas<litros + tanqueGasolina)
             throw new ExcepcionVehiculo("Litros mayor a la capacidad de Gasolina del " + tipo);
-        tanqueGasolina=litros;
+        tanqueGasolina += litros;
     }
 
     //devolucion de mis atributos, podran ver lso datos pero no modificarlos!
