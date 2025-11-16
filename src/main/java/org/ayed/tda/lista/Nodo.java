@@ -3,7 +3,7 @@ package org.ayed.tda.lista;
 /**
  * Nodo para el uso exclusivo del paquete lista (Package-private).
  */
-class Nodo<T> {
+class Nodo <T> {
     T dato;
     Nodo<T> anterior;
     Nodo<T> siguiente;
@@ -29,8 +29,19 @@ class Nodo<T> {
     public Nodo(T dato) {
         this(dato, null, null);
     }
-    
-    public T obtenerDato() {
+
+    /**
+     * retorna el dato del nodo
+     */
+	public T obtenerDato() {
 		return dato;
-    }
+	}
+
+    /**
+     * Cambia dato del nodo
+     * @param dato dato por el que cambiar
+     */
+	public void cambiarDato(T dato) {
+		this.dato = dato;
+	}
 }
