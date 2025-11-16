@@ -1,6 +1,7 @@
-package org.ayed.gta;
-import java.util.Scanner;
+package org.ayed.programaPrincipal;
 
+import org.ayed.gta.ArchivoGaraje;
+import org.ayed.gta.Garaje;
 import org.ayed.gta.Vehiculos.Auto;
 import org.ayed.gta.Vehiculos.Vehiculo;
 
@@ -10,55 +11,50 @@ public class Menu{
 	/** Mostrara el menu de opciones
 	 */
 	public void mostrarMenu(){
-		Scanner entrada= new Scanner(System.in);
-
+		ControladorEntradas controlador= new ControladorEntradas();
 		Garaje garaje= new Garaje();
-		int opcion;
-		do{
-			System.out.println("-------MENU DE GARAJE--------");
-			System.out.println("Funciones");
-			System.out.println("1. Agregar vehiculo al Garaje.");
-			System.out.println("2. Mostrar informacion de todos los vehiculos.");
-			System.out.println("3. Eliminar un vehiculo.");
-			System.out.println("4. Mejorar el garaje.");
-			System.out.println("5. Agregar creditos.");
-			System.out.println("6. Mostrar el valor total del garaje.");
-			System.out.println("7. Mostrar el costo total diario de mantenimiento.");
-			System.out.println("8. Exportar la informacion del garaje en archivo 'Garaje.csv' ");
-			System.out.println("9. Cargar un garaje a partir de el archivo 'Garaje.csv' ");
-			System.out.println("10. Salir");
-			System.out.println("Ingrese numero de opcion que quiera seleccionar: ");
-			opcion= entrada.nextInt();
-			procesarOpcion(opcion,entrada, garaje);
-			System.out.println("Presione enter o cualquier tecla para continuar....");
-			entrada.nextLine();
-			
-		}while(opcion!=10); 
+	
+		System.out.println("-------MENU DE GARAJE--------");
+		System.out.println("Funciones");
+		System.out.println("1. Agregar vehiculo al Garaje.");
+		System.out.println("2. Mostrar informacion de todos los vehiculos.");
+		System.out.println("3. Eliminar un vehiculo.");
+		System.out.println("4. Mejorar el garaje.");
+		System.out.println("5. Agregar creditos.");
+		System.out.println("6. Mostrar el valor total del garaje.");
+		System.out.println("7. Mostrar el costo total diario de mantenimiento.");
+		System.out.println("8. Exportar la informacion del garaje en archivo 'Garaje.csv' ");
+		System.out.println("9. Cargar un garaje a partir de el archivo 'Garaje.csv' ");
+		System.out.println("10. Salir");
+		System.out.println("Ingrese numero de opcion que quiera seleccionar: ");
 
-		entrada.close();
+		int opcion = controlador.obtenerOpcion(10);
+		procesarOpcion(opcion, garaje, controlador);
+		System.out.println("Presione enter o cualquier tecla para continuar....");
+
 	}
 
 	/** Procesa la opcion elegida
 	 * @param opcion Opcion que eligio el usuario
-	 * @param sc Scanner necesario para la entrada de datos por parte del Usuario
+	 * @param controlador Controlador de entradas para interaccion con usuario
 	 * @param garaje Garaje alque aplicaremos cualquiera de las acciones
 	 */
-	private void procesarOpcion(int opcion,Scanner sc, Garaje garaje){
+	private void procesarOpcion(int opcion, Garaje garaje, ControladorEntradas controlador){
 		switch (opcion) {
 			case 1 :
-				agregandoVehiculo(sc, garaje);
+				agregandoVehiculo(garaje, controlador);
 				break;
 			case 2 :
 				mostrarInfo(garaje);
 				break;
 			case 3 :
-				eliminando(sc, garaje);
+				eliminando(garaje, controlador);
 				break;
 			case 4 :
 				mejorar(garaje);
 				break;
 			case 5 :
-				creditos(sc, garaje);
+				creditos(garaje, controlador);
 				break;
 			case 6 :
 				mostrarPrecioTotal(garaje);
@@ -86,52 +82,29 @@ public class Menu{
 		}
 	}
 
-	/** Verifica que lo que el usuario ingrese si sean numeros puros
-	 * El proceso se repetira hasta que el usuario ingrese correctamente un numero puto:  NO "2mil"; SI "2000"
-	 * @param mensaje Es el mensaje que se le mostrara al usuario 
-	 * @param sc Scanner donde el usuario ingresara los datos
-	 * @return datoNum Es el dato ya convertido en numero correctamente
-	 */
-	private int verificarQueSeaNumero(String mensaje, Scanner sc){
-		String linea;
-		boolean valido;
-		int datoNum=0;
-		do { 
-			System.out.print(mensaje);
-			linea = sc.nextLine();
-			try {
-				datoNum = Integer.parseInt(linea);
-				valido= true;
-			} catch (NumberFormatException e) {
-				System.out.println(mensaje);
-				valido= false;
-			}
-		} while (!valido);
-
-		return datoNum; 
-	}
 	/** Agregar un Vehiculo con el interaccion del usuario
-	 *  @param sc Scanner Entrada de datos
+	 *  @param controlador Controlador de entradas para interaccion con usuario
 	 *  @param garaje Garaje al que agregamos el vehiculo 
 	 */
-	private void agregandoVehiculo(Scanner sc, Garaje garaje){
+	private void agregandoVehiculo(Garaje garaje, ControladorEntradas controlador){
 		System.out.println("Ingrese la informacion de Vehiculo");
 		System.out.print("Nombre: ");
-		sc.nextLine();
-		String n = sc.nextLine();   
+
+		String n = controlador.leerEntrada(false);   
 		System.out.print("Marca: ");
-		String m = sc.nextLine();
+		String m = controlador.leerEntrada(false);
 		
-		//para que no se ingrese numero diferente a 1 y 2
-		int tipo;
-		do{
-			tipo= verificarQueSeaNumero("Tipo (Numeros)[1. AUTO  2. MOTO]: ", sc);
-		}while(tipo !=1 && tipo!=2);
+		System.out.println("Tipo (Numeros)[1. AUTO  2. MOTO]: ");
+		int tipo = controlador.obtenerOpcion(2);
 
 		// como son de tipo numero debo asegurarme que se ingrese adecuadamente valores en numeros
-		int p=verificarQueSeaNumero("Precio (numero):$", sc);
-		int capacidadG= verificarQueSeaNumero("Capacidad de Gasolina(numeros): ", sc);
-		int velocidad = verificarQueSeaNumero("Velocidad (numero): Km/h", sc);
+		System.out.print("Precio (numero): ");
+		int p = controlador.leerEntrada(true);
+		System.out.print("Capacidad de Gasolina(numeros): ");
+		int capacidadG = controlador.leerEntrada(true);
+		System.out.print("Velocidad (numero): Km/h ");
+		int velocidad = controlador.leerEntrada(true);
+
 		// convierto el numero a un tipo
 		String tipoV = "AUTO";
 		if(tipo == 2) 
@@ -160,14 +133,14 @@ public class Menu{
 	}
 
 	/** Eliminar un Vehiculo con el interaccion del usuario
-	 *  @param sc Scanner Entrada de datos
+	 *  @param controlador Controlador de entradas para interaccion con usuario
 	 *  @param garaje Garaje al que eliminaremos un vehiculo segun su nombre 
 	 */
-	private void eliminando(Scanner sc, Garaje garaje){
+	private void eliminando(Garaje garaje, ControladorEntradas controlador){
 		try{
 			System.out.print("Ingrese nombre de vehiculo que quiera eliminar: ");
-			sc.nextLine();
-			String nombre= sc.nextLine();
+			
+			String nombre = controlador.leerEntrada(false);
 			garaje.eliminarVehiculo(nombre);
 		}catch(Exception e){
 			System.err.println(e);
@@ -199,9 +172,10 @@ public class Menu{
 	 *  @param sc Scanner para Entrada de datos
 	 +  @param garaje Garaje a vincular cantidad de creditos
 	*/
-	private void creditos(Scanner sc,Garaje garaje){
+	private void creditos(Garaje garaje, ControladorEntradas controlador){
 		try{
-			int credito= verificarQueSeaNumero("Monto de credito a ingresar: ", sc);
+			System.out.print("Ingrese monto de creditos a agregar: ");
+			int credito = controlador.leerEntrada(true);
 			garaje.agregarCreditos(credito);
 			System.out.println("Creditos disponibles: "+ garaje.obtenerCreditos());
 		}catch(Exception e){
