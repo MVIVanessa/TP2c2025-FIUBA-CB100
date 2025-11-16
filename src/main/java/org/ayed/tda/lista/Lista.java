@@ -111,7 +111,7 @@ public class Lista<T> {
             throw new ExcepcionLista("Índice no válido.");
         }
 
-        Nodo<T> nuevoNodo = new Nodo<T>(dato);
+        Nodo<T> nuevoNodo = new Nodo<>(dato);
         
         //Alta al principio
         if (indice == 0) {
