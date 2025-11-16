@@ -58,16 +58,7 @@ public class Lista<T> {
         return nodo;
     }
 
-    /**
-     * Limpia las referencias del nodo indicado.
-     *
-     * @param nodo Nodo a limpiar.
-     */
-    private void limpiarNodo(Nodo<T> nodo) {
-        nodo.dato = null;
-        nodo.anterior = null;
-        nodo.siguiente = null;
-    }
+
 
     /**
      * Agrega un dato al final de la lista.
@@ -161,7 +152,6 @@ public class Lista<T> {
             ultimo = ultimo.anterior;
             ultimo.siguiente = null;
         }
-        limpiarNodo(nodoEliminado);
         cantidadDatos--;
         return datoEliminado;
     }
@@ -209,7 +199,6 @@ public class Lista<T> {
                 ultimo = nodoAnterior;
             }
         }
-        limpiarNodo(nodoEliminado);
         cantidadDatos--;
         return datoEliminado;
     }
