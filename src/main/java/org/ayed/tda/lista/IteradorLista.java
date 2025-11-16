@@ -12,8 +12,11 @@ class IteradorLista<T> implements Iterador<T> {
      *
      * @param lista Lista a iterar.
      */
-    IteradorLista(Lista<T> lista) {
-        // Implementar.
+
+	IteradorLista(Lista<T> lista) {
+        this.lista = lista;
+        this.cursor = lista.obtenerNodo(0);
+        this.indice = 0;
     }
 
     /**
@@ -22,51 +25,92 @@ class IteradorLista<T> implements Iterador<T> {
      * @param lista  Lista a iterar.
      * @param indice Índice inicial del iterador.
      */
-    IteradorLista(Lista<T> lista, int indice) {
-        // Implementar.
+    
+	IteradorLista(Lista<T> lista, int indice) {
+        this.lista = lista;
+        this.cursor = lista.obtenerNodo(indice);
+        this.indice = indice;
     }
 
     @Override
     public T dato() {
-        // Implementar.
-        return (T) new Object();
+        return cursor.obtenerDato();
     }
 
     @Override
     public boolean haySiguiente() {
-        // Implementar.
-        return true;
+        return cursor != null && cursor.siguiente != null;
     }
 
     @Override
     public void siguiente() {
-        // Implementar.
+        if (haySiguiente()) {
+        	cursor = cursor.siguiente;
+        	indice++;
+        }
     }
 
     @Override
     public boolean hayAnterior() {
-        // Implementar.
-        return true;
+    	return cursor != null && cursor.anterior != null;
     }
 
     @Override
     public void anterior() {
-        // Implementar.
+        if (hayAnterior()) {
+        	cursor = cursor.anterior;
+        	indice--;
+        }
     }
 
     @Override
     public void agregar(T dato) {
-        // Implementar.
+        Nodo<T> nuevo = new Nodo<>(dato, cursor, cursor.siguiente);
+        
+        if (cursor.siguiente != null) {
+        	cursor.siguiente.anterior = nuevo;
+        } else {
+        	lista.ultimo = nuevo;
+        }
+        
+        cursor.siguiente = nuevo;
+        lista.cantidadDatos++;
     }
 
     @Override
     public void modificarDato(T dato) {
-        // Implementar.
+        cursor.dato = dato;
     }
 
     @Override
     public T eliminar() {
-        // Implementar.
-        return (T) new Object();
+    	
+    	if (cursor == null) {
+    		return null;
+    	}
+    	
+    	T eliminado = cursor.dato;
+    	
+    	Nodo<T> anterior = cursor.anterior;
+    	Nodo<T> siguiente = cursor.siguiente;
+    	
+    	if (anterior != null) {
+    		anterior.siguiente = siguiente;
+    	} else {
+    		lista.primero = siguiente;
+    	}
+    	
+    	if (siguiente != null) {
+    		siguiente.anterior = anterior;
+    		cursor = siguiente;
+    		
+    	} else {
+    		lista.ultimo = anterior;
+    		cursor = anterior;
+    		indice--;
+    	}
+    	
+    	lista.cantidadDatos--;
+    	return eliminado;
     }
 }
