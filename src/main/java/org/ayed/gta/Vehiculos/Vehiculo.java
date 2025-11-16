@@ -59,7 +59,8 @@ public abstract class Vehiculo {
     }
 
     /**
-     * LLeganar el tanque hasta cierta parte
+     * LLeganar el tanque una cierta cantidad de litros
+     * @param litros la cantidad de litros que se cargan al tanque
      */
     public void llenarGasolina(int litros){
         if(capacidadGas<litros+tanqueGasolina)

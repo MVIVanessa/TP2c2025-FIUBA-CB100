@@ -82,6 +82,14 @@ public class Diccionario<C, V> {
      */
     public Diccionario(int tamanio, double factorDeCarga) {
         // Implementar.
+        
+        if ( tamanio < 0 || (factorDeCarga< 0 || factorDeCarga> 1))
+            throw new ExcepcionDiccionario("Valor invalido para construir diccionario");
+
+        this.tamanioTabla= tamanio;
+        this.factorDeCarga=factorDeCarga;
+        cantidadDatos=0;    // se inicializa con cero datos
+
     }
 
     /**
@@ -124,7 +132,22 @@ public class Diccionario<C, V> {
      */
     public V agregar(C clave, V valor) {
         // Implementar.
-        return (V) new Object();
+        V valorDevolver= valor;
+        boolean insertado= false;
+        int i=0; 
+        Tupla<C,V> dato = new Tupla<>(clave, valor);
+        Lista<Tupla<C,V>> lista=datos.dato(obtenerIndice(clave));
+        while(lista.iterador().haySiguiente() && !insertado){
+            if(lista.dato(i).clave().equals(clave)){
+                lista.modificarDato(dato, i);
+                valorDevolver= lista.dato(i).valor();
+            }
+            i++;
+        } 
+        if (!insertado){
+            lista.agregar(dato);
+        }
+        return valorDevolver;
     }
 
     /**
@@ -141,7 +164,16 @@ public class Diccionario<C, V> {
      */
     public V eliminar(C clave) {
         // Implementar.
-        return (V) new Object();
+        V eliminado= null;
+        int i =0;
+        Lista<Tupla<C,V>> lista=datos.dato(obtenerIndice(clave));
+        while(lista.iterador().haySiguiente()){
+            if(lista.dato(i).clave().equals(clave)){
+                eliminado= lista.dato(i).valor();
+                lista.eliminar(i);
+            }
+        }
+        return eliminado;
     }
 
     /**
@@ -154,8 +186,16 @@ public class Diccionario<C, V> {
      */
     public V obtenerValor(C clave) {
         // Implementar.
-        return (V) new Object();
-    }
+        V devolver=null;
+        Lista<Tupla<C,V>> lista = datos.dato(obtenerIndice(clave));
+        int i=0;
+        while(lista.iterador().haySiguiente()){
+            if(lista.dato(i).clave().equals(clave)){
+                devolver= lista.dato(i).valor();
+            }
+        }
+        return devolver;    
+        }
 
     /**
      * Obtiene el tamaño del diccionario.
@@ -164,7 +204,7 @@ public class Diccionario<C, V> {
      */
     public int tamanio() {
         // Implementar.
-        return 0;
+        return tamanioTabla;
     }
 
     /**
@@ -174,7 +214,7 @@ public class Diccionario<C, V> {
      */
     public boolean vacio() {
         // Implementar.
-        return true;
+        return cantidadDatos==0;
     }
 
     /**
