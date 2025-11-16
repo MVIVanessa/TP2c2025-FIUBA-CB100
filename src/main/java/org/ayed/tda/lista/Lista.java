@@ -46,7 +46,7 @@ public class Lista<T> {
      * @return el nodo en el índice indicado.
      * @throws ExcepcionLista si el índice no es válido.
      */
-    private Nodo<T> obtenerNodo(int indice) {
+    public Nodo<T> obtenerNodo(int indice) {
         if (indice < 0 || indice >= cantidadDatos) {
             throw new ExcepcionLista("Índice no válido.");
         }
@@ -298,24 +298,5 @@ public class Lista<T> {
 
         return new IteradorLista<>(this, indice);
         
-    }
-    
-    
-    /**
-     * Agrego este método para la clase iterador.
-     * Devuelve el Nodo que se se encuentra en la posición índice.
-     * 
-     * @param indice Índice del nodo inicial del iterador.
-     * @return el nodo en la posición.
-     * 
-     */
-    
-    public Nodo<T> obtenerNodo(int indice){
-    	Nodo<T> actual = primero;
-    	for (int i = 0; i < indice; i++) {
-    		actual = actual.siguiente;
-    	}
-    	
-    	return actual;
     }
 }
