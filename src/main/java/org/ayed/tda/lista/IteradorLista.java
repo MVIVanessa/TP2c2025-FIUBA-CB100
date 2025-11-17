@@ -1,5 +1,6 @@
 package org.ayed.tda.lista;
 
+import org.ayed.tda.iterador.ExcepcionNoHayDato;
 import org.ayed.tda.iterador.Iterador;
 
 class IteradorLista<T> implements Iterador<T> {
@@ -15,7 +16,7 @@ class IteradorLista<T> implements Iterador<T> {
 
 	IteradorLista(Lista<T> lista) {
         this.lista = lista;
-        this.cursor = lista.obtenerNodo(0);
+        this.cursor = lista.primero;
         this.indice = 0;
     }
 
@@ -27,90 +28,106 @@ class IteradorLista<T> implements Iterador<T> {
      */
     
 	IteradorLista(Lista<T> lista, int indice) {
-        this.lista = lista;
-        this.cursor = lista.obtenerNodo(indice);
-        this.indice = indice;
-    }
+		this.lista = lista;
+	    if (indice == lista.tamanio()) {
+	        // Cursor al final: no hay nodo
+	        this.cursor = null;
+	    } else {
+	        this.cursor = lista.obtenerNodo(indice);
+	    }
+	    this.indice = indice;
+	}
 
     @Override
     public T dato() {
+    	if (cursor == null) {
+            throw new ExcepcionNoHayDato("El iterador no apunta a ningún nodo.");
+        }
         return cursor.obtenerDato();
     }
-
+    
     @Override
     public boolean haySiguiente() {
-        return cursor != null && cursor.siguiente != null;
+    	return (cursor != null && cursor.siguiente != null) || (cursor == null && lista.primero != null);
     }
 
     @Override
     public void siguiente() {
-        if (haySiguiente()) {
-        	cursor = cursor.siguiente;
-        	indice++;
+        if (!haySiguiente()) {
+            throw new ExcepcionNoHayDato("No hay siguiente.");
+        }
+        if (cursor == null) {
+            // cursor estaba antes del primer nodo → movemos al primero
+            cursor = lista.primero;
+            indice = 0;
+        } else {
+            cursor = cursor.siguiente;
+            indice++;
         }
     }
+    
 
     @Override
     public boolean hayAnterior() {
-    	return cursor != null && cursor.anterior != null;
-    }
+        return (cursor != null && cursor.anterior != null) || (cursor == null && lista.ultimo != null);
+   }
 
     @Override
     public void anterior() {
-        if (hayAnterior()) {
-        	cursor = cursor.anterior;
-        	indice--;
+        if (!hayAnterior()) {
+            throw new ExcepcionNoHayDato("No hay anterior.");
+        }
+        if (cursor == null) {
+            // estamos al final → movemos al último nodo
+            cursor = lista.ultimo;
+            indice = lista.tamanio() - 1;
+        } else {
+            cursor = cursor.anterior;
+            indice--;
         }
     }
 
     @Override
     public void agregar(T dato) {
-        Nodo<T> nuevo = new Nodo<>(dato, cursor, cursor.siguiente);
-        
-        if (cursor.siguiente != null) {
-        	cursor.siguiente.anterior = nuevo;
+
+        if (lista.vacio()) {
+            lista.agregar(dato);
+            cursor = lista.primero;
         } else {
-        	lista.ultimo = nuevo;
+            lista.agregar(dato, indice);
+            cursor = cursor != null ? cursor.anterior : lista.ultimo;
+            indice++;
         }
-        
-        cursor.siguiente = nuevo;
+
         lista.cantidadDatos++;
     }
 
+    
     @Override
     public void modificarDato(T dato) {
+        if (cursor == null) {
+            throw new ExcepcionNoHayDato("No hay dato para modificar.");
+        }
         cursor.dato = dato;
     }
 
     @Override
     public T eliminar() {
+        T eliminado;
     	
     	if (cursor == null) {
-    		return null;
-    	}
+            throw new ExcepcionNoHayDato("No hay dato para eliminar.");
+        }        
     	
-    	T eliminado = cursor.dato;
-    	
-    	Nodo<T> anterior = cursor.anterior;
-    	Nodo<T> siguiente = cursor.siguiente;
-    	
-    	if (anterior != null) {
-    		anterior.siguiente = siguiente;
-    	} else {
-    		lista.primero = siguiente;
-    	}
-    	
-    	if (siguiente != null) {
-    		siguiente.anterior = anterior;
-    		cursor = siguiente;
-    		
-    	} else {
-    		lista.ultimo = anterior;
-    		cursor = anterior;
-    		indice--;
-    	}
-    	
-    	lista.cantidadDatos--;
+    	if (lista.vacio()) {
+            throw new ExcepcionNoHayDato("La lista está vacía.");
+        } else {
+            eliminado = lista.eliminar(indice);
+            indice--;
+            cursor = cursor.anterior;
+        }
+
+        lista.cantidadDatos--;
     	return eliminado;
     }
 }
