@@ -1,9 +1,8 @@
 package org.ayed.tda.lista;
 
-import org.ayed.tda.iterador.ExcepcionNoHayDato;
 import org.ayed.tda.iterador.Iterador;
 
-@SuppressWarnings("unused")
+
 public class Lista<T> {
     Nodo<T> primero;
     Nodo<T> ultimo;
@@ -114,6 +113,7 @@ public class Lista<T> {
         
         //Alta al principio
         if (indice == 0) {
+        	
             nuevoNodo.siguiente = primero;
     
             if (primero != null) {
@@ -125,7 +125,9 @@ public class Lista<T> {
             if (ultimo == null) {
                 ultimo = nuevoNodo;
             }
+            
         } else{
+        	
             //Alta en el medio o al final
             Nodo<T> nodoAnterior = obtenerNodo(indice - 1);
             nuevoNodo.siguiente = nodoAnterior.siguiente;

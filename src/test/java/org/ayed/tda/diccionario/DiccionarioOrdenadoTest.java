@@ -1,15 +1,19 @@
 package org.ayed.tda.diccionario;
 
-import org.ayed.tda.comparador.Comparador;
-import org.ayed.tda.lista.Lista;
-import org.ayed.tda.tupla.Tupla;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-
 import java.util.ArrayList;
 import java.util.Collections;
 
-import static org.junit.jupiter.api.Assertions.*;
+import org.ayed.tda.comparador.Comparador;
+import org.ayed.tda.lista.Lista;
+import org.ayed.tda.tupla.Tupla;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 public class DiccionarioOrdenadoTest {
     private DiccionarioOrdenado<Integer, Integer> diccionarioOrdenado;
@@ -39,7 +43,7 @@ public class DiccionarioOrdenadoTest {
     }
 
     private void llenarDiccionario() {
-        diccionarioOrdenado.agregar(10, 10);
+          diccionarioOrdenado.agregar(10, 10);
         diccionarioOrdenado.agregar(7, 7);
         diccionarioOrdenado.agregar(13, 13);
         diccionarioOrdenado.agregar(5, 5);
