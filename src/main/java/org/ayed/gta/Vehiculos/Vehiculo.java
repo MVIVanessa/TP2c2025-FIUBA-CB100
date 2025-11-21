@@ -93,5 +93,10 @@ public abstract class Vehiculo {
     public int capacidadGasolina(){
         return capacidadGas;
     }
+    /**
+     * @return precio del Vehiculo */
+    public int tanque(){
+        return tanqueGasolina;
+    }
 
 }
