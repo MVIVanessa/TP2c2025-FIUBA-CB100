@@ -88,11 +88,10 @@ public class DiccionarioOrdenado<C, V> {
         Nodo<C,V> sucesor = null;
         
         if(nodo.hijoDerecho!=null){
-            nodo = nodo.hijoDerecho;
-            while(nodo.hijoIzquierdo!= null){
-                nodo= nodo.hijoIzquierdo;
+            sucesor = nodo.hijoDerecho;
+            while(sucesor.hijoIzquierdo!= null){
+                sucesor= sucesor.hijoIzquierdo;
             }
-            sucesor= nodo;
         }
 
         return sucesor;
@@ -192,29 +191,14 @@ public class DiccionarioOrdenado<C, V> {
                 //caso de se tenga el cursor 2 hijos=> ir a por el sucesor
                 }else{  
                         Nodo <C,V> sucesor= obtenerSucesorInmediato(cursor);
+                        eliminar(sucesor.clave);
                         cursor.clave=sucesor.clave;
-                        cursor.valor=sucesor.valor;
-                        cambioNodoHastaEliminar(cursor.hijoDerecho, sucesor);
-                    
+                        cursor.valor=sucesor.valor;                    
                 }
                 cantidadDatos--;
             }
         }
         return eliminado;
-    }
-
-    /** Funcion que se encarga de remplazar los valores en caso de q el sucesor tenga hijo
-     * @param padre padre del cursor;
-     * @param sucesor Sucesor del cursor que se calculo anteriorimente
-     */
-    private void cambioNodoHastaEliminar(Nodo<C,V> padre, Nodo<C,V>sucesor){
-        if(padre.hijoIzquierdo==sucesor){
-            padre.hijoIzquierdo=sucesor.hijoDerecho;
-        }
-        else if(padre.hijoIzquierdo!=null)
-            cambioNodoHastaEliminar(padre.hijoIzquierdo, sucesor);
-        else if(padre.hijoDerecho!=null) 
-            cambioNodoHastaEliminar(padre.hijoDerecho,sucesor);
     }
 
     /** Reemplaza el nodo sin afectar al resto del arbol
