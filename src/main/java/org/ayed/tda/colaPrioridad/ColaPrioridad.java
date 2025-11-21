@@ -18,6 +18,11 @@ public class ColaPrioridad<T> {
      */
     public ColaPrioridad(Comparador<T> comparador) {
         // Implementar.
+        if (comparador == null) {
+            throw new ExcepcionColaPrioridad("El comparador no puede ser nulo.");
+        }
+        this.comparador = comparador;
+        this.datos = new Vector<>();
     }
 
     /**
@@ -29,6 +34,23 @@ public class ColaPrioridad<T> {
      */
     public ColaPrioridad(ColaPrioridad<T> colaPrioridad) {
         // Implementar.
+        if (colaPrioridad == null) {
+            throw new ExcepcionColaPrioridad("La cola a copiar no puede ser nula.");
+        }
+        this.comparador = colaPrioridad.comparador;
+        this.datos = new Vector<>(colaPrioridad.datos);
+    }
+    
+    /**
+     * Intercambia los datos en las posiciones i y j del vector.
+     *
+     * @param i Índice del primer dato.
+     * @param j Índice del segundo dato.
+     */
+    private void intercambiar(int i, int j) {
+        T temp = datos.dato(i);
+        datos.modificarDato(datos.dato(j), i);
+        datos.modificarDato(temp, j);
     }
 
     /**
@@ -39,6 +61,20 @@ public class ColaPrioridad<T> {
      */
     private void heapificarHaciaArriba() {
         // Implementar.
+        int indice = datos.tamanio() - 1;
+
+        while (indice > 0) {
+            int padre = (indice - 1) / 2;
+            T actual = datos.dato(indice);
+            T padreDato = datos.dato(padre);
+
+            if (comparador.comparar(actual, padreDato) > 0) {
+                intercambiar(indice, padre);
+                indice = padre;
+            } else {
+                indice = 0;
+            }
+        }
     }
 
     /**
@@ -49,7 +85,31 @@ public class ColaPrioridad<T> {
      */
     private void heapificarHaciaAbajo() {
         // Implementar.
+        int indice = 0;
+        int tamanio = datos.tamanio();
+        boolean seguir = true;
+
+        while (seguir) {
+            int hijoIzq = 2 * indice + 1;
+            int hijoDer = 2 * indice + 2;
+            int mayor = indice;
+
+            if (hijoIzq < tamanio && comparador.comparar(datos.dato(hijoIzq), datos.dato(mayor)) > 0) {
+                mayor = hijoIzq;
+            }
+            if (hijoDer < tamanio && comparador.comparar(datos.dato(hijoDer), datos.dato(mayor)) > 0) {
+                mayor = hijoDer;
+            }
+
+            if (mayor != indice) {
+                intercambiar(indice, mayor);
+                indice = mayor;
+            } else {
+                seguir = false;
+            }
+        }
     }
+
 
     /**
      * Agrega el dato a la cola, manteniendo el invariante
@@ -59,6 +119,11 @@ public class ColaPrioridad<T> {
      */
     public void agregar(T dato) {
         // Implementar.
+        if (dato == null) {
+            throw new ExcepcionColaPrioridad("El dato a agregar no puede ser nulo.");
+        }
+        datos.agregar(dato);
+        heapificarHaciaArriba();
     }
 
     /**
@@ -70,7 +135,16 @@ public class ColaPrioridad<T> {
      */
     public T eliminar() {
         // Implementar.
-        return (T) new Object();
+        if (vacio()) {
+            throw new ExcepcionColaPrioridad("La cola está vacía.");
+        }
+        T raiz = datos.dato(0);
+        T ultimo = datos.eliminar();
+        if (!vacio()) {
+            datos.modificarDato(ultimo, 0);
+            heapificarHaciaAbajo();
+        }
+        return raiz;
     }
 
     /**
@@ -81,7 +155,10 @@ public class ColaPrioridad<T> {
      */
     public T siguiente() {
         // Implementar.
-        return (T) new Object();
+        if (vacio()) {
+            throw new ExcepcionColaPrioridad("La cola está vacía.");
+        }
+        return datos.dato(0);
     }
 
     /**
@@ -91,7 +168,7 @@ public class ColaPrioridad<T> {
      */
     public int tamanio() {
         // Implementar.
-        return 0;
+        return datos.tamanio();
     }
 
     /**
@@ -101,6 +178,6 @@ public class ColaPrioridad<T> {
      */
     public boolean vacio() {
         // Implementar.
-        return true;
+        return datos.tamanio() == 0;
     }
 }

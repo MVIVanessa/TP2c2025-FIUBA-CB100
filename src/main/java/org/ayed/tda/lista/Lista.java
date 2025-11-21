@@ -2,6 +2,7 @@ package org.ayed.tda.lista;
 
 import org.ayed.tda.iterador.Iterador;
 
+
 public class Lista<T> {
     Nodo<T> primero;
     Nodo<T> ultimo;
@@ -27,15 +28,12 @@ public class Lista<T> {
         if (lista == null) {
             throw new ExcepcionLista("La lista a copiar no puede ser nula.");
         }
-        int tamanio = lista.tamanio();
-        Iterador<T> iterador = lista.iterador();
-
-        for (int i = 0; i < tamanio; i++) {
-            T dato = iterador.dato();
-            this.agregar(dato);
-            iterador.siguiente();
+        for (int i = 0; i < lista.tamanio(); i++) {
+            this.agregar(lista.dato(i));
         }
     }
+
+
 
     /**
      * Obtiene el nodo en el índice indicado.
@@ -115,6 +113,7 @@ public class Lista<T> {
         
         //Alta al principio
         if (indice == 0) {
+        	
             nuevoNodo.siguiente = primero;
     
             if (primero != null) {
@@ -126,7 +125,9 @@ public class Lista<T> {
             if (ultimo == null) {
                 ultimo = nuevoNodo;
             }
+            
         } else{
+        	
             //Alta en el medio o al final
             Nodo<T> nodoAnterior = obtenerNodo(indice - 1);
             nuevoNodo.siguiente = nodoAnterior.siguiente;
@@ -277,6 +278,7 @@ public class Lista<T> {
      * @see Iterador
      */
     public Iterador<T> iterador() {
+    	
         return new IteradorLista<>(this);
     }
 
@@ -292,11 +294,12 @@ public class Lista<T> {
      * @see Iterador
      */
     public Iterador<T> iterador(int indice) {
-        if (indice < 0 || indice >= cantidadDatos) {
-            throw new ExcepcionLista("Índice no válido.");
+    	if (indice < 0) {
+            throw new ExcepcionLista("Índice no válido: negativo.");
         }
-
+        if (indice > cantidadDatos) {
+            throw new ExcepcionLista("Índice no válido: mayor al tamaño.");
+        }
         return new IteradorLista<>(this, indice);
-        
     }
 }
