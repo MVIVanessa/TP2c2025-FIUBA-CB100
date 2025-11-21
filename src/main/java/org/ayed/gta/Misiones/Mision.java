@@ -31,8 +31,6 @@ public abstract class Mision{
 	public void despliegueDeMapa(){
 		if(mapa==null)
 			throw new ExcepcionMision("Juego No puede continuar, no hay mapa");
-		gps.modificarPartida(jugador);
-
 		for (int x = 0; x < mapa.ancho(); x++) {
 			for (int y = 0; y < mapa.alto(); y++) {
 				if (x == jugador.obtenerX() && y == jugador.obtenerY()) {
@@ -46,8 +44,11 @@ public abstract class Mision{
 				System.out.print(" "); 
 			}
 			System.out.println();
+
 		}
+
 	}
+
 
 
 	
@@ -56,30 +57,43 @@ public abstract class Mision{
 	* @return ExceptionMision cuando se elige un comando no posible por limitaciones del mapa 
 	*/
 	public void moverJugador(String comando){
+		boolean movio = false;
 		switch (comando) {
 			case "W":	//mover Arriba
-				if(jugador.obtenerY()-1 <0 && mapa.datoCelda(jugador.obtenerX(), jugador.obtenerY()-1).equals("E"))
+				if(jugador.obtenerY()-1 <0 || mapa.datoCelda(jugador.obtenerX(), jugador.obtenerY()-1).equals("E"))
 					throw new ExcepcionMision("No es posible subir");
-
+				jugador.modificarY(jugador.obtenerY() - 1);
+            	movio = true;
 				break;
 			case "S":	//mover Abajo
-				if(jugador.obtenerY()+1 <mapa.alto()-1 && mapa.datoCelda(jugador.obtenerX(), jugador.obtenerY()+1).equals("E"))
+				if(jugador.obtenerY()+1 <mapa.alto()-1 || mapa.datoCelda(jugador.obtenerX(), jugador.obtenerY()+1).equals("E"))
 					throw new ExcepcionMision("No es posible bajar");
-
+				jugador.modificarY(jugador.obtenerY() + 1);
+            	movio = true;
 				break;
 			case "D":	// mover Derecha
-				if(jugador.obtenerX()+1 <mapa.ancho()-1 && mapa.datoCelda(jugador.obtenerX()+1, jugador.obtenerY()).equals("E"))
+				if(jugador.obtenerX()+1 <mapa.ancho()-1 || mapa.datoCelda(jugador.obtenerX()+1, jugador.obtenerY()).equals("E"))
 					throw new ExcepcionMision("No es posible ir a la derecha");
+				jugador.modificarX(jugador.obtenerX() + 1);
+            	movio = true;
 				break;
 			
 			case "A":	// move Izquierda
-				if(jugador.obtenerX()-1 <0 && mapa.datoCelda(jugador.obtenerX()-1, jugador.obtenerY()).equals("E"))
+				if(jugador.obtenerX()-1 <0 || mapa.datoCelda(jugador.obtenerX()-1, jugador.obtenerY()).equals("E"))
 					throw new ExcepcionMision("No es posible ir a la izquierda");
+				jugador.modificarX(jugador.obtenerX() - 1);
+            	movio = true;
 				break;
 			default:
 				System.out.println("Comando invalido");
 			
 		}
+		if(movio) {
+			gps.modificarPartida(jugador); 
+			tomarRecompensa(jugador);      
+			despliegueDeMapa();
+			tiempoJuego++;
+    	}
 	}
 
 	/**
