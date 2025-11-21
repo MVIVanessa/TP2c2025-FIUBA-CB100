@@ -258,11 +258,12 @@ public class Diccionario<C, V> {
         	Tupla<C,V> t = it.dato();
         	
         	if ((t.clave() == null && clave == null) ||
-                    (t.clave() != null && t.clave().equals(clave))) {
-                    devolver = t.valor();
+                (t.clave() != null && t.clave().equals(clave))) {
+                devolver = t.valor();
                     
             	lista.eliminar(pos);
                 cantidadDatos--;
+                return devolver;
 
             }
         	
