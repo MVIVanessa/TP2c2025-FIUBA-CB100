@@ -93,5 +93,11 @@ public abstract class Vehiculo {
     public int capacidadGasolina(){
         return capacidadGas;
     }
+    
+    /**
+     * @return tipo de Vehiculo */
+    public String tipoVehiculo() {
+        return tipo;
+    }
 
 }
