@@ -17,7 +17,7 @@ public class Mapa {
 	public int ancho(){
 		return ancho;
 	}          
-	/** devuelve el ancho del mapa
+	/** devuelve la altura del mapa
 	 * @return altura
 	 */
 	public int alto(){
