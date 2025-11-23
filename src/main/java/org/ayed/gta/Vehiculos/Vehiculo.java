@@ -2,8 +2,6 @@ package org.ayed.gta.Vehiculos;
 
 public abstract class Vehiculo {
         // CONSTANTES QUE NO SE CAMBIAN
-        private final int COSTO_MOTO= 30;
-        private final int RUEDA_MOTO= 2;
         protected final int COSTO_GASOLINA=1;
 
         private String nombre;
@@ -67,6 +65,19 @@ public abstract class Vehiculo {
         tanqueGasolina += litros;
     }
 
+    /**
+     * Rebaja de apoco la cantidad de Gasolina en el tanque
+     */
+    public void rebajarCantidadTanque(){
+        tanqueGasolina--;
+    }
+    /**
+     * Aumenta de apoco la cantidad de Gasolina en el tanque
+     */
+    public void subirKilometraje(){
+        kilometraje--;
+    }
+
     //devolucion de mis atributos, podran ver lso datos pero no modificarlos!
     
     /**
@@ -94,9 +105,14 @@ public abstract class Vehiculo {
         return capacidadGas;
     }
     /**
-     * @return precio del Vehiculo */
+     * @return gazolina disponible del Vehiculo */
     public int tanque(){
         return tanqueGasolina;
+    }
+    /**
+     * @return velocidad maxima del Vehiculo */
+    public int velocidadMaxima(){
+        return velocidadMax;
     }
 
 }

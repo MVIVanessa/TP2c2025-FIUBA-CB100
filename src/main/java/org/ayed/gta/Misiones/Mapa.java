@@ -1,10 +1,10 @@
 package org.ayed.gta.Misiones;
-import java.util.Vector;
-
-import org.ayed.tda.lista.Lista;
+import org.ayed.tda.vector.Vector;
 
 public class Mapa {
-	Vector<Lista<Coordenadas>> mapa;		// no segura si esto esta bien REVISAR
+
+	private final int VALOR_CALLE = 1;
+	Vector<Vector<String>> mapa;		// no segura si esto esta bien REVISAR
 	int altura;
 	int ancho;
 
@@ -27,7 +27,8 @@ public class Mapa {
 	/** Devuelve el contenido de una celda
 	 */
 	public String datoCelda(int x, int y){
-		return null;
+		Vector<String> lista= mapa.dato(x);
+		return lista.dato(y);
 	}
 	/** Devuelve la posición de salida (S)
 	 */
@@ -37,7 +38,7 @@ public class Mapa {
 
 	/** Devuelve la posición de destino (D)
 	 */
-	public Coordenadas destino(){
+	public String destino(){
 		return null;
 		
 	}  
@@ -55,5 +56,17 @@ public class Mapa {
 	public void cargarDesdeArchivo(String nombreArchivo){
 		
 	}
+	/**
+	 * Devuelve el costo de transito de la celda transitable
+	 * @param c coordenadas donde esta el jugador
+	 * @return
+	 */
+	public int costoTransito(Coordenadas c){
+		int costo=VALOR_CALLE;
+		if(datoCelda(c.obtenerX(), c.obtenerY()).equals("C"))
+			costo*=5;
+		return costo;
+	}
+	
 
 }

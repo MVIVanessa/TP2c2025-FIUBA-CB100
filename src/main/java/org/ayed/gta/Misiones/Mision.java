@@ -1,11 +1,11 @@
 package org.ayed.gta.Misiones;
+import org.ayed.gta.Garaje;
 import org.ayed.gta.Vehiculos.Vehiculo;
 
 public abstract class Mision{
-	private TipoMision tipo; 			//1=facil	2=Moderada	3=Dificil
 	private Vehiculo transporte;		//vehiculo que usara el jugador para la mision
-	private int tiempoJuego;			//en segundos
-	private int tiempoMision;
+	private double tiempoJuego;			//en segundos
+	private double tiempoMision;
 	private Coordenadas jugador;
 	private Mapa mapa;
 	private Gps gps;
@@ -15,10 +15,9 @@ public abstract class Mision{
 	 * 		1=facil		2=Moderada		3=Dificil
 	 * @param v Vehiculo con el que jugara el jugador
 	 */
-    Mision(TipoMision tipo, Vehiculo v, int tiempo) {
-		this.tipo=tipo;
+    Mision( Vehiculo v, double tiempo) {
 		this.tiempoJuego= 0;
-		this.transporte=v;
+		this.transporte=null;
 		this.tiempoMision= tiempo;
 		this.mapa = new Mapa();
 		jugador= mapa.posicionInicial();
@@ -26,8 +25,8 @@ public abstract class Mision{
 	}
 
 	/**Muestra el mapa de la jugada con la respectiva posicion del jugador
-	 * @param mapa
-	 */
+	 *@throws ExcepcionMision si el mapa es nulo
+	*/
 	public void despliegueDeMapa(){
 		if(mapa==null)
 			throw new ExcepcionMision("Juego No puede continuar, no hay mapa");
@@ -48,13 +47,10 @@ public abstract class Mision{
 		}
 
 	}
-
-
-
 	
 	/** Mueve al jugador segun el comando ingresado 
 	* @param comando comando ingresado por el usuario para moverse en el mapa
-	* @return ExceptionMision cuando se elige un comando no posible por limitaciones del mapa 
+	* @throws ExceptionMision cuando se elige un comando no posible por limitaciones del mapa 
 	*/
 	public void moverJugador(String comando){
 		boolean movio = false;
@@ -63,7 +59,7 @@ public abstract class Mision{
 				if(jugador.obtenerY()-1 <0 || mapa.datoCelda(jugador.obtenerX(), jugador.obtenerY()-1).equals("E"))
 					throw new ExcepcionMision("No es posible subir");
 				jugador.modificarY(jugador.obtenerY() - 1);
-            	movio = true;
+				movio = true;
 				break;
 			case "S":	//mover Abajo
 				if(jugador.obtenerY()+1 <mapa.alto()-1 || mapa.datoCelda(jugador.obtenerX(), jugador.obtenerY()+1).equals("E"))
@@ -90,9 +86,7 @@ public abstract class Mision{
 		}
 		if(movio) {
 			gps.modificarPartida(jugador); 
-			tomarRecompensa(jugador);      
-			despliegueDeMapa();
-			tiempoJuego++;
+			incrementoTiempo();
     	}
 	}
 
@@ -105,7 +99,8 @@ public abstract class Mision{
 	 */
 	public boolean misionCompletada(){
 		boolean completada=false;
-		if(jugador.equals(mapa.destino()) & !fracaso())
+
+		if(mapa.datoCelda(jugador.obtenerX(),jugador.obtenerY()).equals(mapa.destino()) && !fracaso())
 			completada=true;
 		return completada;
 	}
@@ -115,9 +110,7 @@ public abstract class Mision{
 	 * 					el tanque de Gasolina queda vacio
 	 */
 	private boolean fracaso(){
-		if( tiempoJuego > tiempoMision || transporte.tanque()==0)
-			return true;
-		return false;
+		return tiempoJuego > tiempoMision || transporte.tanque()==0;
 	}
 	/**
 	 * Recoge la recompensa del mapa, osea la eliminara del mapa
@@ -129,4 +122,30 @@ public abstract class Mision{
 			mapa.recogerRecompensa(c);
 	}
 
+	/** Incrementa el tiempo segun el costo de transito dividido la velocidad maxima del vehiculo
+	 */
+	private void incrementoTiempo(){
+		tiempoJuego+= mapa.costoTransito(jugador)/transporte.velocidadMaxima();
+	}
+
+	/**
+	 * seleccion de vehiculos permitidos para la mision
+	 * @param g
+	 * @return Vehiculo que selecciona el usuario
+	 */
+	abstract void vehiculosPermitidos(Garaje g);
+	
+	/** Eleccion de vehiculo a usar para la Mision
+	 * @param i indice del Vehiculo
+	 * @return	Vehiculo selecionado devuelve null si no se encuentra
+	 */
+	abstract Vehiculo seleccionarVehiculo(int i);
+
+
+	/**
+	 * @return tiempo del juego en progreso
+ 	 */
+	public double devolverTiempo(){
+		return tiempoJuego;
+	}
 }
