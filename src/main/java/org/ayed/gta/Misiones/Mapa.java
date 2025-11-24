@@ -56,6 +56,7 @@ public class Mapa {
 	public void cargarDesdeArchivo(String nombreArchivo){
 		
 	}
+
 	/**
 	 * Devuelve el costo de transito de la celda transitable
 	 * @param c coordenadas donde esta el jugador

@@ -1,6 +1,16 @@
 package org.ayed.gta.Misiones;
 
-public class Facil {
-	private int recompensaDinero;
-	private int recompensaCreditos;
+import org.ayed.gta.Garaje;
+
+public class Facil extends Mision {
+	// private int recompensaDinero;
+	// private int recompensaCreditos;
+
+    public Facil() {
+        super(0);
+    }
+	@Override 
+	public int vehiculosPermitidos(Garaje g){
+		return 0;
+	}
 }

@@ -5,9 +5,16 @@ import org.ayed.gta.Garaje;
 import org.ayed.gta.Vehiculos.Auto;
 import org.ayed.gta.Vehiculos.Vehiculo;
 
-public class Menu{
-	final String RUTA = "Garaje.csv"; 
+public class MenuGaraje{
+	final String RUTA; 
 
+	/**
+	 * Cosntructor
+	 * @param ruta ruta del archivo a guardar el garaje+
+	 */
+    public MenuGaraje(String ruta) {
+        this.RUTA = ruta;
+    }
 	/** Mostrara el menu de opciones
 	 */
 	public void mostrarMenu(){

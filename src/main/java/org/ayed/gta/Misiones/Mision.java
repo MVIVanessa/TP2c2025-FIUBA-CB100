@@ -1,8 +1,10 @@
 package org.ayed.gta.Misiones;
 import org.ayed.gta.Garaje;
 import org.ayed.gta.Vehiculos.Vehiculo;
+import org.ayed.tda.vector.Vector;
 
 public abstract class Mision{
+	private Vector<Vehiculo> permitidos;
 	private Vehiculo transporte;		//vehiculo que usara el jugador para la mision
 	private double tiempoJuego;			//en segundos
 	private double tiempoMision;
@@ -11,11 +13,10 @@ public abstract class Mision{
 	private Gps gps;
 	/**
 	 * Constructor de Mision
-	 * @param tipo Tipo De Mision Elegido pór el usuario: 
-	 * 		1=facil		2=Moderada		3=Dificil
+	 * @param tiempo tiempo de juego limite para jugar
 	 * @param v Vehiculo con el que jugara el jugador
 	 */
-    Mision( Vehiculo v, double tiempo) {
+    Mision( double tiempo) {
 		this.tiempoJuego= 0;
 		this.transporte=null;
 		this.tiempoMision= tiempo;
@@ -87,6 +88,8 @@ public abstract class Mision{
 		if(movio) {
 			gps.modificarPartida(jugador); 
 			incrementoTiempo();
+			transporte.rebajarCantidadTanque();
+			transporte.subirKilometraje();
     	}
 	}
 
@@ -100,7 +103,7 @@ public abstract class Mision{
 	public boolean misionCompletada(){
 		boolean completada=false;
 
-		if(mapa.datoCelda(jugador.obtenerX(),jugador.obtenerY()).equals(mapa.destino()) && !fracaso())
+		if(mapa.datoCelda(jugador.obtenerX(),jugador.obtenerY()).equals(mapa.destino()))
 			completada=true;
 		return completada;
 	}
@@ -109,7 +112,7 @@ public abstract class Mision{
 	 * @return true si: tiempo de juego es mayor al tiempo que se le da al jugador
 	 * 					el tanque de Gasolina queda vacio
 	 */
-	private boolean fracaso(){
+	public boolean fracaso(){
 		return tiempoJuego > tiempoMision || transporte.tanque()==0;
 	}
 	/**
@@ -130,16 +133,31 @@ public abstract class Mision{
 
 	/**
 	 * seleccion de vehiculos permitidos para la mision
-	 * @param g
-	 * @return Vehiculo que selecciona el usuario
+	 * @param g Garaje del usuario
+	 * @return cantidad e vehiculos permitidos dentro del garaje
 	 */
-	abstract void vehiculosPermitidos(Garaje g);
+	public abstract int vehiculosPermitidos(Garaje g);
 	
 	/** Eleccion de vehiculo a usar para la Mision
 	 * @param i indice del Vehiculo
 	 * @return	Vehiculo selecionado devuelve null si no se encuentra
 	 */
-	abstract Vehiculo seleccionarVehiculo(int i);
+	public Vehiculo seleccionarVehiculo(int i){
+		if(i<0 || i > permitidos.tamanio())
+			throw new ExcepcionMision("indice de vehiculo a seleccionar invalido");
+		return transporte= permitidos.dato(i);
+	}
+
+
+	public void mostrarVehiculosPermitidos() {
+    	System.out.println("Vehículos disponibles para esta misión:");
+    	Vehiculo v;
+		for (int i=0; i< permitidos.tamanio(); i++ ) {
+			v= permitidos.dato(i);
+        	System.out.println(i + ") " + v.informacionVehiculo());
+        	i++;
+		}
+    }
 
 
 	/**
@@ -148,4 +166,6 @@ public abstract class Mision{
 	public double devolverTiempo(){
 		return tiempoJuego;
 	}
+
+	
 }
