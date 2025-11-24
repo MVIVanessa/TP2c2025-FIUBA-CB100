@@ -52,7 +52,7 @@ public class Partida {
 					jugarMision(sc, garaje);
 					salir = continuarJugando(sc,garaje);
 				}while(!salir);
-				
+
 				break;
 			case 2:
 				// ir a garaje. Desplega el menu de acciones de garaje
@@ -63,7 +63,7 @@ public class Partida {
 			case 4: 
 				System.out.println("Termino la partida");
 			default:
-				throw new AssertionError();
+				System.err.println("Error en procesar opcion");
 		}
 	}
 
@@ -74,7 +74,7 @@ public class Partida {
 	}
 
 	private Mision elegirModo(int i){
-		Mision mision;
+		Mision mision=null;
 		switch (i) {
 			case 1:
 				mision= new Dificil();
@@ -86,7 +86,7 @@ public class Partida {
 				mision= new Facil();
 				break;
 			default:
-				throw new ExcepcionMision("Eleccion de Modo de juego invalido");
+				System.err.println("Eleccion de Modo de juego invalido");
 		}
 		return mision;
 
@@ -106,7 +106,7 @@ public class Partida {
 			System.err.println("No es posible jugar");
 		else{
 			System.out.println("Ingrese numero de Vehiculo que quiere usar: ");
-			int elegido= sc.obtenerOpcion(cantPerm);
+			int elegido= sc.obtenerOpcion(cantPerm) ;
 			Vehiculo v= mision.seleccionarVehiculo(elegido);
 			System.out.println("Vehiculo seleccionado: "+ v.nombreVehiculo());
 
