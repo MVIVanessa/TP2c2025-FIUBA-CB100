@@ -9,6 +9,8 @@ public class Pila<T> {
      */
     public Pila() {
         // Implementar.
+        this.ultimo = null;
+        this.cantidadDatos = 0;
     }
 
     /**
@@ -20,6 +22,33 @@ public class Pila<T> {
      */
     public Pila(Pila<T> pila) {
         // Implementar.
+        if (pila == null) {
+            throw new ExcepcionLista("La pila a copiar no puede ser nula.");
+        }
+        if (pila.vacio()) {
+            this.ultimo = null;
+            this.cantidadDatos = 0;
+        }
+
+        // copia profunda conservando el orden LIFO
+        this.ultimo = null;
+        this.cantidadDatos = 0;
+
+        if (pila.vacio()) return;
+
+        // guardar los datos desde el fondo hasta el tope
+        Object[] datos = new Object[pila.cantidadDatos];
+        Nodo<T> actual = pila.ultimo;
+        int i = 0;
+        while (actual != null) {
+            datos[i++] = actual.dato;
+            actual = actual.siguiente;
+        }
+
+        // reconstruir la pila en el mismo orden LIFO
+        for (int j = pila.cantidadDatos - 1; j >= 0; j--) {
+            this.agregar((T) datos[j]);
+        }
     }
 
     /**
@@ -29,6 +58,12 @@ public class Pila<T> {
      */
     public void agregar(T dato) {
         // Implementar.
+        Nodo<T> nuevo = new Nodo<>(dato, null, ultimo);
+        if (ultimo != null) {
+            ultimo.anterior = nuevo;
+        }
+        ultimo = nuevo;
+        cantidadDatos++;
     }
 
     /**
@@ -39,7 +74,16 @@ public class Pila<T> {
      */
     public T eliminar() {
         // Implementar.
-        return (T) new Object();
+        if (vacio()) {
+            throw new ExcepcionLista("La pila está vacía.");
+        }
+        T dato = ultimo.dato;
+        ultimo = ultimo.siguiente;
+        if (ultimo != null) {
+            ultimo.anterior = null;
+        }
+        cantidadDatos--;
+        return dato;
     }
 
     /**
@@ -50,7 +94,10 @@ public class Pila<T> {
      */
     public T siguiente() {
         // Implementar.
-        return (T) new Object();
+        if (vacio()) {
+            throw new ExcepcionLista("La pila está vacía.");
+        }
+        return ultimo.dato;
     }
 
     /**
@@ -60,7 +107,7 @@ public class Pila<T> {
      */
     public int tamanio() {
         // Implementar.
-        return 0;
+        return cantidadDatos;
     }
 
     /**
@@ -70,6 +117,6 @@ public class Pila<T> {
      */
     public boolean vacio() {
         // Implementar.
-        return true;
+        return cantidadDatos == 0;
     }
 }
