@@ -1,37 +1,29 @@
 package org.ayed.gta.Mapa;
+import java.io.IOException;
 import java.util.Random;
+import org.ayed.tda.lista.ExcepcionLista;
 import org.ayed.tda.lista.Lista;
 import org.ayed.tda.iterador.Iterador;
+import org.ayed.gta.Mapa.LectorMapa;
 
 public class Mapa {
     static final int CANTIDAD_COLUMNAS = 12;
     static final int CANTIDAD_FILAS = 12;
-    static final int[][] POSICIONES_EDIFICIOS = {
-        {1,1}, {1, 3}, {1, 5}, {1, 7}, {1, 9}, {1, 10},
-        {3,1}, {3, 3}, {3, 5}, {3, 7}, {3, 9}, {3,10},
-        {4,1}, {4, 3}, {4, 9}, {4, 10},
-        {5,1}, {5, 3}, {5, 5}, {5, 7}, {5, 9}, {5,10},
-        {6,1},
-        {7,1}, {7, 3}, {7, 5}, {7, 7}, {7, 9}, {7,10},
-        {10,1}, {10, 3}, {10, 5}, {10, 7}, {10, 9}, {10,10}
-    };
     private Lista<Lista<TipoCelda>> grillas;
     //TipoMision tipoMision;
 
     /**
      * Constructor de Mapa.
      */
-    public Mapa() {
-        //this.tipoMision = tipoMision;
-        this.grillas = new Lista<Lista<TipoCelda>>();
-        for (int i = 0; i < CANTIDAD_FILAS; i++) {
-            Lista<TipoCelda> fila = new Lista<TipoCelda>();
-            for (int j = 0; j < CANTIDAD_COLUMNAS; j++) {
-                fila.agregar(TipoCelda.TRANSITABLE);
-            }
-            this.grillas.agregar(fila);
+    public Mapa(String rutaArchivoCSV) {
+        LectorMapa lector = new LectorMapa();
+        try {
+            this.grillas = lector.leerMapaDesdeCSV(rutaArchivoCSV);
+        } catch (IOException e) {
+            throw new ExcepcionMapa("Error al cargar el mapa desde CSV: " + e.getMessage());
         }
-        
+        //this.tipoMision = tipoMision;
+        // ESTABLECER CANT FILAS Y COLUMNAS A PARTIR DE GRILLAS ??
         inicializarGrilla();
     }
 
@@ -42,7 +34,6 @@ public class Mapa {
      */
     private void inicializarGrilla() {
         try {
-            establecerEdificios();
             establecerCeldaAleatoria(TipoCelda.ENTRADA);
             establecerCeldaAleatoria(TipoCelda.SALIDA);
             establecerCeldaRecompensa();
@@ -51,19 +42,6 @@ public class Mapa {
             throw new ExcepcionMapa("Error al inicializar la grilla del mapa: " + e.getMessage());
         }
         
-    }
-
-    /**
-     * Establece las posiciones de los edificios en el mapa.
-     * Las posiciones son fijas y predefinidas.
-     */
-    private void establecerEdificios() {
-        for (int[] posicion : POSICIONES_EDIFICIOS) {
-            int filaIndex = posicion[0];
-            int columnaIndex = posicion[1];
-            Lista<TipoCelda> fila = this.grillas.dato(filaIndex);
-            fila.modificarDato(TipoCelda.EDIFICIO, columnaIndex);
-        }
     }
 
     /**
