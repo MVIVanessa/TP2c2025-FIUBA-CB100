@@ -38,7 +38,7 @@ public abstract class Mision{
 				}else if(gps.buscandocordenadas(new Coordenadas(x, y)))
 					System.out.print('*');
 				else {
-					tomarRecompensa(jugador);
+					tomarRecompensaAdicional(jugador);
 					System.out.print(mapa.datoCelda(x,y));
 				}
 				System.out.print(" "); 
@@ -119,7 +119,7 @@ public abstract class Mision{
 	 * Recoge la recompensa del mapa, osea la eliminara del mapa
 	 * @param c cordenadas donde esta el jugador
 	 */
-	private void tomarRecompensa(Coordenadas c){
+	private void tomarRecompensaAdicional(Coordenadas c){
 		if( mapa.datoCelda(c.obtenerX(), c.obtenerY()).equals("R"))			// R = reconpensa
 		// ver si lo hago o va a mapa;
 			mapa.recogerRecompensa(c);
@@ -166,6 +166,21 @@ public abstract class Mision{
 	public double devolverTiempo(){
 		return tiempoJuego;
 	}
+	/**
+	 * @return tiempo de la mision limite
+ 	 */
+	public double devolverTiempoLim(){
+		return tiempoMision;
+	}
 
+	/**
+	 * Devolver transporte que usa mision
+	 * @return transporte
+	 */
+	public Vehiculo transporte(){
+		return transporte;
+	}
+
+	public abstract int recompensaDinero();
 	
 }

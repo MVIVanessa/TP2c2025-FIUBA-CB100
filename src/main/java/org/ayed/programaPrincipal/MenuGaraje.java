@@ -23,7 +23,7 @@ public class MenuGaraje{
 	
 		System.out.println("-------MENU DE GARAJE--------");
 		System.out.println("Funciones");
-		System.out.println("1. Agregar vehiculo al Garaje.");
+		System.out.println("1. Salir");
 		System.out.println("2. Mostrar informacion de todos los vehiculos.");
 		System.out.println("3. Eliminar un vehiculo.");
 		System.out.println("4. Mejorar el garaje.");
@@ -32,7 +32,6 @@ public class MenuGaraje{
 		System.out.println("7. Mostrar el costo total diario de mantenimiento.");
 		System.out.println("8. Exportar la informacion del garaje en archivo 'Garaje.csv' ");
 		System.out.println("9. Cargar un garaje a partir de el archivo 'Garaje.csv' ");
-		System.out.println("10. Salir");
 		System.out.println("Ingrese numero de opcion que quiera seleccionar: ");
 
 		int opcion = controlador.obtenerOpcion(10);
@@ -49,7 +48,7 @@ public class MenuGaraje{
 	private void procesarOpcion(int opcion, Garaje garaje, ControladorEntradas controlador){
 		switch (opcion) {
 			case 1 :
-				agregandoVehiculo(garaje, controlador);
+				System.out.println("-------- SALIENDO --------");
 				break;
 			case 2 :
 				mostrarInfo(garaje);
@@ -76,11 +75,6 @@ public class MenuGaraje{
 				garaje.copiarGaraje(importarGaraje());
 				if(!garaje.obtenerVehiculo().vacio())
 					System.out.println("Garaje cargado correctamente desde archivo.\n");
-				
-				break;
-
-			case 10:
-				System.out.println("-------- SALIENDO --------"); 
 				break;
 			default:
 				System.out.println("Eleccion de opcion invalida, Ingrese de 1 al 9");

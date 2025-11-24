@@ -11,5 +11,10 @@ public class Dificil extends Mision{
 	public int vehiculosPermitidos(Garaje g){
 		return 0;
 	}
+	@Override
+	public int recompensaDinero() {
+		// IMPLEMENTAR
+		return 1;
+	}
 	
 }
