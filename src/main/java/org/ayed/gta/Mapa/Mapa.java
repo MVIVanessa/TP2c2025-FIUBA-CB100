@@ -7,11 +7,11 @@ import org.ayed.tda.lista.Lista;
 import org.ayed.tda.iterador.Iterador;
 
 public class Mapa {
-    static final int CANTIDAD_COLUMNAS = 12;
-    static final int CANTIDAD_FILAS = 12;
+    private int CANTIDAD_COLUMNAS;
+    private int CANTIDAD_FILAS;
     static final int PROBABILIDAD_CONGESTION = 15; // en porcentaje
     static final int PROBABILIDAD_RECOMPENSA = 5; // en porcentaje
-    static final String rutaMapaBase = "src/main/resources/mapa.csv";
+    static final String rutaMapaBase = "pruebaMapa.csv";
     private Lista<Lista<TipoCelda>> grillas;
     //TipoMision tipoMision;
 
@@ -21,7 +21,8 @@ public class Mapa {
     public Mapa() {
         //this.tipoMision = tipoMision;
         this.grillas = leerMapaDesdeCSV(rutaMapaBase);
-        
+        this.CANTIDAD_FILAS = this.grillas.tamanio();
+        this.CANTIDAD_COLUMNAS = this.grillas.dato(0).tamanio();
         inicializarGrilla();
     }
 
@@ -132,38 +133,44 @@ public class Mapa {
         
         Lista<Lista<TipoCelda>> mapa = new Lista<>();
         try (BufferedReader br = new BufferedReader(new FileReader(rutaArchivo))) {
+    
             String linea = br.readLine();
             if (linea == null) throw new ExcepcionMapa("Archivo del mapa vacío.");
+
             int tamanioPrimeraFila = linea.split(",").length;
-            
-            while ((linea = br.readLine()) != null) { //Leemos el archivo por línea
-                
-                String[] celdas = linea.split(",");
-                Lista<TipoCelda> fila = new Lista<>();
-                
-                for (String celdaActual : celdas) {
-                    String celdaStr = celdaActual.trim().toUpperCase();
-                    TipoCelda celdaNueva;
-                    
-                    if (celdaStr.equals("C")) celdaNueva = TipoCelda.TRANSITABLE;
-                    else if(celdaStr.equals("E")) celdaNueva = TipoCelda.EDIFICIO;
-                    else{
-                        throw new ExcepcionMapa("Tipo de celda inválido: " + celdaStr);
-                    }
-                    
-                    fila.agregar(celdaNueva);
-                }
-                
-                if (fila.tamanio() != tamanioPrimeraFila) {
-                    throw new ExcepcionMapa("Inconsistencia en el tamaño de las filas del mapa.");
-                }
-                mapa.agregar(fila);
+            mapa.agregar( procesarLinea(linea, tamanioPrimeraFila) );
+
+            while ((linea = br.readLine()) != null) {
+                mapa.agregar( procesarLinea(linea, tamanioPrimeraFila) );
             }
+    
             return mapa;  
+    
         } catch (IOException e) {
             throw new ExcepcionMapa("Error al leer el archivo CSV del mapa: " + e.getMessage());
         }
-        
     }
+    
+    private Lista<TipoCelda> procesarLinea(String linea, int tamanio) {
+    
+        String[] celdas = linea.split(",");
+        if (celdas.length != tamanio)
+            throw new ExcepcionMapa("Inconsistencia en el tamaño de filas.");
+    
+        Lista<TipoCelda> fila = new Lista<>();
+    
+        for (String celdaActual : celdas) {
+            String celdaStr = celdaActual.trim().toUpperCase();
+            TipoCelda celdaNueva;
+
+            if (celdaStr.equals("C")) celdaNueva = TipoCelda.TRANSITABLE; 
+            else if(celdaStr.equals("E")) celdaNueva = TipoCelda.EDIFICIO; 
+            else{ throw new ExcepcionMapa("Tipo de celda inválido: " + celdaStr); }
+            fila.agregar(celdaNueva);
+        }
+    
+        return fila;
+    }
+    
 
 }
