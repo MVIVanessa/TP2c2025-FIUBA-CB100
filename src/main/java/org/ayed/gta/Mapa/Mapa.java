@@ -1,29 +1,27 @@
 package org.ayed.gta.Mapa;
+import java.io.BufferedReader;
+import java.io.FileReader;
 import java.io.IOException;
 import java.util.Random;
-import org.ayed.tda.lista.ExcepcionLista;
 import org.ayed.tda.lista.Lista;
 import org.ayed.tda.iterador.Iterador;
-import org.ayed.gta.Mapa.LectorMapa;
 
 public class Mapa {
     static final int CANTIDAD_COLUMNAS = 12;
     static final int CANTIDAD_FILAS = 12;
+    static final int PROBABILIDAD_CONGESTION = 15; // en porcentaje
+    static final int PROBABILIDAD_RECOMPENSA = 5; // en porcentaje
+    static final String rutaMapaBase = "src/main/resources/mapa.csv";
     private Lista<Lista<TipoCelda>> grillas;
     //TipoMision tipoMision;
 
     /**
      * Constructor de Mapa.
      */
-    public Mapa(String rutaArchivoCSV) {
-        LectorMapa lector = new LectorMapa();
-        try {
-            this.grillas = lector.leerMapaDesdeCSV(rutaArchivoCSV);
-        } catch (IOException e) {
-            throw new ExcepcionMapa("Error al cargar el mapa desde CSV: " + e.getMessage());
-        }
+    public Mapa() {
         //this.tipoMision = tipoMision;
-        // ESTABLECER CANT FILAS Y COLUMNAS A PARTIR DE GRILLAS ??
+        this.grillas = leerMapaDesdeCSV(rutaMapaBase);
+        
         inicializarGrilla();
     }
 
@@ -59,7 +57,7 @@ public class Mapa {
 
             while (!hayRecompensa && recorridoColumnas.haySiguiente()) {
                 int probabilidad = rand.nextInt(100); // Genera un número entre 0 y 99
-                if (probabilidad < 5 && recorridoColumnas.dato() == TipoCelda.TRANSITABLE) { // 5% de probabilidad
+                if (probabilidad < PROBABILIDAD_RECOMPENSA && recorridoColumnas.dato() == TipoCelda.TRANSITABLE) { // 5% de probabilidad
                     recorridoColumnas.modificarDato(TipoCelda.RECOMPENSA);
                     hayRecompensa = true;
                 }
@@ -82,7 +80,7 @@ public class Mapa {
 
             while (recorridoColumnas.haySiguiente()) {
                 int probabilidad = rand.nextInt(100); // Genera un número entre 0 y 99
-                if (probabilidad < 20 && recorridoColumnas.dato() == TipoCelda.TRANSITABLE) { // 20% de probabilidad
+                if (probabilidad < PROBABILIDAD_CONGESTION && recorridoColumnas.dato() == TipoCelda.TRANSITABLE) {
                     recorridoColumnas.modificarDato(TipoCelda.CONGESTIONADA);   
                 }
                 recorridoColumnas.siguiente();
@@ -117,10 +115,55 @@ public class Mapa {
     }
     
     /**
-     * @return la grilla del mapa
+     * @return la grilla del mapa como una matriz de listas doblemente enlazadas de TipoCelda.
      */
     public Lista<Lista<TipoCelda>> obtenerMapa() {
         return this.grillas;
+    }
+
+    //------------------------------ Archivos ------------------------------------
+
+    /**
+     * Lee un archivo CSV y construye la representación del mapa.
+     * @param rutaArchivo
+     * @return
+     */
+    private Lista<Lista<TipoCelda>> leerMapaDesdeCSV(String rutaArchivo){
+        
+        Lista<Lista<TipoCelda>> mapa = new Lista<>();
+        try (BufferedReader br = new BufferedReader(new FileReader(rutaArchivo))) {
+            String linea = br.readLine();
+            if (linea == null) throw new ExcepcionMapa("Archivo del mapa vacío.");
+            int tamanioPrimeraFila = linea.split(",").length;
+            
+            while ((linea = br.readLine()) != null) { //Leemos el archivo por línea
+                
+                String[] celdas = linea.split(",");
+                Lista<TipoCelda> fila = new Lista<>();
+                
+                for (String celdaActual : celdas) {
+                    String celdaStr = celdaActual.trim().toUpperCase();
+                    TipoCelda celdaNueva;
+                    
+                    if (celdaStr.equals("C")) celdaNueva = TipoCelda.TRANSITABLE;
+                    else if(celdaStr.equals("E")) celdaNueva = TipoCelda.EDIFICIO;
+                    else{
+                        throw new ExcepcionMapa("Tipo de celda inválido: " + celdaStr);
+                    }
+                    
+                    fila.agregar(celdaNueva);
+                }
+                
+                if (fila.tamanio() != tamanioPrimeraFila) {
+                    throw new ExcepcionMapa("Inconsistencia en el tamaño de las filas del mapa.");
+                }
+                mapa.agregar(fila);
+            }
+            return mapa;  
+        } catch (IOException e) {
+            throw new ExcepcionMapa("Error al leer el archivo CSV del mapa: " + e.getMessage());
+        }
+        
     }
 
 }
