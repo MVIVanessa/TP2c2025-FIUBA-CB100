@@ -100,8 +100,9 @@ public class Partida {
 		if (cantPerm==0)
 			System.err.println("No es posible jugar. No cuenta con vehiculos para la mision");
 		else{
+			mision.mostrarVehiculosPermitidos();
 			System.out.println("Ingrese numero de Vehiculo que quiere usar: ");
-			int elegido= sc.obtenerOpcion(cantPerm) ;
+			int elegido= sc.obtenerOpcion(cantPerm-1) ;
 			Vehiculo v= mision.seleccionarVehiculo(elegido);
 			System.out.println("Vehiculo seleccionado: "+ v.nombreVehiculo());
 

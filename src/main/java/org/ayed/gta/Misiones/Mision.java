@@ -4,7 +4,7 @@ import org.ayed.gta.Vehiculos.Vehiculo;
 import org.ayed.tda.vector.Vector;
 
 public abstract class Mision{
-	private Vector<Vehiculo> permitidos;
+	protected Vector<Vehiculo> permitidos;
 	private Vehiculo transporte;		//vehiculo que usara el jugador para la mision
 	private double tiempoJuego;			//en segundos
 	private double tiempoMision;
@@ -23,6 +23,7 @@ public abstract class Mision{
 		this.mapa = new Mapa();
 		jugador= mapa.posicionInicial();
 		gps= new Gps(jugador, mapa);
+		permitidos=null;
 	}
 
 	/**Muestra el mapa de la jugada con la respectiva posicion del jugador
@@ -95,7 +96,7 @@ public abstract class Mision{
 			transporte.subirKilometraje();
     	}
 	}
-
+	/*Muestra los comando del juego */
 	public void mostrarComandosJugador(){
 		System.out.println("Para Moverse alrededor del Mapa se usa las letras WASD ");
 		System.out.println("W= Arriba");
