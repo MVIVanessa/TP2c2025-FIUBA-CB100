@@ -25,10 +25,10 @@ public class Partida {
     public Partida() {
 		misiones = new Lista<>();
 		nombreJugador= null;
-		dinero=DINERO_INICIAL;
 		garaje = new Garaje();
 		//asignar vehiculo inicial()
 		garaje.agregarVehiculo(VEHICULO_BASICO);
+		dinero= garaje.obtenerCostoMantenimiento();
 		noFallo=true;
     }
 
@@ -47,14 +47,16 @@ public class Partida {
 	 */
 	public void jugarPartida(ControladorEntradas sc){
 		boolean salir=false;
-		do{
+		while(!salir && noFallo && dinero-garaje.obtenerCostoMantenimiento()>=0){
 			noFallo=jugarMision(sc, garaje);
 			salir = continuarJugando(sc,garaje);
+		}
 			// verifica que complua las condiciones para seguir jugando misiones
-		}while(!salir && noFallo && dinero-garaje.obtenerCostoMantenimiento()>=0);
-
-		if(!noFallo || dinero-garaje.obtenerCostoMantenimiento()>=0){
-			System.out.println("No fue posible seguir la partida");
+    	if(noFallo){
+			if(dinero < garaje.obtenerCostoMantenimiento())
+        		System.out.println("No tienes dinero suficiente para iniciar otra misión.");
+			if(salir)
+				System.out.println("Finalizaste la partida.");
 		}
 
 	}
@@ -91,21 +93,21 @@ public class Partida {
 		boolean bien= true;
 		System.out.println("Eliga el modo de la Mision (1.Dificil, 2.Moderada, 3.Facil): ");
 		int eleccion = sc.obtenerOpcion(3);
-		misiones.agregar(elegirModo(eleccion));
-		Mision mision=misiones.dato(misiones.tamanio()-1);	
-		//muestra comandos de la mision
-		mision.mostrarComandosJugador();
+		Mision mision=elegirModo(eleccion);
 		//selecciona vehiculos del listado permitido segun el modo de mision
 		int cantPerm = mision.vehiculosPermitidos(garaje);
-		if (cantPerm==0)
+		if (cantPerm==0){
 			System.err.println("No es posible jugar. No cuenta con vehiculos para la mision");
-		else{
+		}else{
 			mision.mostrarVehiculosPermitidos();
 			System.out.println("Ingrese numero de Vehiculo que quiere usar: ");
 			int elegido= sc.obtenerOpcion(cantPerm-1) ;
 			Vehiculo v= mision.seleccionarVehiculo(elegido);
 			System.out.println("Vehiculo seleccionado: "+ v.nombreVehiculo());
 
+			System.out.println("Empezando Mision");
+			//muestra comandos de la mision
+			mision.mostrarComandosJugador();
 			dinero-=garaje.obtenerCostoMantenimiento();
 			// Jugador se desplaza en el mapa hasta terminar tiempo o llegar al destino
 			while(!mision.misionCompletada() &&!mision.fracaso()){
@@ -133,6 +135,7 @@ public class Partida {
 				System.out.println("Fracaso de misión...");
 				bien=false;
 			}
+			misiones.agregar(mision);
 		}
 		return bien;
 	}
@@ -145,11 +148,10 @@ public class Partida {
 	 * @return true si se desea contunuar, false sino, o si no puede seguir aunque quiera al no tener suficiente dinero
 	 */
 	private boolean continuarJugando(ControladorEntradas sc,Garaje g){
-		boolean salir= false;
 		System.out.println("Desea seguir jugando?( 1.si 2.no): ");
 		//comparo con el numero para seguir
-		salir= NO_SEGUIR == sc.obtenerOpcion(2);
-		return salir;
+		int op= sc.obtenerOpcion(2);
+		return op== 2;
 	}
 	/**
 	 * Guarda la partida en un archivo con el nombre del juador
@@ -161,9 +163,9 @@ public class Partida {
 	* @param sc controlador de entradas
 	*/ 
 	public boolean partidaNueva(ControladorEntradas sc){
-		System.out.println("Nueva partida?( 1.si 2.no):");
+		System.out.println("Desea abrir una nueva partida?( 1.si 2.no):");
 		boolean salir= NO_SEGUIR == sc.obtenerOpcion(2);
-		return (!noFallo || dinero-garaje.obtenerCostoMantenimiento()<0) && salir;
+		return (!noFallo || dinero-garaje.obtenerCostoMantenimiento()<0) && !salir;
 	}
 	/**devuelde el nombre del jugador de la partida */
 	public String nombre(){

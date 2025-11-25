@@ -6,8 +6,6 @@ public class MenuPartida {
 	public MenuPartida(){
 		partida= new Partida();
 	}
-
-
 	public void empezarPartida(){
 		ControladorEntradas entrada=new ControladorEntradas();
 		//ingreso de nombre de usuario y creacion de archivo
