@@ -1,5 +1,6 @@
 package org.ayed.gta;
 import org.ayed.gta.Vehiculos.Vehiculo;
+import org.ayed.tda.lista.Cola;
 import org.ayed.tda.vector.Vector;
 
 public class Garaje {
@@ -10,14 +11,16 @@ public class Garaje {
     private int capacidad;      // difiere de la capacidad max de clase vector
     private Vector<Vehiculo> vehiculos;
     private int creditos;
+    private Cola<Vehiculo> zonaEspera;  // Cola FIFO para zona de espera
 
 
     // Constructor de Garaje
     public Garaje(){
         // espacioOcupado=0;       // cuando creo un vector desde ya lo dejare vacio
-        vehiculos = new Vector();
+        vehiculos = new Vector<>();
         capacidad = CAPACIDAD_INICIAL;
-        creditos=0;
+        creditos = 0;
+        zonaEspera = new Cola<>();
     }
 
     // este es un ampliaje de Garaje que no es lo mismo que para el vector.
@@ -35,23 +38,42 @@ public class Garaje {
      * Agrega un Vehiculo al Garaje.
      *
      * @param vehiculo Vehiculo a agregar.
-     //  * @throws ExcepcionGaraje si no excede la capacidad .
+     * @throws ExcepcionGaraje si Vehiculo es null .
      */
     public String agregarVehiculo(Vehiculo vehiculo) {
         // Implementar.
-        if(vehiculos.tamanio() >= capacidad)
-            throw new ExcepcionGaraje("No hay mas espacio para agregar");      
+        if (vehiculo == null)
+            throw new ExcepcionGaraje("Vehiculo nulo no se puede agregar");
 
-        vehiculos.agregar(vehiculo);
-        return ("Agregado: "+ vehiculo.informacionVehiculo()); 
-    
+        String mensaje;
+        if (vehiculos.tamanio() < capacidad) {
+            vehiculos.agregar(vehiculo);
+            mensaje= ("Agregado: " + vehiculo.informacionVehiculo());
+
+        } else {
+            zonaEspera.agregar(vehiculo);
+            mensaje=("Garaje lleno -> enviado a zona de espera: " + vehiculo.nombreVehiculo());
+        }
+        return mensaje;
     }
 
-        /**
+     /**
+     * Intenta mover vehículos de la zona de espera al garaje,
+     * mientras haya espacio disponible.
+     */
+    private void transferirDesdeEspera() {
+        while (!zonaEspera.vacio() && vehiculos.tamanio() < capacidad) {
+            Vehiculo vehiculo = zonaEspera.eliminar();
+            vehiculos.agregar(vehiculo);
+            System.out.println("Movido desde espera -> " + vehiculo.nombreVehiculo());
+        }
+    }
+
+    /**
      * Elimina un Vehiculo del Garaje.
      *
      * @param nombre Nombre de Vehiculo a eliminar.
-     //  * @throws ExcepcionGaraje si el Garje esta vacio o  No se encuentra el vehiculo.
+     * @throws ExcepcionGaraje si el Garje esta vacio o  No se encuentra el vehiculo.
      */
     public void eliminarVehiculo(String nombre) {
         // Implementar.
@@ -72,10 +94,13 @@ public class Garaje {
             }
             i++;
         }
+
         if(!eliminado)
             throw new ExcepcionGaraje("Nombre de Vehiculo inexistente");
 
-    }
+        transferirDesdeEspera();
+}
+
     /** Acredita creditos incresado
     *   @param creditos Creditos a ingresar  
     ** throw ExcepcionGaraje si el credito 
@@ -84,7 +109,7 @@ public class Garaje {
         // Implementar.
         if (creditos <= 0)
             throw new ExcepcionGaraje("Monto de credito invalido");
-        this.creditos = creditos;
+        this.creditos += creditos;
     }
 
     /** Mejora la capacidad de almacenamiento del Garaje  
@@ -97,7 +122,10 @@ public class Garaje {
             throw new ExcepcionGaraje("Credito insuficiente");
         // mejorar el vector de Vehiculos al duplicarla al doble
         ampliarGaraje();
-        this.creditos -= COSTO_MEJORA;
+        creditos -= COSTO_MEJORA;
+        
+        // Intentar mover vehículos en espera
+        transferirDesdeEspera();
     }
 
     /** Calcular el Valor total de la suma de todos los precios en Garaje de los vehiculos
