@@ -37,13 +37,13 @@ public class Garaje {
      * @param vehiculo Vehiculo a agregar.
      //  * @throws ExcepcionGaraje si no excede la capacidad .
      */
-    public void agregarVehiculo(Vehiculo vehiculo) {
+    public String agregarVehiculo(Vehiculo vehiculo) {
         // Implementar.
         if(vehiculos.tamanio() >= capacidad)
             throw new ExcepcionGaraje("No hay mas espacio para agregar");      
 
         vehiculos.agregar(vehiculo);
-        System.out.println("Agregado: "+ vehiculo.informacionVehiculo()); 
+        return ("Agregado: "+ vehiculo.informacionVehiculo()); 
     
     }
 
@@ -93,11 +93,11 @@ public class Garaje {
     */
     public void mejorarGaraje() {
         // Implementar.
-        if( creditos-COSTO_MEJORA < 0)
+        if( this.creditos-COSTO_MEJORA < 0)
             throw new ExcepcionGaraje("Credito insuficiente");
         // mejorar el vector de Vehiculos al duplicarla al doble
         ampliarGaraje();
-        creditos-=COSTO_MEJORA;
+        this.creditos -= COSTO_MEJORA;
     }
 
     /** Calcular el Valor total de la suma de todos los precios en Garaje de los vehiculos
@@ -141,16 +141,28 @@ public class Garaje {
         String info; 
         for(int i=0; i< vehiculos.tamanio() ; i++){
             info= vehiculos.dato(i).informacionVehiculo();
-            System.out.println(info);
+            System.out.println( i + " _" +info);
         }
 
     }
-
+    /**
+     * Carga gasolina de un Vehiculo 
+     * @param litros cantidad de litros a llenar
+     * @param indice indice del Vehiculo en el garaje
+     */
     public void cargarGasolinaVehiculo(int litros, int indice){
         if(litros*PRECIO_G > creditos)
             throw new ExcepcionGaraje("Credito insuficiente para la operacion");
         vehiculos.dato(indice).llenarGasolina(litros);
         creditos-=litros*PRECIO_G;
+    }
+
+    public void cargarTodosVehiculos(){
+        int litro;
+        for( int i=0; i<vehiculos.tamanio(); i++){
+            litro= vehiculos.dato(i).capacidadGasolina() -vehiculos.dato(i).tanque();
+            cargarGasolinaVehiculo(litro, i);
+        }
     }
 
     //Para uso de archivo

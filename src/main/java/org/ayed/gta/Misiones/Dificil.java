@@ -16,5 +16,10 @@ public class Dificil extends Mision{
 		// IMPLEMENTAR
 		return 1;
 	}
+	@Override
+	public int recompensaCredito() {
+		//implementar
+		return 1;
+	}
 	
 }

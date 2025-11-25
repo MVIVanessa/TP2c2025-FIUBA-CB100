@@ -81,6 +81,9 @@ public abstract class Mision{
 				jugador.modificarX(jugador.obtenerX() - 1);
             	movio = true;
 				break;
+			case "C":
+				int l = transporte.capacidadGasolina() - transporte.tanque();
+				transporte.llenarGasolina(l);
 			default:
 				System.out.println("Comando invalido");
 			
@@ -91,6 +94,15 @@ public abstract class Mision{
 			transporte.rebajarCantidadTanque();
 			transporte.subirKilometraje();
     	}
+	}
+
+	public void mostrarComandosJugador(){
+		System.out.println("Para Moverse alrededor del Mapa se usa las letras WASD ");
+		System.out.println("W= Arriba");
+		System.out.println("S= Abajo");
+		System.out.println("D= Derecha");
+		System.out.println("A= Izquierda");
+		System.out.println("Para llenar tanque del Vehiculo,ingresar 'C'");
 	}
 
 	/**
@@ -137,6 +149,8 @@ public abstract class Mision{
 	 * @return cantidad e vehiculos permitidos dentro del garaje
 	 */
 	public abstract int vehiculosPermitidos(Garaje g);
+
+
 	
 	/** Eleccion de vehiculo a usar para la Mision
 	 * @param i indice del Vehiculo
@@ -148,7 +162,8 @@ public abstract class Mision{
 		return transporte= permitidos.dato(i);
 	}
 
-
+	/** Muestra el listado de Vehculos permitidos por el Modo de mision
+	 */
 	public void mostrarVehiculosPermitidos() {
     	System.out.println("Vehículos disponibles para esta misión:");
     	Vehiculo v;
@@ -180,7 +195,15 @@ public abstract class Mision{
 	public Vehiculo transporte(){
 		return transporte;
 	}
-
+	/**
+	 * Devuelve el valor de el dinero de recompensa
+	 * @return
+	 */
 	public abstract int recompensaDinero();
+	
+	/**recoge la recompensa de credito
+	* @return la recompensa de credito por completar mision 
+	*/
+	public abstract int recompensaCredito();
 	
 }

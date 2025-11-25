@@ -18,4 +18,9 @@ public class Facil extends Mision {
 		// IMPLEMENTAR
 		return 1;
 	}
+	@Override
+	public int recompensaCredito() {
+		//implementar
+		return 1;
+	}
 }

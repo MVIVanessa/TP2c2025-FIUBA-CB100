@@ -1,11 +1,12 @@
 package org.ayed;
 
-// import org.ayed.programaPrincipal.Menu;
+import org.ayed.programaPrincipal.MenuPartida;
+
 
 public class Main {
     public static void main(String[] args) {
-        // Menu menu= new Menu();
-        // menu.mostrarMenu();
+        MenuPartida menu = new MenuPartida();
+        menu.empezarPartida();
     
     }
 }

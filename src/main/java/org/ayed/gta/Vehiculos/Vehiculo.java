@@ -48,13 +48,6 @@ public abstract class Vehiculo {
      * @return costo de MAntenimiento del Vehiculo
      */
     abstract public int costoMantenimientoVehiculo();
-    
-    /**
-     * Llenar en tanque de gasolina al maximo
-     */
-    public void llenarGasolinaMax(){
-        tanqueGasolina=capacidadGas;
-    }
 
     /**
      * Cargar en tanque una cantidad especifica de gasolina
