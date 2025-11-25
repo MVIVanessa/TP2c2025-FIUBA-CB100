@@ -12,13 +12,12 @@ import org.ayed.tda.lista.Lista;
 
 public class Partida {
 	private final int NO_SEGUIR =2;
-	private final int DINERO_INICIAL=200;
 	private final Vehiculo VEHICULO_BASICO= new Auto("Auto", "clasico", 0, 100, 10);
-	Lista<Mision> misiones;	
-	String nombreJugador;
-	int dinero;
-	Garaje garaje;
-	boolean noFallo;
+	private Lista<Mision> misiones;	
+	private String nombreJugador;
+	private int dinero;
+	private Garaje garaje;
+	private boolean noFallo;
 
 	/**constructor de Partida
 	 */
@@ -108,7 +107,7 @@ public class Partida {
 			System.out.println("Empezando Mision");
 			//muestra comandos de la mision
 			mision.mostrarComandosJugador();
-			dinero-=garaje.obtenerCostoMantenimiento();
+			restarDinero(garaje.obtenerCostoMantenimiento());
 			// Jugador se desplaza en el mapa hasta terminar tiempo o llegar al destino
 			while(!mision.misionCompletada() &&!mision.fracaso()){
 				System.out.println("Tiempo: " + mision.devolverTiempo() +"segundos" );
@@ -159,6 +158,14 @@ public class Partida {
 	public void guardarPartida(){
 
 	}
+
+	/**devuelde el nombre del jugador de la partida */
+	public void restarDinero(int monto){
+		if(monto>dinero)
+			System.err.println("No hay suficiente dinero");
+		dinero-=monto;
+	}
+
 	/** si quiso jugar pero no podia, empezar nueva partida
 	* @param sc controlador de entradas
 	*/ 
@@ -170,6 +177,11 @@ public class Partida {
 	/**devuelde el nombre del jugador de la partida */
 	public String nombre(){
 		return nombreJugador;
+	}
+
+	/**devuelde el nombre del jugador de la partida */
+	public int dinero(){
+		return dinero;
 	}
 	/**
 	 * Devuelve el garaje de la partida

@@ -107,5 +107,10 @@ public abstract class Vehiculo {
     public int velocidadMaxima(){
         return velocidadMax;
     }
+    /**
+     * @return tipo de Vehiculo */
+    public String tipoVehiculo() {
+        return tipo;
+    }
 
 }

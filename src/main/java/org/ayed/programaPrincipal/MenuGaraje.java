@@ -13,7 +13,7 @@ public class MenuGaraje{
 	 * Cosntructor
 	 * @param ruta ruta del archivo a guardar el garaje+
 	 */
-    MenuGaraje(String ruta, Garaje garaje ){
+    MenuGaraje(String ruta, Garaje garaje){
         this.RUTA = ruta;
 		this.garaje= garaje;
     }
@@ -167,7 +167,7 @@ public class MenuGaraje{
 	private void mejorar(Garaje garaje){
 		try{
 			garaje.mejorarGaraje();
-			System.out.println("Capacidad de almcen de Vehiculos en Garaje despues de mejora: "+ garaje.capacidadMaxima());
+			System.out.println("Capacidad de almacen de Vehiculos en Garaje despues de mejora: "+ garaje.capacidadMaxima());
 		}catch(Exception e){
 			System.err.println(e.getMessage());
 		}

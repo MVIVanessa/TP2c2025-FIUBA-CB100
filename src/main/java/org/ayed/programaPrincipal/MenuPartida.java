@@ -1,7 +1,7 @@
 package org.ayed.programaPrincipal;
 
 public class MenuPartida {
-	Partida partida;
+	private Partida partida;
 	/**Comienza una Partida */
 	public MenuPartida(){
 		partida= new Partida();

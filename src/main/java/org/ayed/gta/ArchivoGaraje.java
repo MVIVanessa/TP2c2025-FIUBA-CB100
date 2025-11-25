@@ -87,7 +87,7 @@ public class ArchivoGaraje{
 			int capacidad= Integer.parseInt(partes[0].trim());
 			int credito= Integer.parseInt(partes[1].trim());
 		
-			Vector vec = new Vector();
+			Vector<Vehiculo> vec = new Vector<>();
 			// mientras pueda seguir leyendose el archivo
 			while (entrada.hasNextLine()) {
 				linea = entrada.nextLine().trim();
