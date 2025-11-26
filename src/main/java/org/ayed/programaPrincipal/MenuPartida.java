@@ -13,6 +13,8 @@ public class MenuPartida {
 
 		int opcion = menuJuego(entrada);
 		procesarOpcion(opcion,entrada);
+		
+		entrada.cerrar();
 	}
 	/**
 	 * Muestra el menu al juagador
@@ -20,7 +22,10 @@ public class MenuPartida {
 	 * @return opcion ingresada por el usuario
 	 */
 	private int menuJuego(ControladorEntradas sc){
-		System.err.println("1. Jugar una Mision\n2. Ir al Garaje\n3. Guardar partida en un archivo\n4. Salir (No guarda cambios)");
+		System.err.println( "1. Jugar una Mision\n"+
+							"2. Ir al Garaje\n"+
+							"3. Guardar partida en un archivo\n"+
+							"4. Salir (No guarda cambios)");
 		return sc.obtenerOpcion(4);
 	}
 

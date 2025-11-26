@@ -51,4 +51,8 @@ public class ControladorEntradas {
         return opcion;
     }
 
+    public void cerrar(){
+        scanner.close();
+    }
+
 }
