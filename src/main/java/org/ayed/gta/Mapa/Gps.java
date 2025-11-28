@@ -17,7 +17,7 @@ public class Gps {
      * @param partida coordenadas donde se encuentra el jugador
      * @param mapa mapa del juego como una grilla (lista de listas de TipoCelda)
 	 */
-    Gps(Coordenadas partida, Mapa mapa) {
+    public Gps(Coordenadas partida, Mapa mapa) {
         this.mapa = mapa;
         this.inicio = partida;
         this.fin = mapa.destino(); // Creamos el destino desde el mapa
@@ -67,7 +67,7 @@ public class Gps {
      * 
      * @param c coordenadas que se van a buscar dentro del recorrido Gps
      */
-    public boolean buscarcoordenadas(Coordenadas c) {
+    public boolean buscarCoordenadas(Coordenadas c) {
         for (int i = 0; i < camino.tamanio(); i++) {
             Coordenadas actual = camino.dato(i);
             if (actual.obtenerX() == c.obtenerX() && actual.obtenerY() == c.obtenerY()) {

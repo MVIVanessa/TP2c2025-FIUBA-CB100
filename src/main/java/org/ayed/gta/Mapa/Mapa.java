@@ -137,7 +137,7 @@ public class Mapa {
     }
 
     // getter de entrada
-    public Coordenadas entrada() {
+    public Coordenadas posicionInicial() {
         return this.entrada;
     }
 
@@ -151,6 +151,50 @@ public class Mapa {
      */
     public Lista<Lista<TipoCelda>> obtenerMapa() {
         return this.grillas;
+    }
+
+    /**
+     * @return altura del mapa
+     */
+    public int alto() {
+        return this.CANTIDAD_FILAS;
+    }
+
+    /**
+     * @return el ancho del mapa
+     */
+    public int ancho() {
+        return this.CANTIDAD_COLUMNAS;
+    }
+
+    /**
+     * @return tipo de celda de posicion pedida
+     */
+    public TipoCelda datoDeCelda(int fila, int columna) {
+        if (fila < 0 || fila >= CANTIDAD_FILAS) return null;
+        if (columna < 0 || columna >= CANTIDAD_COLUMNAS) return null;
+        return this.grillas.dato(fila).dato(columna);
+    }
+
+    /**
+     * Recoge la recompensa y modifica el tipo de la celda a TRANSITABLE
+     * 
+     * @param celda de tipo recompensa que recorre el jugador
+     * 
+     * @return true si pasa por una celda de tipo recompensa
+     * @return false si la celda por la que pasa no es de tipo recompensa
+     */
+    public boolean recogerRecompensa(Coordenadas celda) {
+        if (celda == null) return false;
+        int coordX = celda.obtenerX();
+        int coordY = celda.obtenerY();
+        TipoCelda tipo = datoDeCelda(coordX, coordY);
+
+        if (tipo == TipoCelda.RECOMPENSA) {
+            this.grillas.dato(coordX).modificarDato(TipoCelda.TRANSITABLE, coordY); // Al recoger recompensa, la celda vuelve a ser RANSITABLE
+            return true;
+        }
+        return false;
     }
 
     //------------------------------ Archivos ------------------------------------
