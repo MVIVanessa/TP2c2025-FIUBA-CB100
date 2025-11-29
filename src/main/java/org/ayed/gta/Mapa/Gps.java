@@ -29,7 +29,7 @@ public class Gps {
     }
 	
 	/**
-     * Modifica la cordenada de partida del Gps y recalcula el camino
+     * Modifica la cordenada de partida del Gps y recalcula el camino si es necesario
      * 
 	* @param c coordenadas nuevas para punto de partida
 	*/
@@ -50,10 +50,11 @@ public class Gps {
             camino = aEstrella.buscarCamino(nuevaPosicion, fin); // Si no hay camino, recalculo uno
             return;
         }
-        Coordenadas siguientePosicion = camino.dato(0);
+        Coordenadas sigPosicion = camino.dato(0);
         
         // Si el jugador avanzo correctamente por el camino sugerido por el Gps, elimino la grilla que ya avanzo
-        if (siguientePosicion.obtenerX() == nuevaPosicion.obtenerX() && siguientePosicion.obtenerY() == nuevaPosicion.obtenerY()){
+        if (sigPosicion.obtenerX() == nuevaPosicion.obtenerX()
+            && sigPosicion.obtenerY() == nuevaPosicion.obtenerY()){
             camino.eliminar(0);
             return;
         }
@@ -61,6 +62,17 @@ public class Gps {
         // Si el jugador no siguio el camino sugerido por el Gps, recalculamos el camino completo
         camino = aEstrella.buscarCamino(nuevaPosicion, fin);
     }
+
+    /**
+     * @return null sin posicion
+     * @return las coordenadas del camino
+     */
+    public Lista<Coordenadas> obtenerCamino(Coordenadas desde) {
+        if (desde == null) return null;
+        return camino;
+        //return aEstrella.buscarCamino(desde, fin);
+    }
+
 
     /**
      * Busca una coordenada dentro del camino actual
@@ -87,14 +99,18 @@ public class Gps {
         int filas = matriz.tamanio();
         int columnas = matriz.dato(0).tamanio();
 
-        for (int f = 0; f < filas; f++) { // Creamos nodos y adyacencias
+        for (int f = 0; f < filas; f++) {  // Primero agregamos todos los vértices
             for (int c = 0; c < columnas; c++) {
-                TipoCelda tipo = matriz.dato(f).dato(c);
-                if (tipo != TipoCelda.EDIFICIO) { // Si es transitable
-                    Coordenadas actual = new Coordenadas(f, c);
-                    grafo.agregarVertice(actual); // Creamos nodo
+                if (matriz.dato(f).dato(c) != TipoCelda.EDIFICIO) {
+                    grafo.agregarVertice(new Coordenadas(f, c));
+                }
+            }
+        }
 
-                    // Intentamos conectar con nodos vecinos (arriba, abajo, izquierda, derecha)
+        for (int f = 0; f < filas; f++) { // Agregamos las aristas entre vecinos transitables
+            for (int c = 0; c < columnas; c++) {
+                if (matriz.dato(f).dato(c) != TipoCelda.EDIFICIO) {
+                    Coordenadas actual = new Coordenadas(f, c);
                     conectarSiTransitable(actual, f-1, c);
                     conectarSiTransitable(actual, f+1, c);
                     conectarSiTransitable(actual, f, c-1);
@@ -102,7 +118,8 @@ public class Gps {
                 }
             }
         }
-    }
+}
+
 
     /**
      * Conecta el nodo origen con otro adyacente si este es transitable

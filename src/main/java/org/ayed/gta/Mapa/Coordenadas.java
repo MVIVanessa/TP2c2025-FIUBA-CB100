@@ -47,4 +47,29 @@ public class Coordenadas {
 		return this.x==x && this.y==y;
 	}
 	
+	/**
+	 * Compara dos objetos
+	 * 
+	 * @return true si son iguales
+	 * @return true si son distintos o si uno no es Coordenadas
+	 */
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+
+		if (!(o instanceof Coordenadas)) return false;
+		Coordenadas otro = (Coordenadas) o;
+		return (this.x == otro.x && this.y == otro.y);
+	}
+
+	@Override
+	public int hashCode() {
+		return 31 * x + y;
+	}
+
+	@Override
+	public String toString() {
+		return "(" + x + ", " + y + ")";
+	}
+
 }
