@@ -1,4 +1,4 @@
-package org.ayed.gta;
+package org.ayed.gta.Garaje;
 import org.ayed.gta.Vehiculos.Vehiculo;
 import org.ayed.tda.lista.Cola;
 import org.ayed.tda.vector.Vector;

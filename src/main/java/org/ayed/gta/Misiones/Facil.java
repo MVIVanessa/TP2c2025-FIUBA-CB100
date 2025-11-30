@@ -1,6 +1,6 @@
 package org.ayed.gta.Misiones;
 
-import org.ayed.gta.Garaje;
+import org.ayed.gta.Garaje.Garaje;
 
 public class Facil extends Mision {
 	// private int recompensaDinero;

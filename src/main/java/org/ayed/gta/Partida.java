@@ -1,8 +1,12 @@
-package org.ayed.programaPrincipal;
+package org.ayed.gta;
 
+<<<<<<< HEAD:src/main/java/org/ayed/programaPrincipal/Partida.java
 import java.io.FileWriter;
 
 import org.ayed.gta.Garaje;
+=======
+import org.ayed.gta.Garaje.Garaje;
+>>>>>>> 3d34d1216f2abf8d99510b3708a7844fede2e467:src/main/java/org/ayed/gta/Partida.java
 import org.ayed.gta.Misiones.Dificil;
 import org.ayed.gta.Misiones.ExcepcionMision;
 import org.ayed.gta.Misiones.Facil;
@@ -10,6 +14,7 @@ import org.ayed.gta.Misiones.Mision;
 import org.ayed.gta.Misiones.Moderada;
 import org.ayed.gta.Vehiculos.Auto;
 import org.ayed.gta.Vehiculos.Vehiculo;
+import org.ayed.programaPrincipal.ControladorEntradas;
 import org.ayed.tda.lista.Lista;
 
 public class Partida {
@@ -114,12 +119,12 @@ public class Partida {
 			while(!mision.misionCompletada() &&!mision.fracaso()){
 				System.out.println("Tiempo: " + mision.devolverTiempo() +"segundos" );
 				System.out.println("Tiempo Limite: " + mision.devolverTiempoLim() +"segundos" );
-				
+				mision.glosario();
 				mision.despliegueDeMapa();
 				
 				String movimiento= sc.leerEntrada(false);
 				try {
-					mision.moverJugador(movimiento);
+					mision.moverJugador(movimiento, sc);
 
 				} catch (ExcepcionMision e) {
 					System.out.println(e.getMessage());
@@ -160,7 +165,7 @@ public class Partida {
 		System.out.println("Desea seguir jugando?( 1.si 2.no): ");
 		//comparo con el numero para seguir
 		int op= sc.obtenerOpcion(2);
-		return op== 2;
+		return op==NO_SEGUIR;
 	}
 	/**
 	 * Guarda la partida en un archivo con el nombre del jugador.

@@ -1,7 +1,7 @@
 package org.ayed.programaPrincipal;
 
-import org.ayed.gta.ArchivoGaraje;
-import org.ayed.gta.Garaje;
+import org.ayed.gta.Garaje.ArchivoGaraje;
+import org.ayed.gta.Garaje.Garaje;
 import org.ayed.gta.Vehiculos.Auto;
 import org.ayed.gta.Vehiculos.Vehiculo;
 

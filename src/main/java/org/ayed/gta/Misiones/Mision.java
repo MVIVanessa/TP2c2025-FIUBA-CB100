@@ -1,7 +1,17 @@
 package org.ayed.gta.Misiones;
+<<<<<<< HEAD
 import org.ayed.gta.Garaje;
 import org.ayed.gta.Vehiculos.Exotico;
+=======
+import org.ayed.gta.Concesionario.MenuConcesionario;
+import org.ayed.gta.Garaje.Garaje;
+import org.ayed.gta.Mapa.Coordenadas;
+import org.ayed.gta.Mapa.Gps;
+import org.ayed.gta.Mapa.Mapa;
+import org.ayed.gta.Mapa.TipoCelda;
+>>>>>>> 3d34d1216f2abf8d99510b3708a7844fede2e467
 import org.ayed.gta.Vehiculos.Vehiculo;
+import org.ayed.programaPrincipal.ControladorEntradas;
 import org.ayed.tda.vector.Vector;
 
 public abstract class Mision{
@@ -26,7 +36,7 @@ public abstract class Mision{
 		this.tiempoMision= tiempo;
 		this.mapa = new Mapa();
 		jugador= mapa.posicionInicial();
-		gps= new Gps(jugador, mapa);
+		gps= new Gps(mapa);
 		permitidos=null;
 		recompensaCreditos=0;
 		recompensaExotico=null;
@@ -36,22 +46,36 @@ public abstract class Mision{
 	 *@throws ExcepcionMision si el mapa es nulo
 	*/
 	public void despliegueDeMapa(){
-		if(mapa==null)
-			throw new ExcepcionMision("Juego No puede continuar, no hay mapa");
-		for (int x = 0; x < mapa.ancho(); x++) {
-			for (int y = 0; y < mapa.alto(); y++) {
-				if (x == jugador.obtenerX() && y == jugador.obtenerY()) {
-					System.out.print('J');
-				}else if(gps.buscandocordenadas(new Coordenadas(x, y)))
-					System.out.print('*');
-				else {
-					tomarRecompensaAdicional(jugador);
-					System.out.print(mapa.datoCelda(x,y));
+		try {
+			if(mapa==null)
+				throw new ExcepcionMision("Juego No puede continuar, no hay mapa");
+			System.out.println("############# Mapa #############");
+			for (int x = 0; x < mapa.alto(); x++) {
+				System.out.print("#");
+				for (int y = 0; y < mapa.ancho(); y++) {
+					if (x == jugador.obtenerX() && y == jugador.obtenerY()) {
+						System.out.print('J');
+					}else if(mapa.datoDeCelda(x,y) == TipoCelda.RECOMPENSA)
+						System.out.print("R");
+					else if(mapa.destino().compararCoordenadas(new Coordenadas(x, y))) // si es true son iguales y es celda salida
+						System.out.print("D"); 
+					else if ( mapa.datoDeCelda(x, y) == TipoCelda.CONGESTIONADA)
+						System.out.print("^");
+					else if(gps.buscarCoordenadas(new Coordenadas(x, y)))	// si es true significa que estamos en el camino de gps
+						System.out.print('*');
+					else if (mapa.datoDeCelda(x,y) == TipoCelda.EDIFICIO){
+						System.out.print("E"); 
+					}else {
+						System.out.print(" "); 
+					}
+					System.out.print(" "); 
 				}
-				System.out.print(" "); 
-			}
-			System.out.println();
+				System.out.println("#");
 
+			}	
+			System.out.println("################################");
+		} catch (ExcepcionMision e) {
+			System.err.println("Error al desplegar Mapa");
 		}
 
 	}
@@ -60,30 +84,30 @@ public abstract class Mision{
 	* @param comando comando ingresado por el usuario para moverse en el mapa
 	* @throws ExceptionMision cuando se elige un comando no posible por limitaciones del mapa 
 	*/
-	public void moverJugador(String comando){
+	public void moverJugador(String comando, ControladorEntradas sc){
 		boolean movio = false;
 		switch (comando) {
 			case "W":	//mover Arriba
-				if(jugador.obtenerY()-1 <0 || mapa.datoCelda(jugador.obtenerX(), jugador.obtenerY()-1).equals("E"))
+				if(jugador.obtenerY()-1 <0 || mapa.datoDeCelda(jugador.obtenerX(), jugador.obtenerY()-1).equals("E"))
 					throw new ExcepcionMision("No es posible subir");
 				jugador.modificarY(jugador.obtenerY() - 1);
 				movio = true;
 				break;
 			case "S":	//mover Abajo
-				if(jugador.obtenerY()+1 <mapa.alto()-1 || mapa.datoCelda(jugador.obtenerX(), jugador.obtenerY()+1).equals("E"))
+				if(jugador.obtenerY()+1 <mapa.alto()-1 || mapa.datoDeCelda(jugador.obtenerX(), jugador.obtenerY()+1).equals("E"))
 					throw new ExcepcionMision("No es posible bajar");
 				jugador.modificarY(jugador.obtenerY() + 1);
             	movio = true;
 				break;
 			case "D":	// mover Derecha
-				if(jugador.obtenerX()+1 <mapa.ancho()-1 || mapa.datoCelda(jugador.obtenerX()+1, jugador.obtenerY()).equals("E"))
+				if(jugador.obtenerX()+1 <mapa.ancho()-1 || mapa.datoDeCelda(jugador.obtenerX()+1, jugador.obtenerY()).equals("E"))
 					throw new ExcepcionMision("No es posible ir a la derecha");
 				jugador.modificarX(jugador.obtenerX() + 1);
             	movio = true;
 				break;
 			
 			case "A":	// move Izquierda
-				if(jugador.obtenerX()-1 <0 || mapa.datoCelda(jugador.obtenerX()-1, jugador.obtenerY()).equals("E"))
+				if(jugador.obtenerX()-1 <0 || mapa.datoDeCelda(jugador.obtenerX()-1, jugador.obtenerY()).equals("E"))
 					throw new ExcepcionMision("No es posible ir a la izquierda");
 				jugador.modificarX(jugador.obtenerX() - 1);
             	movio = true;
@@ -100,6 +124,8 @@ public abstract class Mision{
 			incrementoTiempo();
 			transporte.rebajarCantidadTanque();
 			transporte.subirKilometraje();
+			tomarRecompensaAdicional(jugador);
+			desplegarConcesionario(jugador, sc);
     	}
 	}
 	/*Muestra los comando del juego */
@@ -112,6 +138,14 @@ public abstract class Mision{
 		System.out.println("Para llenar tanque del Vehiculo,ingresar 'C'");
 	}
 
+	public void glosario(){
+		System.out.println("E= Edificio");
+		System.out.println("^= Calle congestionada");
+		System.out.println("*= GPS hacia la salida");
+		System.out.println("ESPACIO= Calle transitable");
+		System.out.println("J= Ubicacion de Juagdor");
+	}
+
 	/**
 	 * Retorna true o false si la mision esta complatada
 	 * Se fracasa si:
@@ -122,7 +156,7 @@ public abstract class Mision{
 	public boolean misionCompletada(){
 		boolean completada=false;
 
-		if(mapa.datoCelda(jugador.obtenerX(),jugador.obtenerY()).equals(mapa.destino()))
+		if(mapa.datoDeCelda(jugador.obtenerX(),jugador.obtenerY()) == TipoCelda.SALIDA)
 			completada=true;
 		return completada;
 	}
@@ -139,6 +173,7 @@ public abstract class Mision{
 	 * @param c cordenadas donde esta el jugador
 	 */
 	private void tomarRecompensaAdicional(Coordenadas c){
+<<<<<<< HEAD
 		if(!mapa.datoCelda(c.obtenerX(), c.obtenerY()).equals("R"))	// R = recompensa
 			return;
 		
@@ -168,6 +203,11 @@ public abstract class Mision{
 	    int i = (int)(Math.random() * nombres.length);
 
 	    return new Exotico(nombres[i], marcas[i], 6, 30000, 80, 10000);
+=======
+		if( mapa.datoDeCelda(c.obtenerX(), c.obtenerY()) == TipoCelda.RECOMPENSA)			// R = reconpensa
+		// ver si lo hago o va a mapa;
+			mapa.recogerRecompensa(c);
+>>>>>>> 3d34d1216f2abf8d99510b3708a7844fede2e467
 	}
 
 	/** Incrementa el tiempo segun el costo de transito dividido la velocidad maxima del vehiculo
@@ -182,8 +222,6 @@ public abstract class Mision{
 	 * @return cantidad e vehiculos permitidos dentro del garaje
 	 */
 	public abstract int vehiculosPermitidos(Garaje g);
-
-
 	
 	/** Eleccion de vehiculo a usar para la Mision
 	 * @param i indice del Vehiculo
@@ -219,9 +257,19 @@ public abstract class Mision{
 	    return recompensaCreditos;
 	}
 
+<<<<<<< HEAD
 	public Vehiculo recompensaExotico() {
 	    return recompensaExotico;
 	}
+=======
+	public void desplegarConcesionario(Coordenadas c, ControladorEntradas sc){
+		if(mapa.datoDeCelda(c.obtenerX(), c.obtenerY()) == TipoCelda.CONCESIONARIO){
+			MenuConcesionario menuC= new MenuConcesionario();
+			menuC.desplegarMenu(sc);
+		}
+	}
+
+>>>>>>> 3d34d1216f2abf8d99510b3708a7844fede2e467
 
 	/**
 	 * @return tiempo del juego en progreso

@@ -1,4 +1,5 @@
-package org.ayed.gta;
+package org.ayed.gta.Garaje;
+
 public class ExcepcionArchivoGaraje extends RuntimeException {
     /**
      * Constructor de ExcepcionArchivoGaraje.
