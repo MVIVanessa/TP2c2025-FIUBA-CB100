@@ -1,11 +1,12 @@
 package org.ayed.gta.Misiones;
 import org.ayed.gta.Concesionario.MenuConcesionario;
-import org.ayed.gta.Garaje;
+import org.ayed.gta.Garaje.Garaje;
 import org.ayed.gta.Mapa.Coordenadas;
 import org.ayed.gta.Mapa.Gps;
 import org.ayed.gta.Mapa.Mapa;
 import org.ayed.gta.Mapa.TipoCelda;
 import org.ayed.gta.Vehiculos.Vehiculo;
+import org.ayed.programaPrincipal.ControladorEntradas;
 import org.ayed.tda.vector.Vector;
 
 public abstract class Mision{
@@ -27,7 +28,7 @@ public abstract class Mision{
 		this.tiempoMision= tiempo;
 		this.mapa = new Mapa();
 		jugador= mapa.posicionInicial();
-		gps= new Gps(jugador, mapa);
+		gps= new Gps(mapa);
 		permitidos=null;
 	}
 
@@ -38,18 +39,22 @@ public abstract class Mision{
 		try {
 			if(mapa==null)
 				throw new ExcepcionMision("Juego No puede continuar, no hay mapa");
-			for (int x = 0; x < mapa.ancho(); x++) {
-				for (int y = 0; y < mapa.alto(); y++) {
+			for (int x = 0; x < mapa.alto(); x++) {
+				for (int y = 0; y < mapa.ancho(); y++) {
 					if (x == jugador.obtenerX() && y == jugador.obtenerY()) {
 						System.out.print('J');
 					}else if(mapa.datoDeCelda(x,y) == TipoCelda.RECOMPENSA)
 						System.out.print("R");
-					else if ( mapa.datoDeCelda(x, y) == TipoCelda.CONCESIONARIO)
-						System.out.println("C");
+					else if(mapa.destino().compararCoordenadas(new Coordenadas(x, y))) // si es true son iguales y es celda salida
+						System.out.print("D"); 
+					else if ( mapa.datoDeCelda(x, y) == TipoCelda.CONGESTIONADA)
+						System.out.print("^");
 					else if(gps.buscarCoordenadas(new Coordenadas(x, y)))	// si es true significa que estamos en el camino de gps
 						System.out.print('*');
-					else {
-						System.out.print(mapa.datoDeCelda(x,y));
+					else if (mapa.datoDeCelda(x,y) == TipoCelda.EDIFICIO){
+						System.out.print("E"); 
+					}else {
+						System.out.print(" "); 
 					}
 					System.out.print(" "); 
 				}
@@ -67,7 +72,7 @@ public abstract class Mision{
 	* @param comando comando ingresado por el usuario para moverse en el mapa
 	* @throws ExceptionMision cuando se elige un comando no posible por limitaciones del mapa 
 	*/
-	public void moverJugador(String comando){
+	public void moverJugador(String comando, ControladorEntradas sc){
 		boolean movio = false;
 		switch (comando) {
 			case "W":	//mover Arriba
@@ -108,7 +113,7 @@ public abstract class Mision{
 			transporte.rebajarCantidadTanque();
 			transporte.subirKilometraje();
 			tomarRecompensaAdicional(jugador);
-			desplegarConcesionario(jugador);
+			desplegarConcesionario(jugador, sc);
     	}
 	}
 	/*Muestra los comando del juego */
@@ -119,6 +124,14 @@ public abstract class Mision{
 		System.out.println("D= Derecha");
 		System.out.println("A= Izquierda");
 		System.out.println("Para llenar tanque del Vehiculo,ingresar 'C'");
+	}
+
+	public void glosario(){
+		System.out.println("E= Edificio");
+		System.out.println("^= Calle congestionada");
+		System.out.println("*= GPS hacia la salida");
+		System.out.println("ESPACIO= Calle transitable");
+		System.out.println("J= Ubicacion de Juagdor");
 	}
 
 	/**
@@ -188,10 +201,10 @@ public abstract class Mision{
 		}
     }
 
-	public void desplegarConcesionario(Coordenadas c){
+	public void desplegarConcesionario(Coordenadas c, ControladorEntradas sc){
 		if(mapa.datoDeCelda(c.obtenerX(), c.obtenerY()) == TipoCelda.CONCESIONARIO){
 			MenuConcesionario menuC= new MenuConcesionario();
-			menuC.desplegarMenu();
+			menuC.desplegarMenu(sc);
 		}
 	}
 

@@ -1,8 +1,8 @@
 package org.ayed.gta.Concesionario;
 
+import org.ayed.gta.Partida;
 import org.ayed.gta.Vehiculos.Exotico;
 import org.ayed.gta.Vehiculos.Vehiculo;
-import org.ayed.programaPrincipal.Partida;
 import org.ayed.tda.vector.Vector;
 
 /**

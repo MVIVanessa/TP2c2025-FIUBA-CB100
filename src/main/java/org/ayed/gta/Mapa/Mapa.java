@@ -9,22 +9,20 @@ import org.ayed.tda.lista.Lista;
 
 public class Mapa {
     private final int VALOR_CALLE = 1;
-    private int CANTIDAD_COLUMNAS;
-    private int CANTIDAD_FILAS;
+    private final int CANTIDAD_COLUMNAS;
+    private final int CANTIDAD_FILAS;
     static final int PROBABILIDAD_CONGESTION = 15; // en porcentaje
     static final int PROBABILIDAD_RECOMPENSA = 5; // en porcentaje
-    static final String rutaMapaBase = "pruebaMapa.csv";
+    private final String RUTA_MAPA_BASE = "mapa.csv";
     private Lista<Lista<TipoCelda>> grillas;
     private Coordenadas entrada;
     private Coordenadas salida;
-    //TipoMision tipoMision;
-
     /**
      * Constructor de Mapa.
      */
     public Mapa() {
         //this.tipoMision = tipoMision;
-        this.grillas = leerMapaDesdeCSV(rutaMapaBase);
+        this.grillas = leerMapaDesdeCSV(RUTA_MAPA_BASE);
         this.CANTIDAD_FILAS = this.grillas.tamanio();
         this.CANTIDAD_COLUMNAS = this.grillas.dato(0).tamanio();
         inicializarGrilla();
@@ -187,12 +185,12 @@ public class Mapa {
      */
     public boolean recogerRecompensa(Coordenadas celda) {
         if (celda == null) return false;
-        int coordX = celda.obtenerX();
-        int coordY = celda.obtenerY();
-        TipoCelda tipo = datoDeCelda(coordX, coordY);
+        int cX = celda.obtenerX();
+        int cY = celda.obtenerY();
+        TipoCelda tipo = datoDeCelda(cX, cY);
 
         if (tipo == TipoCelda.RECOMPENSA) {
-            this.grillas.dato(coordX).modificarDato(TipoCelda.TRANSITABLE, coordY); // Al recoger recompensa, la celda vuelve a ser RANSITABLE
+            this.grillas.dato(cX).modificarDato(TipoCelda.TRANSITABLE, cY); // Al recoger recompensa, la celda vuelve a ser RANSITABLE
             return true;
         }
         return false;

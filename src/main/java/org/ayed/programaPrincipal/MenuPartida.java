@@ -1,5 +1,7 @@
 package org.ayed.programaPrincipal;
 
+import org.ayed.gta.Partida;
+
 public class MenuPartida {
 	private Partida partida;
 	/**Comienza una Partida */
@@ -22,10 +24,13 @@ public class MenuPartida {
 	 * @return opcion ingresada por el usuario
 	 */
 	private int menuJuego(ControladorEntradas sc){
-		System.err.println( "1. Jugar una Mision\n"+
-							"2. Ir al Garaje\n"+
-							"3. Guardar partida en un archivo\n"+
-							"4. Salir (No guarda cambios)");
+		System.out.println(" ______________________________________");
+		System.out.println( "| 1. Jugar una Mision                  |\n"+
+							"| 2. Ir al Garaje                      |\n"+
+							"| 3. Guardar partida en un archivo     |\n"+
+							"| 4. Salir (No guarda cambios)         |\n"+
+							"|______________________________________|");
+
 		return sc.obtenerOpcion(4);
 	}
 
