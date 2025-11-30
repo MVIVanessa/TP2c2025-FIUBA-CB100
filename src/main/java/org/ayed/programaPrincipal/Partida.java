@@ -1,5 +1,7 @@
 package org.ayed.programaPrincipal;
 
+import java.io.FileWriter;
+
 import org.ayed.gta.Garaje;
 import org.ayed.gta.Misiones.Dificil;
 import org.ayed.gta.Misiones.ExcepcionMision;
@@ -127,10 +129,18 @@ public class Partida {
 			if (mision.misionCompletada()){
 				dinero+= mision.recompensaDinero();
 				garaje.agregarCreditos(mision.recompensaCredito());
+				
+				Vehiculo exotico = mision.recompensaExotico();
+			    if (exotico != null) {
+			        garaje.agregarVehiculo(exotico);
+			        System.out.println("¡¡Obtuviste un vehículo EXÓTICO!!: " + exotico.nombreVehiculo());
+			    }
+
 				System.out.println("¡¡Misión completada!!");
 			}
 
 			if(mision.fracaso()){
+				mision.descartarRecompensas();
 				System.out.println("Fracaso de misión...");
 				bien=false;
 			}
@@ -153,9 +163,41 @@ public class Partida {
 		return op== 2;
 	}
 	/**
-	 * Guarda la partida en un archivo con el nombre del juador
+	 * Guarda la partida en un archivo con el nombre del jugador.
+	 * El archivo tendrá:
+	 * - Nombre del jugador
+	 * - Dinero Disponible
+	 * - Vehículos del garage
 	 */
 	public void guardarPartida(){
+		
+		if(nombreJugador == null) {
+			System.out.println("No se puede guardar la partida: nombre del jugador no asignado.");
+			return;
+		}
+		
+		String nombreArchivo = nombreJugador + "_save.txt";
+		
+		try {
+	        FileWriter fw = new FileWriter(nombreArchivo);
+	        fw.write("Jugador:" + nombreJugador + "\n");
+	        fw.write("Dinero:" + dinero + "\n");
+	        fw.write("Vehiculos:\n");
+
+	        // Recorrer los vehículos del garaje usando tus TDA
+	        for (int i = 0; i < garaje.capacidadMaxima(); i++) {
+	            Vehiculo v = garaje.obtenerVehiculo(i);
+	            fw.write(v.informacionVehiculo() + "\n");
+	        }
+
+	        fw.write("FIN\n");
+	        fw.close();
+
+	        System.out.println("Partida guardada correctamente en " + nombreArchivo);
+
+	    } catch (IOException e) {
+	        System.err.println("Error al guardar la partida: " + e.getMessage());
+	    }
 
 	}
 

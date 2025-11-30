@@ -1,5 +1,6 @@
 package org.ayed.gta.Misiones;
 import org.ayed.gta.Garaje;
+import org.ayed.gta.Vehiculos.Exotico;
 import org.ayed.gta.Vehiculos.Vehiculo;
 import org.ayed.tda.vector.Vector;
 
@@ -11,6 +12,9 @@ public abstract class Mision{
 	private Coordenadas jugador;
 	private Mapa mapa;
 	private Gps gps;
+	protected int recompensaCreditos;
+	protected Vehiculo recompensaExotico;
+	
 	/**
 	 * Constructor de Mision
 	 * @param tiempo tiempo de juego limite para jugar
@@ -24,6 +28,8 @@ public abstract class Mision{
 		jugador= mapa.posicionInicial();
 		gps= new Gps(jugador, mapa);
 		permitidos=null;
+		recompensaCreditos=0;
+		recompensaExotico=null;
 	}
 
 	/**Muestra el mapa de la jugada con la respectiva posicion del jugador
@@ -133,9 +139,35 @@ public abstract class Mision{
 	 * @param c cordenadas donde esta el jugador
 	 */
 	private void tomarRecompensaAdicional(Coordenadas c){
-		if( mapa.datoCelda(c.obtenerX(), c.obtenerY()).equals("R"))			// R = reconpensa
-		// ver si lo hago o va a mapa;
-			mapa.recogerRecompensa(c);
+		if(!mapa.datoCelda(c.obtenerX(), c.obtenerY()).equals("R"))	// R = recompensa
+			return;
+		
+		double probabilidad = Math.random();
+		
+		// 95% → créditos
+		if (probabilidad < 0.95) {
+			// recompensa de crédito entre 50 y 200
+			int valor = 50 + (int)(Math.random() * 151);
+			recompensaCreditos += valor;
+		}
+		
+		// 5% → vehículo exótico
+		else {
+			recompensaExotico = generarExotico();
+		}
+		
+		// borrar el R del mapa
+		mapa.recogerRecompensa(c);
+		
+	}
+	
+	private Vehiculo generarExotico() {
+	    String[] nombres = {"Chiron", "Enzo", "Jesko", "Zonda", "Valkyrie"};
+	    String[] marcas = {"Bugatti", "Ferrari", "Koenigsegg", "Pagani", "Lamborghini"};
+
+	    int i = (int)(Math.random() * nombres.length);
+
+	    return new Exotico(nombres[i], marcas[i], 6, 30000, 80, 10000);
 	}
 
 	/** Incrementa el tiempo segun el costo de transito dividido la velocidad maxima del vehiculo
@@ -174,7 +206,22 @@ public abstract class Mision{
         	i++;
 		}
     }
+	
+	/**
+	 * Reinicia las recompensas.
+ 	 */
+	public void descartarRecompensas(){		// agrego este método por si la misión falla
+	    recompensaCreditos = 0;
+	    recompensaExotico = null;
+	}
+	
+	public int recompensaCredito() {
+	    return recompensaCreditos;
+	}
 
+	public Vehiculo recompensaExotico() {
+	    return recompensaExotico;
+	}
 
 	/**
 	 * @return tiempo del juego en progreso
@@ -197,7 +244,7 @@ public abstract class Mision{
 		return transporte;
 	}
 	/**
-	 * Devuelve el valor de el dinero de recompensa
+	 * Devuelve el valor del dinero de recompensa
 	 * @return
 	 */
 	public abstract int recompensaDinero();
@@ -205,6 +252,4 @@ public abstract class Mision{
 	/**recoge la recompensa de credito
 	* @return la recompensa de credito por completar mision 
 	*/
-	public abstract int recompensaCredito();
-	
 }

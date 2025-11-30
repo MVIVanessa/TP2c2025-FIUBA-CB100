@@ -63,4 +63,5 @@ public class Tupla<C, V> {
     public int hashCode() {
         return clave.hashCode() + 31 * valor.hashCode();
     }
+
 }
