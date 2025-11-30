@@ -37,15 +37,13 @@ public class Coordenadas {
     public void modificarY(int nuevoY) {
         this.y = nuevoY;
     }
-	/**
-	 * Comparador de Coordenadas
-	 * @param x a comparar contra x
-	 * @param y a comparar contra y
-	 * @return
-	 */
-	public boolean compararCoordenadas(int x, int y){
-		return this.x==x && this.y==y;
+
+	//AGREGADO: (CREO QUE PUEDO ELIMINAR LA DE ARRIBA)
+	public boolean compararCoordenadas(Coordenadas otra) {
+		if (otra == null) return false;
+		return (this.x == otra.x && this.y == otra.y);
 	}
+
 	
 	/**
 	 * Compara dos objetos

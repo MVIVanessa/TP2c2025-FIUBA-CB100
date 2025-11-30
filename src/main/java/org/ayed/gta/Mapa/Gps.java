@@ -2,6 +2,7 @@ package org.ayed.gta.Mapa;
 import org.ayed.tda.grafo.Grafo;
 import org.ayed.tda.grafo.Heuristica;
 import org.ayed.tda.lista.Lista;
+import org.ayed.gta.Mapa.Coordenadas;
 
 public class Gps {
     private Lista<Coordenadas> camino;
@@ -47,14 +48,13 @@ public class Gps {
      */
     private void actualizarCamino (Coordenadas nuevaPosicion) {
         if (camino == null || camino.tamanio() == 0){
-            camino = aEstrella.buscarCamino(nuevaPosicion, fin); // Si no hay camino, recalculo uno
+            camino = aEstrella.buscarCamino(nuevaPosicion, fin); // Si no hay camino, recalculamos uno
             return;
         }
         Coordenadas sigPosicion = camino.dato(0);
         
         // Si el jugador avanzo correctamente por el camino sugerido por el Gps, elimino la grilla que ya avanzo
-        if (sigPosicion.obtenerX() == nuevaPosicion.obtenerX()
-            && sigPosicion.obtenerY() == nuevaPosicion.obtenerY()){
+        if (sigPosicion.compararCoordenadas(nuevaPosicion)){
             camino.eliminar(0);
             return;
         }
@@ -70,7 +70,6 @@ public class Gps {
     public Lista<Coordenadas> obtenerCamino(Coordenadas desde) {
         if (desde == null) return null;
         return camino;
-        //return aEstrella.buscarCamino(desde, fin);
     }
 
 
@@ -82,7 +81,7 @@ public class Gps {
     public boolean buscarCoordenadas(Coordenadas c) {
         for (int i = 0; i < camino.tamanio(); i++) {
             Coordenadas actual = camino.dato(i);
-            if (actual.obtenerX() == c.obtenerX() && actual.obtenerY() == c.obtenerY()) {
+            if (actual.compararCoordenadas(c)) {
                 return true;
             }
         }
@@ -99,7 +98,7 @@ public class Gps {
         int filas = matriz.tamanio();
         int columnas = matriz.dato(0).tamanio();
 
-        for (int f = 0; f < filas; f++) {  // Primero agregamos todos los vértices
+        for (int f = 0; f < filas; f++) {  // Primero agregamos todos los vertices
             for (int c = 0; c < columnas; c++) {
                 if (matriz.dato(f).dato(c) != TipoCelda.EDIFICIO) {
                     grafo.agregarVertice(new Coordenadas(f, c));

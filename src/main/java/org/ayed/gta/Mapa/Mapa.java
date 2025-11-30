@@ -3,7 +3,6 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.Random;
-
 import org.ayed.tda.iterador.Iterador;
 import org.ayed.tda.lista.Lista;
 
@@ -23,7 +22,7 @@ public class Mapa {
      */
     public Mapa() {
         //this.tipoMision = tipoMision;
-        this.grillas = leerMapaDesdeCSV(rutaMapaBase); //rutaMapaBase
+        this.grillas = leerMapaDesdeCSV(rutaMapaBase);
         this.CANTIDAD_FILAS = this.grillas.tamanio();
         this.CANTIDAD_COLUMNAS = this.grillas.dato(0).tamanio();
         inicializarGrilla();
