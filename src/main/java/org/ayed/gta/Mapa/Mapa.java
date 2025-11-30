@@ -8,6 +8,7 @@ import org.ayed.tda.iterador.Iterador;
 import org.ayed.tda.lista.Lista;
 
 public class Mapa {
+    private final int VALOR_CALLE = 1;
     private int CANTIDAD_COLUMNAS;
     private int CANTIDAD_FILAS;
     static final int PROBABILIDAD_CONGESTION = 15; // en porcentaje
@@ -196,6 +197,19 @@ public class Mapa {
         }
         return false;
     }
+
+    /**
+	 * Devuelve el costo de transito de la celda transitable
+	 * @param c coordenadas donde esta el jugador
+	 * @return
+	 */
+	public int costoTransito(Coordenadas c){
+		int costo=VALOR_CALLE;
+        TipoCelda tipo= datoDeCelda((c.obtenerX()), c.obtenerY());
+		if(tipo == tipo.CONGESTIONADA)
+			costo*=5;
+		return costo;
+	}
 
     //------------------------------ Archivos ------------------------------------
 

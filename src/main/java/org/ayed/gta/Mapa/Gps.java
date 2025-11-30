@@ -53,7 +53,7 @@ public class Gps {
         Coordenadas siguientePosicion = camino.dato(0);
         
         // Si el jugador avanzo correctamente por el camino sugerido por el Gps, elimino la grilla que ya avanzo
-        if (siguientePosicion.obtenerX() == nuevaPosicion.obtenerX() && siguientePosicion.obtenerY() == nuevaPosicion.obtenerY()){
+        if (siguientePosicion.compararCoordenadas(nuevaPosicion)){
             camino.eliminar(0);
             return;
         }
@@ -70,7 +70,7 @@ public class Gps {
     public boolean buscarCoordenadas(Coordenadas c) {
         for (int i = 0; i < camino.tamanio(); i++) {
             Coordenadas actual = camino.dato(i);
-            if (actual.obtenerX() == c.obtenerX() && actual.obtenerY() == c.obtenerY()) {
+            if (actual.compararCoordenadas(c)) {
                 return true;
             }
         }

@@ -7,4 +7,5 @@ public enum TipoCelda {
     EDIFICIO,
     CONGESTIONADA,
     RECOMPENSA,
+    CONCESIONARIO,
 }

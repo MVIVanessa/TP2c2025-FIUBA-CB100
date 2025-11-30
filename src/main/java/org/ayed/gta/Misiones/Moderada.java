@@ -5,11 +5,11 @@ import org.ayed.gta.Garaje;
 public class Moderada extends Mision{
 
     public Moderada() {
-        super(0);
+        super(10);
     }
 	@Override 
 	public int vehiculosPermitidos(Garaje g){
-		return 0;
+		return 1;
 	}
 	@Override
 	public int recompensaDinero() {

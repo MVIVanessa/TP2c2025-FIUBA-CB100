@@ -1,4 +1,4 @@
-package org.ayed.gta;
+package org.ayed.gta.Concesionario;
 
 import org.ayed.gta.Vehiculos.Exotico;
 import org.ayed.gta.Vehiculos.Vehiculo;

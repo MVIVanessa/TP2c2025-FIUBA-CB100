@@ -150,7 +150,7 @@ public class Partida {
 		System.out.println("Desea seguir jugando?( 1.si 2.no): ");
 		//comparo con el numero para seguir
 		int op= sc.obtenerOpcion(2);
-		return op== 2;
+		return op==NO_SEGUIR;
 	}
 	/**
 	 * Guarda la partida en un archivo con el nombre del juador

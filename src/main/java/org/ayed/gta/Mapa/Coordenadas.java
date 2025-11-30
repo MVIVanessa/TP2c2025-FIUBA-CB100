@@ -4,7 +4,7 @@ public class Coordenadas {
 	int x;
 	int y;
 
-    Coordenadas(int x, int y) {
+    public Coordenadas(int x, int y) {
 		this.x=x;
 		this.y=y;
     }
@@ -43,8 +43,8 @@ public class Coordenadas {
 	 * @param y a comparar contra y
 	 * @return
 	 */
-	public boolean compararCoordenadas(int x, int y){
-		return this.x==x && this.y==y;
+	public boolean compararCoordenadas(Coordenadas c){
+		return this.x==c.obtenerX() && this.y==c.obtenerY();
 	}
 	
 }
