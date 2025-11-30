@@ -30,7 +30,7 @@ public class MenuPartida {
 							"| 2. Ir al Garaje                      |\n"+
 							"| 3. Guardar partida en un archivo     |\n"+
 							"| 4. Ir a Concesionario		        |\n"+
-							"| 4. Salir (No guarda cambios)         |\n"+
+							"| 5. Salir (No guarda cambios)         |\n"+
 							"|______________________________________|");
 
 		return sc.obtenerOpcion(4);
