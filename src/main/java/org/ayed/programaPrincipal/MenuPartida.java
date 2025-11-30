@@ -1,5 +1,6 @@
 package org.ayed.programaPrincipal;
 
+import org.ayed.gta.Concesionario.MenuConcesionario;
 import org.ayed.gta.Partida;
 
 public class MenuPartida {
@@ -28,6 +29,7 @@ public class MenuPartida {
 		System.out.println( "| 1. Jugar una Mision                  |\n"+
 							"| 2. Ir al Garaje                      |\n"+
 							"| 3. Guardar partida en un archivo     |\n"+
+							"| 4. Ir a Concesionario		        |\n"+
 							"| 4. Salir (No guarda cambios)         |\n"+
 							"|______________________________________|");
 
@@ -58,6 +60,9 @@ public class MenuPartida {
 				partida.guardarPartida();
 				break;
 			case 4: 
+				desplegarConcesionario(sc);
+				break;
+			case 5:
 				System.out.println("Termino la partida");
 				break;
 			default:
@@ -66,6 +71,10 @@ public class MenuPartida {
 			if(op<4)
 				menuJuego(sc);
 		}
+	}
+	private void desplegarConcesionario(ControladorEntradas sc){
+		MenuConcesionario menuC= new MenuConcesionario(partida);
+		menuC.desplegarMenu(sc);
 	}
 
 

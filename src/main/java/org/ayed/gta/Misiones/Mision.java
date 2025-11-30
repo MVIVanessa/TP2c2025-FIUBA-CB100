@@ -1,5 +1,4 @@
 package org.ayed.gta.Misiones;
-import org.ayed.gta.Concesionario.MenuConcesionario;
 import org.ayed.gta.Garaje.Garaje;
 import org.ayed.gta.Mapa.Coordenadas;
 import org.ayed.gta.Mapa.Gps;
@@ -115,7 +114,6 @@ public abstract class Mision{
 			transporte.rebajarCantidadTanque();
 			transporte.subirKilometraje();
 			tomarRecompensaAdicional(jugador);
-			desplegarConcesionario(jugador, sc);
     	}
 	}
 	/*Muestra los comando del juego */
@@ -203,12 +201,6 @@ public abstract class Mision{
 		}
     }
 
-	public void desplegarConcesionario(Coordenadas c, ControladorEntradas sc){
-		if(mapa.datoDeCelda(c.obtenerX(), c.obtenerY()) == TipoCelda.CONCESIONARIO){
-			MenuConcesionario menuC= new MenuConcesionario();
-			menuC.desplegarMenu(sc);
-		}
-	}
 
 
 	/**

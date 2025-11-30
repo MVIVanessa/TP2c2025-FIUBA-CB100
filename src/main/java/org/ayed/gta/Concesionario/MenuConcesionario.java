@@ -1,10 +1,14 @@
 package org.ayed.gta.Concesionario;
 
+import org.ayed.gta.Partida;
+import org.ayed.gta.Vehiculos.Vehiculo;
 import org.ayed.programaPrincipal.ControladorEntradas;
+import org.ayed.tda.vector.Vector;
 
 public class MenuConcesionario {
-	public MenuConcesionario(){
-
+	Partida partidaJugador;
+	public MenuConcesionario(Partida p){
+		partidaJugador=p;
 	}
 	public void desplegarMenu(ControladorEntradas sc){
 		System.out.println(" _____________ CONCESIONARIO ____________");
@@ -13,38 +17,90 @@ public class MenuConcesionario {
 		System.out.println("| 2. Mostrar todo el stock de Vehiculos. |");
 		System.err.println("|________________________________________|");
 		int op=sc.obtenerOpcion(2);
-		procesarOpcion(op);
+		procesarOpcion(op, sc);
 	}
 
-	private void procesarOpcion(int op){
+	/** Procesa la opcion elegida
+	 * @param opcion Opcion que eligio el usuario
+	 * @param controlador Controlador de entradas para interaccion con usuario
+	 */
+	private void procesarOpcion(int op, ControladorEntradas sc){
+		Concesionario conc= new Concesionario();
+		Vector<Vehiculo> respuesta=null;
 		switch (op) {
 			case 0:
-				busquedaPorNombre();
+				respuesta= busquedaPorNombre(sc, conc);
 				break;
 			case 1:
-				busquedaPorMarca();
+				respuesta= busquedaPorMarca(sc, conc);
 				break;
 			case 2:
-				mostrarStock();
-				break;
-			case 3:
-				comprarVehiculo();
+				respuesta= conc.obtenerStock();
 				break;
 			default:
-				throw new AssertionError();
+				System.err.println("Error surgio en procesar la opcion");
+			mostrarInfo(respuesta);
+			comprar(sc, conc);
+		}
+	}
+	/**
+	 * Busca por el nombre ingresado 
+	 * @param sc controlador de entradas
+	 * @param c concesionario
+	 * @return
+	 */
+	private Vector<Vehiculo> busquedaPorNombre(ControladorEntradas sc, Concesionario c){
+		System.out.println("Ingrese nombre de Vehiculo para buscar");
+		String nombre= sc.leerEntrada(false);
+		return c.buscarPorNombre(nombre);
+	}
+	/**
+	 * Busca por l marca ingresado 
+	 * @param sc controlador de entradas
+	 * @param c concesionario
+	 * @return
+	 */
+	private Vector<Vehiculo> busquedaPorMarca(ControladorEntradas sc, Concesionario c){
+		System.out.println("Ingrese marca de Vehiculo para buscar");
+		String marca= sc.leerEntrada(false);
+		return c.buscarPorNombre(marca);
+
+	}
+
+	/** Mostrar informacion de Vehiculos del vector pasado
+	 *  @param vehiculos Vector de Vehculos que contiene vehiculos a mostrar su informacion 
+	 */
+	private void mostrarInfo(Vector<Vehiculo> vehiculos){
+		try{
+			System.out.println("INFORMACION DE VEHICULOS DE GARAJE: ");
+			System.out.println("INDICE | NOMBRE | MARCA | PRECIO | TIPO | CANT RUEDAS | CAPACIDAD GASOLINA | VELOCIDAD ");
+			for (int i = 0; i < vehiculos.tamanio(); i++) {
+				System.out.println(vehiculos.dato(i).informacionVehiculo());
+			};
+		} catch (Exception e) {
+			System.err.println(e);
 		}
 	}
 
-	private void busquedaPorNombre(){
-
-	}
-	private void busquedaPorMarca(){
-
-	}
-	private void mostrarStock(){
-
-	}
-	private void comprarVehiculo(){
+	/**
+	 * Compra el vehiculo segun el indice pedido al usuario
+	 * @param sc
+	 * @param respuesta
+	 * @param c
+	 */
+	private void comprar(ControladorEntradas sc, Concesionario c){
+		System.out.println("Ingrese el nombre exacto de vehiculo que quiere comprar");
+		String nombreExacto= sc.leerEntrada(false);
+		try{
+			boolean comprado=c.comprar(nombreExacto, partidaJugador);
+			if(comprado)
+				System.out.println("Compra Exitosa");
+			else {
+				System.out.println("No pudo realizarse la compra ");
+			}
+		}catch(Exception e){
+			System.err.println(e.getMessage());
+		}
 
 	}
 }
