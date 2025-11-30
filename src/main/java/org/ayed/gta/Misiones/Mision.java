@@ -39,7 +39,9 @@ public abstract class Mision{
 		try {
 			if(mapa==null)
 				throw new ExcepcionMision("Juego No puede continuar, no hay mapa");
+			System.out.println("############# Mapa #############");
 			for (int x = 0; x < mapa.alto(); x++) {
+				System.out.print("#");
 				for (int y = 0; y < mapa.ancho(); y++) {
 					if (x == jugador.obtenerX() && y == jugador.obtenerY()) {
 						System.out.print('J');
@@ -58,10 +60,10 @@ public abstract class Mision{
 					}
 					System.out.print(" "); 
 				}
-				System.out.println();
+				System.out.println("#");
 
 			}	
-
+			System.out.println("################################");
 		} catch (ExcepcionMision e) {
 			System.err.println("Error al desplegar Mapa");
 		}
