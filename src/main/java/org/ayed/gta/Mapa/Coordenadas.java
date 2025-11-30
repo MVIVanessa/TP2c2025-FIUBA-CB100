@@ -38,7 +38,6 @@ public class Coordenadas {
         this.y = nuevoY;
     }
 
-	//AGREGADO: (CREO QUE PUEDO ELIMINAR LA DE ARRIBA)
 	public boolean compararCoordenadas(Coordenadas otra) {
 		if (otra == null) return false;
 		return (this.x == otra.x && this.y == otra.y);
