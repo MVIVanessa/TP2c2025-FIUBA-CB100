@@ -1,7 +1,7 @@
 package org.ayed.gta.Mapa;
-import org.ayed.tda.lista.Lista;
 import org.ayed.tda.grafo.Grafo;
 import org.ayed.tda.grafo.Heuristica;
+import org.ayed.tda.lista.Lista;
 
 public class Gps {
     private Lista<Coordenadas> camino;
@@ -17,15 +17,15 @@ public class Gps {
      * @param partida coordenadas donde se encuentra el jugador
      * @param mapa mapa del juego como una grilla (lista de listas de TipoCelda)
 	 */
-    Gps(Coordenadas partida, Mapa mapa) {
+    public Gps(Coordenadas partida, Mapa mapa) {
         this.mapa = mapa;
         this.inicio = partida;
-        this.fin = buscarSalida(mapa); //Creamos el destino desde el mapa
-        this.grafo = new Grafo<>(); //Construimos un grafo usando el mapa
+        this.fin = mapa.destino(); // Creamos el destino desde el mapa
+        this.grafo = new Grafo<>(); // Construimos un grafo usando el mapa
         construirGrafoDesdeMapa();
-        Heuristica<Coordenadas> heuristica = new AEstrella.ManhattanHeuristicaCoordenadas(); //Creamos heuristica Manhattan para Coordenadas
+        Heuristica<Coordenadas> heuristica = new AEstrella.ManhattanHeuristicaCoordenadas(); // Creamos heuristica Manhattan para Coordenadas
         this.aEstrella = new AEstrella<>(grafo, heuristica);
-        recalcularCamino(); //Calculamos el primer camino
+        this.camino = aEstrella.buscarCamino(inicio, fin); // Primer calculo del camino
     }
 	
 	/**
@@ -33,18 +33,41 @@ public class Gps {
      * 
 	* @param c coordenadas nuevas para punto de partida
 	*/
-	public void modificarPartida(Coordenadas c){
-        if (c == null) return;
-        this.inicio = c;
-        recalcularCamino();
+	public void modificarPartida(Coordenadas nuevaPosicion){
+        if (nuevaPosicion == null) return;
+        
+        this.inicio = nuevaPosicion;
+        actualizarCamino(nuevaPosicion);
 	}
+
+    /**
+     * Actualiza el camino con el movimiento del jugador
+     * 
+     * @param nuevaPosicion coordenadas nuevas a las que se movio el jugador
+     */
+    private void actualizarCamino (Coordenadas nuevaPosicion) {
+        if (camino == null || camino.tamanio() == 0){
+            camino = aEstrella.buscarCamino(nuevaPosicion, fin); // Si no hay camino, recalculo uno
+            return;
+        }
+        Coordenadas siguientePosicion = camino.dato(0);
+        
+        // Si el jugador avanzo correctamente por el camino sugerido por el Gps, elimino la grilla que ya avanzo
+        if (siguientePosicion.obtenerX() == nuevaPosicion.obtenerX() && siguientePosicion.obtenerY() == nuevaPosicion.obtenerY()){
+            camino.eliminar(0);
+            return;
+        }
+
+        // Si el jugador no siguio el camino sugerido por el Gps, recalculamos el camino completo
+        camino = aEstrella.buscarCamino(nuevaPosicion, fin);
+    }
 
     /**
      * Busca una coordenada dentro del camino actual
      * 
      * @param c coordenadas que se van a buscar dentro del recorrido Gps
      */
-    public boolean buscarcoordenadas(Coordenadas c) {
+    public boolean buscarCoordenadas(Coordenadas c) {
         for (int i = 0; i < camino.tamanio(); i++) {
             Coordenadas actual = camino.dato(i);
             if (actual.obtenerX() == c.obtenerX() && actual.obtenerY() == c.obtenerY()) {
@@ -64,14 +87,14 @@ public class Gps {
         int filas = matriz.tamanio();
         int columnas = matriz.dato(0).tamanio();
 
-        for (int f = 0; f < filas; f++) { //Creamos nodos y adyacencias
+        for (int f = 0; f < filas; f++) { // Creamos nodos y adyacencias
             for (int c = 0; c < columnas; c++) {
                 TipoCelda tipo = matriz.dato(f).dato(c);
-                if (tipo != TipoCelda.EDIFICIO) { //Si es transitable
+                if (tipo != TipoCelda.EDIFICIO) { // Si es transitable
                     Coordenadas actual = new Coordenadas(f, c);
-                    grafo.agregarVertice(actual); //Creamos nodo
+                    grafo.agregarVertice(actual); // Creamos nodo
 
-                    //Intentamos conectar con nodos vecinos (arriba, abajo, izquierda, derecha)
+                    // Intentamos conectar con nodos vecinos (arriba, abajo, izquierda, derecha)
                     conectarSiTransitable(actual, f-1, c);
                     conectarSiTransitable(actual, f+1, c);
                     conectarSiTransitable(actual, f, c-1);
@@ -101,33 +124,5 @@ public class Gps {
             Coordenadas destino = new Coordenadas(f, c);
             grafo.agregarArista(origen, destino, 1);
         }
-    }
-
-    /**
-     * Encuentra la posición de la celda SALIDA en la grilla
-     * 
-     * @param mapa mapa del juego como una grilla
-     * 
-     * @return coordenadas de la salida
-     */
-    private Coordenadas buscarSalida(Mapa mapa) {
-        Lista<Lista<TipoCelda>> m = mapa.obtenerMapa();
-        if (m == null) return null;
-
-        for (int i = 0; i < m.tamanio(); i++) {
-            for (int j = 0; j < m.dato(i).tamanio(); j++) {
-                if (m.dato(i).dato(j) == TipoCelda.SALIDA) {
-                    return new Coordenadas(i, j);
-                }
-            }
-        }
-        return null;
-    }
-
-    /**
-     * Recalcula el camino usando A*
-     */
-    private void recalcularCamino() {
-        this.camino = aEstrella.buscarCamino(inicio, fin);
     }
 }

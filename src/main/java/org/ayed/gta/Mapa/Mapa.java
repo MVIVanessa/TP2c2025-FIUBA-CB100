@@ -3,8 +3,9 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.Random;
-import org.ayed.tda.lista.Lista;
+
 import org.ayed.tda.iterador.Iterador;
+import org.ayed.tda.lista.Lista;
 
 public class Mapa {
     private int CANTIDAD_COLUMNAS;
@@ -13,6 +14,8 @@ public class Mapa {
     static final int PROBABILIDAD_RECOMPENSA = 5; // en porcentaje
     static final String rutaMapaBase = "pruebaMapa.csv";
     private Lista<Lista<TipoCelda>> grillas;
+    private Coordenadas entrada;
+    private Coordenadas salida;
     //TipoMision tipoMision;
 
     /**
@@ -24,6 +27,7 @@ public class Mapa {
         this.CANTIDAD_FILAS = this.grillas.tamanio();
         this.CANTIDAD_COLUMNAS = this.grillas.dato(0).tamanio();
         inicializarGrilla();
+        establecerEntradaYSalida();
     }
 
     /**
@@ -114,12 +118,83 @@ public class Mapa {
             }
         }
     }
+
+    /**
+     * Establece entrada y salida una vez que ya estan en el mapa
+     */
+    private void establecerEntradaYSalida() {
+        for (int i = 0; i < CANTIDAD_FILAS; i++) {
+            Lista<TipoCelda> fila = grillas.dato(i);
+            for (int j = 0; j < CANTIDAD_COLUMNAS; j++) {
+                if (fila.dato(j) == TipoCelda.ENTRADA) {
+                    this.entrada = new Coordenadas(i, j);
+                }
+                if (fila.dato(j) == TipoCelda.SALIDA) {
+                    this.salida = new Coordenadas(i, j);
+                }
+            }
+        }
+    }
+
+    // getter de entrada
+    public Coordenadas posicionInicial() {
+        return this.entrada;
+    }
+
+    // getter de salida
+    public Coordenadas destino() {
+        return this.salida;
+    }
     
     /**
      * @return la grilla del mapa como una matriz de listas doblemente enlazadas de TipoCelda.
      */
     public Lista<Lista<TipoCelda>> obtenerMapa() {
         return this.grillas;
+    }
+
+    /**
+     * @return altura del mapa
+     */
+    public int alto() {
+        return this.CANTIDAD_FILAS;
+    }
+
+    /**
+     * @return el ancho del mapa
+     */
+    public int ancho() {
+        return this.CANTIDAD_COLUMNAS;
+    }
+
+    /**
+     * @return tipo de celda de posicion pedida
+     */
+    public TipoCelda datoDeCelda(int fila, int columna) {
+        if (fila < 0 || fila >= CANTIDAD_FILAS) return null;
+        if (columna < 0 || columna >= CANTIDAD_COLUMNAS) return null;
+        return this.grillas.dato(fila).dato(columna);
+    }
+
+    /**
+     * Recoge la recompensa y modifica el tipo de la celda a TRANSITABLE
+     * 
+     * @param celda de tipo recompensa que recorre el jugador
+     * 
+     * @return true si pasa por una celda de tipo recompensa
+     * @return false si la celda por la que pasa no es de tipo recompensa
+     */
+    public boolean recogerRecompensa(Coordenadas celda) {
+        if (celda == null) return false;
+        int coordX = celda.obtenerX();
+        int coordY = celda.obtenerY();
+        TipoCelda tipo = datoDeCelda(coordX, coordY);
+
+        if (tipo == TipoCelda.RECOMPENSA) {
+            this.grillas.dato(coordX).modificarDato(TipoCelda.TRANSITABLE, coordY); // Al recoger recompensa, la celda vuelve a ser RANSITABLE
+            return true;
+        }
+        return false;
     }
 
     //------------------------------ Archivos ------------------------------------
@@ -171,6 +246,4 @@ public class Mapa {
     
         return fila;
     }
-    
-
 }
