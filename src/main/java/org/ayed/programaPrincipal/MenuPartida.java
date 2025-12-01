@@ -18,7 +18,7 @@ public class MenuPartida {
 		do{
 			opcion = menuJuego(entrada);
 			procesarOpcion(opcion,entrada);
-		}while(opcion!=5 && !partida.partidaNueva(entrada));
+		}while(opcion!=6);
 
 		entrada.cerrar();
 	}
@@ -33,10 +33,11 @@ public class MenuPartida {
 							"| 2. Ir al Garaje                      |\n"+
 							"| 3. Guardar partida en un archivo     |\n"+
 							"| 4. Ir a Concesionario		       |\n"+
-							"| 5. Salir (No guarda cambios)         |\n"+
+							"| 5. Mostrar dinero en cuenta			|\n"+
+							"| 6. Salir (No guarda cambios)         |\n"+
 							"|______________________________________|");
 
-		return sc.obtenerOpcion(5);
+		return sc.obtenerOpcion(6);
 	}
 
 	/**
@@ -66,6 +67,9 @@ public class MenuPartida {
 				desplegarConcesionario(sc);
 				break;
 			case 5:
+				System.out.println("Dinero en cuenta: $"+ partida.dinero());
+				break;
+			case 6:
 				System.out.println("Termino la partida");
 				break;
 			default:

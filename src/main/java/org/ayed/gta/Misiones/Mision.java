@@ -91,14 +91,14 @@ public abstract class Mision{
 				movio = true;
 				break;
 			case "D":	// mover Derecha
-				if(jugador.obtenerY()+1 < mapa.cantColumnas()-1 ||
+				if(jugador.obtenerY()+1 > mapa.cantColumnas()-1 ||
 				 mapa.datoDeCelda(jugador.obtenerX(), jugador.obtenerY()+1)== TipoCelda.EDIFICIO)
 					throw new ExcepcionMision("No es posible ir a la derecha");
 				jugador.modificarY(jugador.obtenerY() + 1);
             	movio = true;
 				break;
 			case "S":	//mover Abajo
-				if(jugador.obtenerX()+1 <mapa.cantFilas()-1 ||
+				if(jugador.obtenerX()+1 >mapa.cantFilas()-1 ||
 				 mapa.datoDeCelda(jugador.obtenerX()+1, jugador.obtenerY()) == TipoCelda.EDIFICIO)
 					throw new ExcepcionMision("No es posible bajar");
 				jugador.modificarX(jugador.obtenerX() + 1);
@@ -107,19 +107,19 @@ public abstract class Mision{
 			
 			case "W":	//mover Arriba
 				if(jugador.obtenerX()-1 <0 || 
-				mapa.datoDeCelda(jugador.obtenerX()-1, jugador.obtenerY())== TipoCelda.EDIFICIO)
+				mapa.datoDeCelda(jugador.obtenerX()-1, jugador.obtenerY()) == TipoCelda.EDIFICIO)
 					throw new ExcepcionMision("No es posible subir");
 				jugador.modificarX(jugador.obtenerX() - 1);
             	movio = true;
 				break;
-			case "C":
+			case "C": //lena el tanque al maximo solo tres veces
 				int l = transporte.capacidadGasolina() - transporte.tanque();
 				transporte.llenarGasolina(l);
 			default:
 				System.out.println("Comando invalido");
 			
 		}
-		if(movio) {
+		if(movio && !fracaso()) {
 			gps.modificarPartida(jugador); 
 			incrementoTiempo();
 			transporte.rebajarCantidadTanque();
@@ -172,9 +172,11 @@ public abstract class Mision{
 	 * @param c cordenadas donde esta el jugador
 	 */
 	private void tomarRecompensaAdicional(Coordenadas c){
-		if( mapa.datoDeCelda(c.obtenerX(), c.obtenerY()) == TipoCelda.RECOMPENSA)	// R = recompensa
+		if( mapa.datoDeCelda(c.obtenerX(), c.obtenerY()) == TipoCelda.RECOMPENSA){	// R = recompensa
+				// borrar el R del mapa
+			mapa.recogerRecompensa(c);	
 			return;
-		
+		}
 		double probabilidad = Math.random();
 		
 		// 95% → créditos
@@ -188,9 +190,6 @@ public abstract class Mision{
 		else {
 			recompensaExotico = generarExotico();
 		}
-		
-		// borrar el R del mapa
-		mapa.recogerRecompensa(c);
 		
 	}
 	
@@ -206,7 +205,7 @@ public abstract class Mision{
 	/** Incrementa el tiempo segun el costo de transito dividido la velocidad maxima del vehiculo
 	 */
 	private void incrementoTiempo(){
-		tiempoJuego+= mapa.costoTransito(jugador)/transporte.velocidadMaxima();
+		tiempoJuego += (double)mapa.costoTransito(jugador)/(double)transporte.velocidadMaxima();
 	}
 
 	/**

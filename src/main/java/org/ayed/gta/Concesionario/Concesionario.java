@@ -1,7 +1,9 @@
 package org.ayed.gta.Concesionario;
 
 import org.ayed.gta.Partida;
+import org.ayed.gta.Vehiculos.Auto;
 import org.ayed.gta.Vehiculos.Exotico;
+import org.ayed.gta.Vehiculos.Moto;
 import org.ayed.gta.Vehiculos.Vehiculo;
 import org.ayed.tda.vector.Vector;
 
@@ -18,6 +20,32 @@ public class Concesionario {
      */
     public Concesionario() {
         stock = new Vector<>();
+    }
+    
+    /**
+     * Crea un concesionario con vehículos hardcodeados.
+     */
+    public static Concesionario crearConcesionarioDefault() {
+        Concesionario c = new Concesionario();
+        c.cargarCatalogoDefault();
+        return c;
+    }
+    
+    /**
+     * Carga vehículos predeterminados al concesionario.
+     */
+    private void cargarCatalogoDefault() {
+        // AUTOS
+        stock.agregar(new Auto("Peugeot", "208", 180, 45, 15000));
+        stock.agregar(new Auto("Renault", "Clio", 170, 40, 14000));
+        stock.agregar(new Auto("Ford", "Focus", 190, 50, 21000));
+
+        // MOTOS
+        stock.agregar(new Moto("Honda", "Titan 150", 120, 12, 6000));
+        stock.agregar(new Moto("Yamaha", "FZ16", 130, 13, 8000));
+        stock.agregar(new Moto("Bajaj", "Rouser 200", 140, 14, 9500));
+
+        // Exóticos NO deben venderse
     }
 
     /**
@@ -104,7 +132,7 @@ public class Concesionario {
      * No se venden vehículos exóticos y se requiere dinero suficiente.
      *
      * @param nombreExactoVehiculo nombre exacto del vehículo a comprar.
-     * @param jugador jugador que realiza la compra.
+     * @param jugador Partida de jugador que realiza la compra.
      * @return true si la compra fue exitosa, false en caso contrario.
      * @throws IllegalArgumentException si nombreExactoVehiculo o jugador son null.
      */
