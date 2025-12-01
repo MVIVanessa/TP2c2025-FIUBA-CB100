@@ -1,12 +1,9 @@
 package org.ayed.gta;
 
-<<<<<<< HEAD:src/main/java/org/ayed/programaPrincipal/Partida.java
 import java.io.FileWriter;
+import java.io.IOException;
 
-import org.ayed.gta.Garaje;
-=======
 import org.ayed.gta.Garaje.Garaje;
->>>>>>> 3d34d1216f2abf8d99510b3708a7844fede2e467:src/main/java/org/ayed/gta/Partida.java
 import org.ayed.gta.Misiones.Dificil;
 import org.ayed.gta.Misiones.ExcepcionMision;
 import org.ayed.gta.Misiones.Facil;
@@ -116,7 +113,7 @@ public class Partida {
 			mision.mostrarComandosJugador();
 			restarDinero(garaje.obtenerCostoMantenimiento());
 			// Jugador se desplaza en el mapa hasta terminar tiempo o llegar al destino
-			while(!mision.misionCompletada() &&!mision.fracaso()){
+			while(!mision.misionCompletada() && !mision.fracaso()){
 				System.out.println("Tiempo: " + mision.devolverTiempo() +"segundos" );
 				System.out.println("Tiempo Limite: " + mision.devolverTiempoLim() +"segundos" );
 				mision.glosario();
@@ -190,8 +187,8 @@ public class Partida {
 	        fw.write("Vehiculos:\n");
 
 	        // Recorrer los vehículos del garaje usando tus TDA
-	        for (int i = 0; i < garaje.capacidadMaxima(); i++) {
-	            Vehiculo v = garaje.obtenerVehiculo(i);
+	        for (int i = 0; i < garaje.obtenerVehiculo().tamanio(); i++) {
+	            Vehiculo v = garaje.obtenerVehiculo().dato(i);
 	            fw.write(v.informacionVehiculo() + "\n");
 	        }
 

@@ -7,6 +7,7 @@ public class Dificil extends Mision{
     public Dificil() {
 		super(0);
 	}
+
 	@Override 
 	public int vehiculosPermitidos(Garaje g){
 		return 0;

@@ -32,7 +32,7 @@ public abstract class Vehiculo {
         this.ruedas=ruedas;
         this.tipo=tipo;         
         kilometraje=0;          //kilometraje empieza desde cero
-        tanqueGasolina=0;       //tomare que el tanque esta vacio al inicio
+        tanqueGasolina=capacidadGasolina/4;       //tomare que el tanque esta vacio al inicio
         velocidadMax=maximo;
     }
 

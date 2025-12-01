@@ -155,14 +155,14 @@ public class Mapa {
     /**
      * @return altura del mapa
      */
-    public int alto() {
+    public int cantFilas() {
         return this.CANTIDAD_FILAS;
     }
 
     /**
      * @return el ancho del mapa
      */
-    public int ancho() {
+    public int cantColumnas() {
         return this.CANTIDAD_COLUMNAS;
     }
 
