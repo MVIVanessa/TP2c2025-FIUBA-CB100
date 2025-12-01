@@ -17,6 +17,7 @@ import org.ayed.tda.lista.Lista;
 public class Partida {
 	private final int NO_SEGUIR =2;
 	private final Vehiculo VEHICULO_BASICO= new Auto("Auto", "clasico", 0, 100, 10);
+	private final int PARTIDAS_INICIALES =3;
 	private Lista<Mision> misiones;	
 	private String nombreJugador;
 	private int dinero;
@@ -31,7 +32,7 @@ public class Partida {
 		garaje = new Garaje();
 		//asignar vehiculo inicial()
 		garaje.agregarVehiculo(VEHICULO_BASICO);
-		dinero= garaje.obtenerCostoMantenimiento();
+		dinero= garaje.obtenerCostoMantenimiento()*PARTIDAS_INICIALES;
 		noFallo=true;
     }
 
@@ -114,11 +115,14 @@ public class Partida {
 			restarDinero(garaje.obtenerCostoMantenimiento());
 			// Jugador se desplaza en el mapa hasta terminar tiempo o llegar al destino
 			while(!mision.misionCompletada() && !mision.fracaso()){
-				System.out.println("Tiempo: " + mision.devolverTiempo() +"segundos" );
-				System.out.println("Tiempo Limite: " + mision.devolverTiempoLim() +"segundos" );
 				mision.glosario();
 				mision.despliegueDeMapa();
+				//Muestra el tiempo del jugador
+				System.out.println("Tiempo: " + mision.devolverTiempo() +" segundos" );
+				System.out.println("Tiempo Limite: " + mision.devolverTiempoLim() +"segundos" );
 				
+				// Muestra la cantidad de gasolina disponible del jugador
+				System.out.println("Gasolida en Vehiculo:"+mision.transporte().tanque()+"/"+mision.transporte().capacidadGasolina());
 				String movimiento= sc.leerEntrada(false);
 				try {
 					mision.moverJugador(movimiento, sc);

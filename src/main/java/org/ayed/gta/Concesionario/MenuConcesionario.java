@@ -7,6 +7,7 @@ import org.ayed.tda.vector.Vector;
 
 public class MenuConcesionario {
 	Partida partidaJugador;
+	
 	public MenuConcesionario(Partida p){
 		partidaJugador=p;
 	}
@@ -15,8 +16,9 @@ public class MenuConcesionario {
 		System.out.println("| 0. Buscar Vehiculos por Nombre.        |");
 		System.out.println("| 1. Buscar Vehiculos por Marca.         |");
 		System.out.println("| 2. Mostrar todo el stock de Vehiculos. |");
+		System.out.println("| 3. volver a Menu Principal             |");
 		System.err.println("|________________________________________|");
-		int op=sc.obtenerOpcion(2);
+		int op=sc.obtenerOpcion(3);
 		procesarOpcion(op, sc);
 	}
 
@@ -37,8 +39,12 @@ public class MenuConcesionario {
 			case 2:
 				respuesta= conc.obtenerStock();
 				break;
+			case 3:
+				System.out.println("--------SALIENDO DE CONCESIONARIO--------");
 			default:
 				System.err.println("Error surgio en procesar la opcion");
+		}
+		if(op<3){
 			mostrarInfo(respuesta);
 			comprar(sc, conc);
 		}
