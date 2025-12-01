@@ -14,9 +14,12 @@ public class MenuPartida {
 		//ingreso de nombre de usuario y creacion de archivo
 		partida.ingresarNombre(entrada);
 
-		int opcion = menuJuego(entrada);
-		procesarOpcion(opcion,entrada);
-		
+		int opcion;
+		do{
+			opcion = menuJuego(entrada);
+			procesarOpcion(opcion,entrada);
+		}while(opcion!=5 && !partida.partidaNueva(entrada));
+
 		entrada.cerrar();
 	}
 	/**
@@ -29,11 +32,11 @@ public class MenuPartida {
 		System.out.println( "| 1. Jugar una Mision                  |\n"+
 							"| 2. Ir al Garaje                      |\n"+
 							"| 3. Guardar partida en un archivo     |\n"+
-							"| 4. Ir a Concesionario		        |\n"+
+							"| 4. Ir a Concesionario		       |\n"+
 							"| 5. Salir (No guarda cambios)         |\n"+
 							"|______________________________________|");
 
-		return sc.obtenerOpcion(4);
+		return sc.obtenerOpcion(5);
 	}
 
 	/**
@@ -67,10 +70,8 @@ public class MenuPartida {
 				break;
 			default:
 				System.err.println("Error en procesar opcion");
-			
-			if(op<4)
-				menuJuego(sc);
 		}
+
 	}
 	private void desplegarConcesionario(ControladorEntradas sc){
 		MenuConcesionario menuC= new MenuConcesionario(partida);

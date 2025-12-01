@@ -9,6 +9,7 @@ public class Moderada extends Mision{
     }
 	@Override 
 	public int vehiculosPermitidos(Garaje g){
+		permitidos = g.obtenerVehiculo(); //para probar
 		return 1;
 	}
 	@Override
