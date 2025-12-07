@@ -1,15 +1,17 @@
-package org.ayed.gta;
+package org.ayed.gta.Garaje;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Scanner;
 
 import org.ayed.gta.Vehiculos.Auto;
+import org.ayed.gta.Vehiculos.Exotico;
+import org.ayed.gta.Vehiculos.Moto;
 import org.ayed.gta.Vehiculos.Vehiculo;
 import org.ayed.tda.vector.Vector;
 
 public class ArchivoGaraje{
-	private final String ruta;
+	private String ruta;
 
 	/**
 	 * Constructor de Archivo garaje
@@ -36,7 +38,7 @@ public class ArchivoGaraje{
 			}
 			arch.close();			
 		} catch (IOException e) {
-			throw new ExcepcionArchivoGaraje("No se logro importar al Archivo");
+			throw new ExcepcionArchivoGaraje("No se logro importar al Archivo, "+ e.getMessage());
 		}
 
 	}
@@ -52,18 +54,18 @@ public class ArchivoGaraje{
 	 * @return tipo de vehiculo ya vuelto objeto TipoVehiculo 
 	* * throw ExcepcionArchivoGaraje el tipo de dato es irreconocible
 	 */
-	private Vehiculo crearVehiculo(String nom, String marc, String t, int prec,int c, int v){
+	private Vehiculo crearVehiculo(String nom, String marc, String t, int r, int prec,int c, int v){
                 Vehiculo vehiculo=null;
 				switch (t) {
                     case "AUTO":
                         vehiculo = new Auto(nom,marc,prec,c,v);
                         break;
                     case "MOTO":
-                        //vehiculo = new Moto(nom,marc,prec,c,v);
+                        vehiculo = new Moto(nom,marc,prec,c,v);
                         break;
 					case "EXOTICO":
-						//vehiculo= new Exotico(nom,marc,prec,c,v);
-					break;
+						vehiculo = new Exotico(nom,marc,r, prec,c,v);
+						break;
 					default:
                         throw new ExcepcionArchivoGaraje("Tipo de Vehiculo desconocido: " + t);
                 }
@@ -87,7 +89,7 @@ public class ArchivoGaraje{
 			int capacidad= Integer.parseInt(partes[0].trim());
 			int credito= Integer.parseInt(partes[1].trim());
 		
-			Vector vec = new Vector();
+			Vector<Vehiculo> vec = new Vector<>();
 			// mientras pueda seguir leyendose el archivo
 			while (entrada.hasNextLine()) {
 				linea = entrada.nextLine().trim();
@@ -99,9 +101,10 @@ public class ArchivoGaraje{
 
 					String tipo = partes[3].trim().toUpperCase(); // procesara la enumeracion y vaolvera a tipoVehiculo 	
 					//no necesito la Lectura de CANTIDAD RUEDAS en mi constructor lo hace de na
+					int ruedas = Integer.parseInt(partes[4].trim());
 					int capacidadGas = Integer.parseInt(partes[5].trim());
 					int velocidad= Integer.parseInt(partes[6].trim());
-					Vehiculo v = crearVehiculo(nombre,marca, tipo, precio, capacidadGas,velocidad);
+					Vehiculo v = crearVehiculo(nombre,marca,tipo,ruedas, precio, capacidadGas,velocidad);
 					vec.agregar(v);
 
 				} catch (NumberFormatException e) {

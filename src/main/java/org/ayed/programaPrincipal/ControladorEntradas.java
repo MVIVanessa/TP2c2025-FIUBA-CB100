@@ -4,8 +4,8 @@ import java.util.Scanner;
 public class ControladorEntradas {
     private final Scanner scanner = new Scanner(System.in);
     
-    private boolean esOpcionNumericaValida(int opcion, int maximo_opciones) {
-        return (Integer) opcion >= 0 && (Integer) opcion <= maximo_opciones;
+    private boolean esOpcionNumericaValida(int opcion, int maximoOpciones) {
+        return (Integer) opcion >= 0 && (Integer) opcion <= maximoOpciones;
     }
 
     /**
@@ -15,11 +15,11 @@ public class ControladorEntradas {
      * @return <T> La entrada del usuario convertida al tipo indicado (Integer o String).
      */
     @SuppressWarnings("unchecked")
-    public <T> T leerEntrada(boolean es_numerica) {
+    public <T> T leerEntrada(boolean esNumerica) {
             while (true) {
                 String entrada = scanner.nextLine();
     
-                if (es_numerica) {
+                if (esNumerica) {
                     try {
                         Integer numero = Integer.valueOf(entrada);
                         return (T) numero;
@@ -38,17 +38,21 @@ public class ControladorEntradas {
      * @param maximoOpciones El número máximo de opciones disponibles.
      * @return int La opción válida seleccionada por el usuario.
      */
-    public int obtenerOpcion(int maximo_opciones) {
-        boolean es_numerica = true;
+    public int obtenerOpcion(int maximoOpciones) {
+        boolean esNumerica = true;
         System.out.println("Seleccione una opción: ");
-        int opcion = leerEntrada(es_numerica);
+        int opcion = leerEntrada(esNumerica);
 
-        while (!esOpcionNumericaValida(opcion, maximo_opciones)) {
+        while (!esOpcionNumericaValida(opcion, maximoOpciones)) {
             System.out.println("Opción inválida. Por favor, ingrese una opción válida:");
-            opcion = leerEntrada(es_numerica);
+            opcion = leerEntrada(esNumerica);
             System.out.println("\n");
         }
         return opcion;
+    }
+
+    public void cerrar(){
+        scanner.close();
     }
 
 }

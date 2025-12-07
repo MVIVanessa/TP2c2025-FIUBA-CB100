@@ -41,3 +41,5 @@ mvn test
 
 Si necesitan aclarar o justificar alguna decisión de implementación,
 lo pueden hacer escribiendo en esta sección del README.
+
+Se decidió implementar el mapa con una matriz de listas doblemente enlazadas, ya que se consideró que sería mucho más eficiente, flexible y práctico al tener un formato de grilla.
