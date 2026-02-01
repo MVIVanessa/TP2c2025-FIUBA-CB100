@@ -115,21 +115,35 @@ public class Partida {
 		mision.mostrarComandosJugador();
 	
 		// Asignar la misión a la interfaz
-		Platform.runLater(() -> Interfaz.getInstancia().establecerMision(mision));
+		Platform.runLater(() -> {
+			Interfaz ui = Interfaz.getInstancia();
+			if (ui != null) {
+				ui.establecerMision(mision);
+			}
+			});
+
 
 		while (!mision.misionCompletada() && !mision.fracaso()) {
 			try {
 				Thread.sleep(300); // revisa cada 300 ms si la mision se completo o fracasó (2 veces por segundo)
 			} catch (InterruptedException e) {}
 		}
-	
+		
+		String resultado;
 		if (mision.misionCompletada()) {
 			System.out.println("¡¡Misión completada!!");
-			Platform.runLater(() -> Interfaz.getInstancia().mostrarResultado("¡Misión Completada!"));
+			resultado = "¡Misión Completada!";
 		} else {
 			System.out.println("Fracaso de misión...");
-			Platform.runLater(() -> Interfaz.getInstancia().mostrarResultado("Misión Fallida"));
+			resultado = "Misión Fallida.";
 		}
+		Platform.runLater(() -> {
+			Interfaz ui = Interfaz.getInstancia();
+			if (ui != null) {
+				ui.mostrarResultado(resultado);
+			}
+			});
+
 		return mision.misionCompletada();
 	}
 	
