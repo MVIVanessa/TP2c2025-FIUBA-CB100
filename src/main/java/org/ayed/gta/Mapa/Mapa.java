@@ -13,7 +13,7 @@ public class Mapa {
     private final int CANTIDAD_FILAS;
     static final int PROBABILIDAD_CONGESTION = 15; // en porcentaje
     static final int PROBABILIDAD_RECOMPENSA = 5; // en porcentaje
-    private final String RUTA_MAPA_BASE = "mapa.csv";
+    private final String RUTA_MAPA_BASE = "pruebaMapa.csv";
     private Lista<Lista<TipoCelda>> grillas;
     private Coordenadas entrada;
     private Coordenadas salida;

@@ -282,4 +282,17 @@ public abstract class Mision{
 	/**recoge la recompensa de credito
 	* @return la recompensa de credito por completar mision 
 	*/
+
+	public Mapa obtenerMapa(){
+		return this.mapa;
+	}
+
+	public Gps obtenerGps(){
+		return this.gps;
+	}
+
+	public Coordenadas obtenerPosicionJugador() {
+		return jugador;
+	}
+	
 }

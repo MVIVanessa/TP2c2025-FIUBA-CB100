@@ -2,8 +2,11 @@ package org.ayed.gta;
 
 import java.io.FileWriter;
 import java.io.IOException;
+import javafx.application.Platform;
+
 
 import org.ayed.gta.Garaje.Garaje;
+import org.ayed.gta.Mapa.Interfaz;
 import org.ayed.gta.Misiones.Dificil;
 import org.ayed.gta.Misiones.ExcepcionMision;
 import org.ayed.gta.Misiones.Facil;
@@ -13,6 +16,7 @@ import org.ayed.gta.Vehiculos.Auto;
 import org.ayed.gta.Vehiculos.Vehiculo;
 import org.ayed.programaPrincipal.ControladorEntradas;
 import org.ayed.tda.lista.Lista;
+import org.ayed.tda.lista.Cola;
 
 public class Partida {
 	private final int NO_SEGUIR =2;
@@ -93,67 +97,62 @@ public class Partida {
 	 * @param garaje garaje de la partida
 	*/
 	private boolean jugarMision(ControladorEntradas sc, Garaje garaje){
-		//elegir modo de mision
-		boolean bien= true;
 		System.out.println("Eliga el modo de la Mision (1.Dificil, 2.Moderada, 3.Facil): ");
 		int eleccion = sc.obtenerOpcion(3);
-		Mision mision=elegirModo(eleccion);
-		//selecciona vehiculos del listado permitido segun el modo de mision
+		Mision mision = elegirModo(eleccion);
+	
 		int cantPerm = mision.vehiculosPermitidos(garaje);
-		if (cantPerm==0){
+		if (cantPerm == 0) {
 			System.err.println("No es posible jugar. No cuenta con vehiculos para la mision");
-		}else{
-			mision.mostrarVehiculosPermitidos();
-			System.out.println("Ingrese numero de Vehiculo que quiere usar: ");
-			int elegido= sc.obtenerOpcion(cantPerm-1) ;
-			Vehiculo v= mision.seleccionarVehiculo(elegido);
-			System.out.println("Vehiculo seleccionado: "+ v.nombreVehiculo());
-
-			System.out.println("Empezando Mision");
-			//muestra comandos de la mision
-			mision.mostrarComandosJugador();
-			restarDinero(garaje.obtenerCostoMantenimiento());
-			// Jugador se desplaza en el mapa hasta terminar tiempo o llegar al destino
-			while(!mision.misionCompletada() && !mision.fracaso()){
-				mision.glosario();
-				mision.despliegueDeMapa();
-				//Muestra el tiempo del jugador
-				System.out.println("Tiempo: " + mision.devolverTiempo() +" segundos" );
-				System.out.println("Tiempo Limite: " + mision.devolverTiempoLim() +"segundos" );
-				
-				// Muestra la cantidad de gasolina disponible del jugador
-				System.out.println("Gasolida en Vehiculo:"+mision.transporte().tanque()+"/"+mision.transporte().capacidadGasolina());
-				String movimiento= sc.leerEntrada(false);
-				try {
-					mision.moverJugador(movimiento, sc);
-
-				} catch (ExcepcionMision e) {
-					System.out.println(e.getMessage());
-				}
-
-			}
-			if (mision.misionCompletada()){
-				dinero+= mision.recompensaDinero();
-				garaje.agregarCreditos(mision.recompensaCredito());
-				
-				Vehiculo exotico = mision.recompensaExotico();
-			    if (exotico != null) {
-			        garaje.agregarVehiculo(exotico);
-			        System.out.println("¡¡Obtuviste un vehículo EXÓTICO!!: " + exotico.nombreVehiculo());
-			    }
-
-				System.out.println("¡¡Misión completada!!");
-			}
-
-			if(mision.fracaso()){
-				mision.descartarRecompensas();
-				System.out.println("Fracaso de misión...");
-				bien=false;
-			}
-			misiones.agregar(mision);
+			return false;
 		}
-		return bien;
+	
+		mision.mostrarVehiculosPermitidos();
+		System.out.println("Ingrese numero de Vehiculo que quiere usar: ");
+		int elegido = sc.obtenerOpcion(cantPerm - 1);
+		Vehiculo v = mision.seleccionarVehiculo(elegido);
+		System.out.println("Vehiculo seleccionado: " + v.nombreVehiculo());
+	
+		System.out.println("Empezando Mision");
+		mision.mostrarComandosJugador();
+	
+		// Asignar la misión a la interfaz
+		Platform.runLater(() -> Interfaz.getInstancia().setMision(mision));
+	
+		/*// Lógica del juego por consola sigue funcionando
+		while (!mision.misionCompletada() && !mision.fracaso()) {
+			mision.glosario();
+			mision.despliegueDeMapa();
+			System.out.println("Tiempo: " + mision.devolverTiempo() + " segundos");
+			System.out.println("Tiempo Limite: " + mision.devolverTiempoLim() + " segundos");
+			System.out.println("Gasolina: " + mision.transporte().tanque() + "/" + mision.transporte().capacidadGasolina());
+			String movimiento = sc.leerEntrada(false);
+	
+			try {
+				mision.moverJugador(movimiento, sc);
+			} catch (ExcepcionMision e) {
+				System.out.println(e.getMessage());
+			}
+		}*/
+
+		while (!mision.misionCompletada() && !mision.fracaso()) {
+			try {
+				Thread.sleep(200); // revisa cada 200 ms si la mision se completo o fracasó
+				System.out.println("Tiempo: " + mision.devolverTiempo());
+				System.out.println("Gasolina: " + mision.transporte().tanque());
+
+			} catch (InterruptedException e) {}
+		}
+	
+		if (mision.misionCompletada()) {
+			System.out.println("¡¡Misión completada!!");
+		} else {
+			System.out.println("Fracaso de misión...");
+		}
+	
+		return mision.misionCompletada();
 	}
+	
 
 	/**
 	 * Pregunta al jugador si desea seguir jugando

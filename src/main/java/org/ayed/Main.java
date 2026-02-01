@@ -1,20 +1,37 @@
 package org.ayed;
 
-import org.ayed.programaPrincipal.MenuPartida;
+import org.ayed.programaPrincipal.*;
+
+import org.ayed.gta.Mapa.Coordenadas;
+import org.ayed.gta.Misiones.Mision;
+import org.ayed.gta.Misiones.Facil;
+import org.ayed.gta.Mapa.Interfaz;
+
+import javafx.application.Application;
+
+import org.ayed.gta.Vehiculos.Vehiculo;
+import org.ayed.gta.Vehiculos.Auto; 
+import org.ayed.tda.vector.Vector;
+
+import org.ayed.gta.Partida;
 
 public class Main {
     public static void main(String[] args) {
-        MenuPartida menu = new MenuPartida();
-        menu.empezarPartida();
-        // System.out.println("Ruta actual: " + new java.io.File("").getAbsolutePath());
-        // Mapa map = new Mapa();
-        // Gps gps = new Gps(map);
-        // gps.obtenerCamino(map.posicionInicial());
-        // gps.imprimirCamino();
-        // double tiempo = 20.0;
-        // Moderada mision = new Moderada();
-        // mision.despliegueDeMapa();
-        
+        // Lanzar JavaFX en un hilo separado
+        new Thread(() -> Interfaz.lanzar(args)).start();
+
+        Partida partida = new Partida();
+        ControladorEntradas sc = new ControladorEntradas();
+        Interfaz.setPartida(partida);
+
+        // Esperar a que la interfaz esté lista
+        while (Interfaz.getInstancia() == null) {
+            try { Thread.sleep(50); } catch (InterruptedException e) {}
+        }
+
+        System.out.println("Ventana abierta, listo para jugar.");
+
+        // Ahora podemos jugar varias misiones dinámicamente
+        partida.jugarPartida(sc);
     }
 }
-
