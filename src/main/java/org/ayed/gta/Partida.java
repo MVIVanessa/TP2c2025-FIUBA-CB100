@@ -2,13 +2,10 @@ package org.ayed.gta;
 
 import java.io.FileWriter;
 import java.io.IOException;
-import javafx.application.Platform;
-
 
 import org.ayed.gta.Garaje.Garaje;
 import org.ayed.gta.Mapa.Interfaz;
 import org.ayed.gta.Misiones.Dificil;
-import org.ayed.gta.Misiones.ExcepcionMision;
 import org.ayed.gta.Misiones.Facil;
 import org.ayed.gta.Misiones.Mision;
 import org.ayed.gta.Misiones.Moderada;
@@ -16,7 +13,8 @@ import org.ayed.gta.Vehiculos.Auto;
 import org.ayed.gta.Vehiculos.Vehiculo;
 import org.ayed.programaPrincipal.ControladorEntradas;
 import org.ayed.tda.lista.Lista;
-import org.ayed.tda.lista.Cola;
+
+import javafx.application.Platform;
 
 public class Partida {
 	private final int NO_SEGUIR =2;
@@ -117,30 +115,11 @@ public class Partida {
 		mision.mostrarComandosJugador();
 	
 		// Asignar la misión a la interfaz
-		Platform.runLater(() -> Interfaz.getInstancia().setMision(mision));
-	
-		/*// Lógica del juego por consola sigue funcionando
-		while (!mision.misionCompletada() && !mision.fracaso()) {
-			mision.glosario();
-			mision.despliegueDeMapa();
-			System.out.println("Tiempo: " + mision.devolverTiempo() + " segundos");
-			System.out.println("Tiempo Limite: " + mision.devolverTiempoLim() + " segundos");
-			System.out.println("Gasolina: " + mision.transporte().tanque() + "/" + mision.transporte().capacidadGasolina());
-			String movimiento = sc.leerEntrada(false);
-	
-			try {
-				mision.moverJugador(movimiento, sc);
-			} catch (ExcepcionMision e) {
-				System.out.println(e.getMessage());
-			}
-		}*/
+		Platform.runLater(() -> Interfaz.getInstancia().establecerMision(mision));
 
 		while (!mision.misionCompletada() && !mision.fracaso()) {
 			try {
-				Thread.sleep(200); // revisa cada 200 ms si la mision se completo o fracasó
-				System.out.println("Tiempo: " + mision.devolverTiempo());
-				System.out.println("Gasolina: " + mision.transporte().tanque());
-
+				Thread.sleep(300); // revisa cada 300 ms si la mision se completo o fracasó (2 veces por segundo)
 			} catch (InterruptedException e) {}
 		}
 	
