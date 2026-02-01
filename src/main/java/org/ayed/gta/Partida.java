@@ -146,10 +146,11 @@ public class Partida {
 	
 		if (mision.misionCompletada()) {
 			System.out.println("¡¡Misión completada!!");
+			Platform.runLater(() -> Interfaz.getInstancia().mostrarResultado("¡Misión Completada!"));
 		} else {
 			System.out.println("Fracaso de misión...");
+			Platform.runLater(() -> Interfaz.getInstancia().mostrarResultado("Misión Fallida"));
 		}
-	
 		return mision.misionCompletada();
 	}
 	

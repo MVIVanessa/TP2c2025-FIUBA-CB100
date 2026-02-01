@@ -22,7 +22,6 @@ public class Main {
 
         Partida partida = new Partida();
         ControladorEntradas sc = new ControladorEntradas();
-        Interfaz.setPartida(partida);
 
         // Esperar a que la interfaz esté lista
         while (Interfaz.getInstancia() == null) {
