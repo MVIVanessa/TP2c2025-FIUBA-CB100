@@ -2,13 +2,10 @@ package org.ayed.gta;
 
 import java.io.FileWriter;
 import java.io.IOException;
-import javafx.application.Platform;
-
 
 import org.ayed.gta.Garaje.Garaje;
 import org.ayed.gta.Mapa.Interfaz;
 import org.ayed.gta.Misiones.Dificil;
-import org.ayed.gta.Misiones.ExcepcionMision;
 import org.ayed.gta.Misiones.Facil;
 import org.ayed.gta.Misiones.Mision;
 import org.ayed.gta.Misiones.Moderada;
@@ -16,7 +13,8 @@ import org.ayed.gta.Vehiculos.Auto;
 import org.ayed.gta.Vehiculos.Vehiculo;
 import org.ayed.programaPrincipal.ControladorEntradas;
 import org.ayed.tda.lista.Lista;
-import org.ayed.tda.lista.Cola;
+
+import javafx.application.Platform;
 
 public class Partida {
 	private final int NO_SEGUIR =2;
@@ -134,18 +132,32 @@ public class Partida {
 				System.out.println(e.getMessage());
 			}
 		}*/
+		Double tiempo=0.1;
 
 		while (!mision.misionCompletada() && !mision.fracaso()) {
 			try {
 				Thread.sleep(200); // revisa cada 200 ms si la mision se completo o fracasó
-				System.out.println("Tiempo: " + mision.devolverTiempo());
-				System.out.println("Gasolina: " + mision.transporte().tanque());
-
+				if(tiempo != mision.devolverTiempo()){
+					tiempo=mision.devolverTiempo();
+					mision.glosario();
+					System.out.println("Tiempo: " + mision.devolverTiempo() + " segundos");
+					System.out.println("Tiempo Limite: " + mision.devolverTiempoLim() + " segundos");
+					System.out.println("Gasolina: " + mision.transporte().tanque() + "/" + mision.transporte().capacidadGasolina());
+				}
 			} catch (InterruptedException e) {}
+
 		}
 	
 		if (mision.misionCompletada()) {
 			System.out.println("¡¡Misión completada!!");
+			if(null!= mision.recompensaExotico()){
+				garaje.agregarVehiculo(mision.recompensaExotico());
+				System.out.println("Vehiculo Ganado: "+mision.recompensaExotico().informacionVehiculo());
+			}else{
+				garaje.agregarCreditos(mision.recompensaCredito());
+				System.out.println("Credito Ganado: "+ mision.recompensaCredito());
+			}	
+			
 			Platform.runLater(() -> Interfaz.getInstancia().mostrarResultado("¡Misión Completada!"));
 		} else {
 			System.out.println("Fracaso de misión...");

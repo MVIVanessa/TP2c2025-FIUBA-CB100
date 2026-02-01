@@ -1,6 +1,7 @@
 package org.ayed.programaPrincipal;
 
 import org.ayed.gta.Concesionario.MenuConcesionario;
+import org.ayed.gta.Mapa.Interfaz;
 import org.ayed.gta.Partida;
 
 public class MenuPartida {
@@ -48,11 +49,22 @@ public class MenuPartida {
 	private void procesarOpcion(int op, ControladorEntradas sc){
 		switch (op) {
 			case 1:
-				partida.jugarPartida(sc);
-				if(partida.partidaNueva(sc)){
-					partida.guardarPartida();
-					empezarPartida();
-				}
+					new Thread(() -> Interfaz.lanzar(new String[]{})).start();
+
+					// Esperar a que la interfaz esté lista
+					while (Interfaz.getInstancia() == null) {
+						try { Thread.sleep(50); } catch (InterruptedException e) {}
+					}
+
+					System.out.println("Ventana abierta, listo para jugar.");
+
+					// Usar la partida ya creada
+					partida.jugarPartida(sc);
+
+					if(partida.partidaNueva(sc)){
+						partida.guardarPartida();
+						empezarPartida();
+					}
 				break;
 			case 2:
 				// ir a garaje. Desplega el menu de acciones de garaje

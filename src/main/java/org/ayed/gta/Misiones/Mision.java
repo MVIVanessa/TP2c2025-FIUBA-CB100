@@ -138,11 +138,12 @@ public abstract class Mision{
 	}
 
 	public void glosario(){
-		System.out.println("E= Edificio");
-		System.out.println("^= Calle congestionada");
-		System.out.println("*= GPS hacia la salida");
-		System.out.println("ESPACIO= Calle transitable");
-		System.out.println("J= Ubicacion de Juagdor");
+		System.out.println("GRIS= Edificio");
+		System.out.println("ROSA= Calle congestionada");
+		System.out.println("AMARILLO= GPS hacia la salida");
+		System.out.println("BLANCO= Calle transitable");
+		System.out.println("NEGRO= Ubicacion de Juagdor");
+		System.out.println("VERDE = Destino");
 	}
 
 	/**
