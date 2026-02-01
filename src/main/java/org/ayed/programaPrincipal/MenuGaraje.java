@@ -26,19 +26,19 @@ public class MenuGaraje{
 		do{
 			System.out.println("-------MENU DE GARAJE--------");
 			System.out.println("Funciones");
-			System.out.println("1. Salir");
-			System.out.println("2. Mostrar informacion de todos los vehiculos.");
-			System.out.println("3. Eliminar un vehiculo.");
-			System.out.println("4. Mejorar el garaje.");
-			System.out.println("5. Agregar creditos.");
-			System.out.println("6. Mostrar el valor total del garaje.");
-			System.out.println("7. Mostrar el costo total diario de mantenimiento.");
-			System.out.println("8. Exportar la informacion del garaje en archivo "+ ruta);
-			System.out.println("9. Cargar un garaje a partir de el archivo "+ ruta);
-			System.out.println("10. Cargar gasolina un vehiculo segun su indice");
-			System.out.println("11. Cargar gasolina todos los Vehiculos en el garaje.");
+			System.out.println("0. Salir");
+			System.out.println("1. Mostrar informacion de todos los vehiculos.");
+			System.out.println("2. Eliminar un vehiculo.");
+			System.out.println("3. Mejorar el garaje.");
+			System.out.println("4. Agregar creditos.");
+			System.out.println("5. Mostrar el valor total del garaje.");
+			System.out.println("6. Mostrar el costo total diario de mantenimiento.");
+			System.out.println("7. Exportar la informacion del garaje en archivo "+ ruta);
+			System.out.println("8. Cargar un garaje a partir de el archivo "+ ruta);
+			System.out.println("9. Cargar gasolina un vehiculo segun su indice");
+			System.out.println("10. Cargar gasolina todos los Vehiculos en el garaje.");
 
-			opcion = controlador.obtenerOpcion(11);
+			opcion = controlador.obtenerOpcion(10);
 			procesarOpcion(opcion, garaje, controlador);
 		}while (opcion!=1);
 
@@ -52,39 +52,39 @@ public class MenuGaraje{
 	 */
 	private void procesarOpcion(int opcion, Garaje garaje, ControladorEntradas controlador){
 		switch (opcion) {
-			case 1 :
+			case 0 :
 				System.out.println("-------- SALIENDO --------");
 				break;
-			case 2 :
+			case 1 :
 				mostrarInfo(garaje);
 				break;
-			case 3 :
+			case 2 :
 				eliminando(garaje, controlador);
 				break;
-			case 4 :
+			case 3 :
 				mejorar(garaje);
 				break;
-			case 5 :
+			case 4 :
 				creditos(garaje, controlador);
 				break;
-			case 6 :
+			case 5 :
 				mostrarPrecioTotal(garaje);
 				break;                
-			case 7 :
+			case 6 :
 				mostrarCostoMantenimiento(garaje);
 				break;
-			case 8 :
+			case 7 :
 				exportarGaraje(garaje);
 				break;
-			case 9 :
+			case 8 :
 				garaje.copiarGaraje(importarGaraje());
 				if(!garaje.obtenerVehiculo().vacio())
 					System.out.println("Garaje cargado correctamente desde archivo.\n");
 				break;
-			case 10:
+			case 9:
 				cargarVehiculo(garaje, controlador);
 				break;
-			case 11:
+			case 10:
 				cargarVehiculos(garaje);
 				break;
 			default:

@@ -18,7 +18,7 @@ public abstract class Mision{
 	private Coordenadas jugador;
 	private Mapa mapa;
 	private Gps gps;
-	protected int recompensaCreditos;
+	protected int recompensaCreditosExtra;
 	protected Vehiculo recompensaExotico;
 	
 	/**
@@ -34,7 +34,7 @@ public abstract class Mision{
 		jugador= mapa.posicionInicial();
 		gps= new Gps(mapa);
 		permitidos=null;
-		recompensaCreditos=0;
+		recompensaCreditosExtra=0;
 		recompensaExotico=null;
 	}
 
@@ -184,7 +184,7 @@ public abstract class Mision{
 		if (probabilidad < 0.95) {
 			// recompensa de crédito entre 50 y 200
 			int valor = 50 + (int)(Math.random() * 151);
-			recompensaCreditos += valor;
+			recompensaCreditosExtra += valor;
 		}
 		
 		// 5% → vehículo exótico
@@ -242,13 +242,16 @@ public abstract class Mision{
 	 * Reinicia las recompensas.
  	 */
 	public void descartarRecompensas(){		// agrego este método por si la misión falla
-	    recompensaCreditos = 0;
+	    recompensaCreditosExtra = 0;
 	    recompensaExotico = null;
 	}
-	/*devuelve la reconpoensaCredito */
-	public int recompensaCredito() {
-	    return recompensaCreditos;
+	/*devuelve la reconpoensaCredito Extra del casillo rosa */
+	public int recompensaCreditosExtra() {
+	    return recompensaCreditosExtra;
 	}
+	/*devuelve la reconpoensaCredito */
+	public abstract int recompensaCredito();
+
 	/*Devuelve la reconpensa de un Cehiculo exotico */
 	public Vehiculo recompensaExotico() {
 	    return recompensaExotico;

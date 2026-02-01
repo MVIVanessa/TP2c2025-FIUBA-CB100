@@ -12,7 +12,6 @@ import org.ayed.gta.Misiones.Moderada;
 import org.ayed.gta.Vehiculos.Auto;
 import org.ayed.gta.Vehiculos.Vehiculo;
 import org.ayed.programaPrincipal.ControladorEntradas;
-import org.ayed.tda.lista.Lista;
 
 import javafx.application.Platform;
 
@@ -20,7 +19,6 @@ public class Partida {
 	private final int NO_SEGUIR =2;
 	private final Vehiculo VEHICULO_BASICO= new Auto("Auto", "clasico", 0, 100, 10);
 	private final int PARTIDAS_INICIALES =3;
-	private Lista<Mision> misiones;	
 	private String nombreJugador;
 	private int dinero;
 	private Garaje garaje;
@@ -29,7 +27,6 @@ public class Partida {
 	/**constructor de Partida
 	 */
     public Partida() {
-		misiones = new Lista<>();
 		nombreJugador= null;
 		garaje = new Garaje();
 		//asignar vehiculo inicial()
@@ -61,7 +58,7 @@ public class Partida {
     	if(noFallo){
 			if(dinero < garaje.obtenerCostoMantenimiento())
         		System.out.println("No tienes dinero suficiente para iniciar otra misión.");
-			if(salir)
+			if (salir)
 				System.out.println("Finalizaste la partida.");
 		}
 
@@ -74,13 +71,13 @@ public class Partida {
 	private Mision elegirModo(int i){
 		Mision mision=null;
 		switch (i) {
-			case 1:
+			case 0:
 				mision= new Dificil();
 				break;
-			case 2:
+			case 1:
 				mision= new Moderada();
 				break;
-			case 3:
+			case 2:
 				mision= new Facil();
 				break;
 			default:
@@ -96,8 +93,12 @@ public class Partida {
 	*/
 	private boolean jugarMision(ControladorEntradas sc, Garaje garaje){
 		System.out.println("Eliga el modo de la Mision (1.Dificil, 2.Moderada, 3.Facil): ");
-		int eleccion = sc.obtenerOpcion(3);
+		int eleccion = sc.obtenerOpcion(2);
 		Mision mision = elegirModo(eleccion);
+		if (mision == null) {
+			System.err.println("No se pudo crear la misión.");
+			return false; // salir de jugarMision sin romper
+		}
 	
 		int cantPerm = mision.vehiculosPermitidos(garaje);
 		if (cantPerm == 0) {
@@ -112,38 +113,13 @@ public class Partida {
 		System.out.println("Vehiculo seleccionado: " + v.nombreVehiculo());
 	
 		System.out.println("Empezando Mision");
-		mision.mostrarComandosJugador();
 	
 		// Asignar la misión a la interfaz
-		Platform.runLater(() -> Interfaz.getInstancia().setMision(mision));
-	
-		/*// Lógica del juego por consola sigue funcionando
-		while (!mision.misionCompletada() && !mision.fracaso()) {
-			mision.glosario();
-			mision.despliegueDeMapa();
-			System.out.println("Tiempo: " + mision.devolverTiempo() + " segundos");
-			System.out.println("Tiempo Limite: " + mision.devolverTiempoLim() + " segundos");
-			System.out.println("Gasolina: " + mision.transporte().tanque() + "/" + mision.transporte().capacidadGasolina());
-			String movimiento = sc.leerEntrada(false);
-	
-			try {
-				mision.moverJugador(movimiento, sc);
-			} catch (ExcepcionMision e) {
-				System.out.println(e.getMessage());
-			}
-		}*/
-		Double tiempo=0.1;
+		Platform.runLater(() -> Interfaz.getInstancia().establecerMision(mision));
 
 		while (!mision.misionCompletada() && !mision.fracaso()) {
 			try {
-				Thread.sleep(200); // revisa cada 200 ms si la mision se completo o fracasó
-				if(tiempo != mision.devolverTiempo()){
-					tiempo=mision.devolverTiempo();
-					mision.glosario();
-					System.out.println("Tiempo: " + mision.devolverTiempo() + " segundos");
-					System.out.println("Tiempo Limite: " + mision.devolverTiempoLim() + " segundos");
-					System.out.println("Gasolina: " + mision.transporte().tanque() + "/" + mision.transporte().capacidadGasolina());
-				}
+				Thread.sleep(300); // revisa cada 300 ms si la mision se completo o fracasó (2 veces por segundo)
 			} catch (InterruptedException e) {}
 
 		}
@@ -152,12 +128,15 @@ public class Partida {
 			System.out.println("¡¡Misión completada!!");
 			if(null!= mision.recompensaExotico()){
 				garaje.agregarVehiculo(mision.recompensaExotico());
-				System.out.println("Vehiculo Ganado: "+mision.recompensaExotico().informacionVehiculo());
-			}else{
-				garaje.agregarCreditos(mision.recompensaCredito());
-				System.out.println("Credito Ganado: "+ mision.recompensaCredito());
-			}	
-			
+				System.out.println("RECONPENSA Ganada: Vehiculo"+ mision.recompensaExotico().informacionVehiculo());
+			}else if (mision.recompensaCreditosExtra()!=mision.recompensaCredito()){
+				garaje.agregarCreditos(mision.recompensaCreditosExtra());
+				System.out.println("RECONPENSA Ganada: Credito"+ mision.recompensaCreditosExtra());
+			}
+			garaje.agregarCreditos(mision.recompensaCredito());
+			dinero += mision.recompensaDinero();
+			System.out.println("Credito Ganado: "+ mision.recompensaCredito());
+				
 			Platform.runLater(() -> Interfaz.getInstancia().mostrarResultado("¡Misión Completada!"));
 		} else {
 			System.out.println("Fracaso de misión...");
@@ -175,9 +154,9 @@ public class Partida {
 	 * @return true si se desea contunuar, false sino, o si no puede seguir aunque quiera al no tener suficiente dinero
 	 */
 	private boolean continuarJugando(ControladorEntradas sc,Garaje g){
-		System.out.println("Desea seguir jugando?( 1.si 2.no): ");
+		System.out.println("Desea seguir jugando?( 0.si 1.no): ");
 		//comparo con el numero para seguir
-		int op= sc.obtenerOpcion(2);
+		int op= sc.obtenerOpcion(1);
 		return op==NO_SEGUIR;
 	}
 	/**
@@ -230,8 +209,8 @@ public class Partida {
 	* @param sc controlador de entradas
 	*/ 
 	public boolean partidaNueva(ControladorEntradas sc){
-		System.out.println("Desea abrir una nueva partida?( 1.si 2.no):");
-		boolean salir= NO_SEGUIR == sc.obtenerOpcion(2);
+		System.out.println("Desea abrir una nueva partida?( 0.si 1.no):");
+		boolean salir= NO_SEGUIR == sc.obtenerOpcion(1);
 		return (!noFallo || dinero-garaje.obtenerCostoMantenimiento()<0) && !salir;
 	}
 	/**devuelde el nombre del jugador de la partida */

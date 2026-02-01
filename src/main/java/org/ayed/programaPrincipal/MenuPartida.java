@@ -30,15 +30,15 @@ public class MenuPartida {
 	 */
 	private int menuJuego(ControladorEntradas sc){
 		System.out.println(" ______________________________________");
-		System.out.println( "| 1. Jugar una Mision                  |\n"+
-							"| 2. Ir al Garaje                      |\n"+
-							"| 3. Guardar partida en un archivo     |\n"+
-							"| 4. Ir a Concesionario		       |\n"+
-							"| 5. Mostrar dinero en cuenta			|\n"+
-							"| 6. Salir (No guarda cambios)         |\n"+
+		System.out.println( "| 0. Jugar una Mision                  |\n"+
+							"| 1. Ir al Garaje                      |\n"+
+							"| 2. Guardar partida en un archivo     |\n"+
+							"| 3. Ir a Concesionario		       |\n"+
+							"| 4. Mostrar dinero en cuenta			|\n"+
+							"| 5. Salir (No guarda cambios)         |\n"+
 							"|______________________________________|");
 
-		return sc.obtenerOpcion(6);
+		return sc.obtenerOpcion(5);
 	}
 
 	/**
@@ -48,40 +48,40 @@ public class MenuPartida {
 	 */
 	private void procesarOpcion(int op, ControladorEntradas sc){
 		switch (op) {
-			case 1:
-					new Thread(() -> Interfaz.lanzar(new String[]{})).start();
+			case 0:
+				    if (Interfaz.getInstancia() == null) {
+						new Thread(() -> Interfaz.lanzar(new String[]{})).start();
 
 					// Esperar a que la interfaz esté lista
-					while (Interfaz.getInstancia() == null) {
-						try { Thread.sleep(50); } catch (InterruptedException e) {}
+						while (Interfaz.getInstancia() == null) {
+							try { Thread.sleep(50); } catch (InterruptedException e) {}
+						}
+				
+						System.out.println("Ventana abierta, listo para jugar.");
 					}
-
-					System.out.println("Ventana abierta, listo para jugar.");
-
-					// Usar la partida ya creada
-					partida.jugarPartida(sc);
-
+						// Usar la partida ya creada
+						partida.jugarPartida(sc);
+					
 					if(partida.partidaNueva(sc)){
 						partida.guardarPartida();
-						empezarPartida();
 					}
 				break;
-			case 2:
+			case 1:
 				// ir a garaje. Desplega el menu de acciones de garaje
 				MenuGaraje menu= new MenuGaraje(partida.nombre(), partida.garaje());
 				menu.mostrarMenu();
 				break;
-			case 3:
+			case 2:
 				// guarda la partida en un archivo
 				partida.guardarPartida();
 				break;
-			case 4: 
+			case 3: 
 				desplegarConcesionario(sc);
 				break;
-			case 5:
+			case 4:
 				System.out.println("Dinero en cuenta: $"+ partida.dinero());
 				break;
-			case 6:
+			case 5:
 				System.out.println("Termino la partida");
 				break;
 			default:
