@@ -1,5 +1,6 @@
-package org.ayed.gta;
+package org.ayed.gta.Garaje;
 import org.ayed.gta.Vehiculos.Vehiculo;
+import org.ayed.tda.lista.Cola;
 import org.ayed.tda.vector.Vector;
 
 public class Garaje {
@@ -10,14 +11,16 @@ public class Garaje {
     private int capacidad;      // difiere de la capacidad max de clase vector
     private Vector<Vehiculo> vehiculos;
     private int creditos;
+    private Cola<Vehiculo> zonaEspera;  // Cola FIFO para zona de espera
 
 
     // Constructor de Garaje
     public Garaje(){
         // espacioOcupado=0;       // cuando creo un vector desde ya lo dejare vacio
-        vehiculos = new Vector();
+        vehiculos = new Vector<>();
         capacidad = CAPACIDAD_INICIAL;
-        creditos=0;
+        creditos = 0;
+        zonaEspera = new Cola<>();
     }
 
     // este es un ampliaje de Garaje que no es lo mismo que para el vector.
@@ -35,23 +38,42 @@ public class Garaje {
      * Agrega un Vehiculo al Garaje.
      *
      * @param vehiculo Vehiculo a agregar.
-     //  * @throws ExcepcionGaraje si no excede la capacidad .
+     * @throws ExcepcionGaraje si Vehiculo es null .
      */
-    public void agregarVehiculo(Vehiculo vehiculo) {
+    public String agregarVehiculo(Vehiculo vehiculo) {
         // Implementar.
-        if(vehiculos.tamanio() >= capacidad)
-            throw new ExcepcionGaraje("No hay mas espacio para agregar");      
+        if (vehiculo == null)
+            throw new ExcepcionGaraje("Vehiculo nulo no se puede agregar");
 
-        vehiculos.agregar(vehiculo);
-        System.out.println("Agregado: "+ vehiculo.informacionVehiculo()); 
-    
+        String mensaje;
+        if (vehiculos.tamanio() < capacidad) {
+            vehiculos.agregar(vehiculo);
+            mensaje= ("Agregado: " + vehiculo.informacionVehiculo());
+
+        } else {
+            zonaEspera.agregar(vehiculo);
+            mensaje=("Garaje lleno -> enviado a zona de espera: " + vehiculo.nombreVehiculo());
+        }
+        return mensaje;
     }
 
-        /**
+     /**
+     * Intenta mover vehículos de la zona de espera al garaje,
+     * mientras haya espacio disponible.
+     */
+    private void transferirDesdeEspera() {
+        while (!zonaEspera.vacio() && vehiculos.tamanio() < capacidad) {
+            Vehiculo vehiculo = zonaEspera.eliminar();
+            vehiculos.agregar(vehiculo);
+            System.out.println("Movido desde espera -> " + vehiculo.nombreVehiculo());
+        }
+    }
+
+    /**
      * Elimina un Vehiculo del Garaje.
      *
      * @param nombre Nombre de Vehiculo a eliminar.
-     //  * @throws ExcepcionGaraje si el Garje esta vacio o  No se encuentra el vehiculo.
+     * @throws ExcepcionGaraje si el Garje esta vacio o  No se encuentra el vehiculo.
      */
     public void eliminarVehiculo(String nombre) {
         // Implementar.
@@ -72,10 +94,13 @@ public class Garaje {
             }
             i++;
         }
+
         if(!eliminado)
             throw new ExcepcionGaraje("Nombre de Vehiculo inexistente");
 
-    }
+        transferirDesdeEspera();
+}
+
     /** Acredita creditos incresado
     *   @param creditos Creditos a ingresar  
     ** throw ExcepcionGaraje si el credito 
@@ -84,7 +109,7 @@ public class Garaje {
         // Implementar.
         if (creditos <= 0)
             throw new ExcepcionGaraje("Monto de credito invalido");
-        this.creditos = creditos;
+        this.creditos += creditos;
     }
 
     /** Mejora la capacidad de almacenamiento del Garaje  
@@ -93,11 +118,14 @@ public class Garaje {
     */
     public void mejorarGaraje() {
         // Implementar.
-        if( creditos-COSTO_MEJORA < 0)
+        if( this.creditos-COSTO_MEJORA < 0)
             throw new ExcepcionGaraje("Credito insuficiente");
         // mejorar el vector de Vehiculos al duplicarla al doble
         ampliarGaraje();
-        creditos-=COSTO_MEJORA;
+        creditos -= COSTO_MEJORA;
+        
+        // Intentar mover vehículos en espera
+        transferirDesdeEspera();
     }
 
     /** Calcular el Valor total de la suma de todos los precios en Garaje de los vehiculos
@@ -141,16 +169,28 @@ public class Garaje {
         String info; 
         for(int i=0; i< vehiculos.tamanio() ; i++){
             info= vehiculos.dato(i).informacionVehiculo();
-            System.out.println(info);
+            System.out.println( i + " _" +info);
         }
 
     }
-
+    /**
+     * Carga gasolina de un Vehiculo 
+     * @param litros cantidad de litros a llenar
+     * @param indice indice del Vehiculo en el garaje
+     */
     public void cargarGasolinaVehiculo(int litros, int indice){
         if(litros*PRECIO_G > creditos)
             throw new ExcepcionGaraje("Credito insuficiente para la operacion");
         vehiculos.dato(indice).llenarGasolina(litros);
         creditos-=litros*PRECIO_G;
+    }
+
+    public void cargarTodosVehiculos(){
+        int litro;
+        for( int i=0; i<vehiculos.tamanio(); i++){
+            litro= vehiculos.dato(i).capacidadGasolina() -vehiculos.dato(i).tanque();
+            cargarGasolinaVehiculo(litro, i);
+        }
     }
 
     //Para uso de archivo

@@ -2,8 +2,6 @@ package org.ayed.gta.Vehiculos;
 
 public abstract class Vehiculo {
         // CONSTANTES QUE NO SE CAMBIAN
-        private final int COSTO_MOTO= 30;
-        private final int RUEDA_MOTO= 2;
         protected final int COSTO_GASOLINA=1;
 
         private String nombre;
@@ -34,7 +32,7 @@ public abstract class Vehiculo {
         this.ruedas=ruedas;
         this.tipo=tipo;         
         kilometraje=0;          //kilometraje empieza desde cero
-        tanqueGasolina=0;       //tomare que el tanque esta vacio al inicio
+        tanqueGasolina=capacidadGasolina/4;       //tomare que el tanque esta vacio al inicio
         velocidadMax=maximo;
     }
 
@@ -50,22 +48,27 @@ public abstract class Vehiculo {
      * @return costo de MAntenimiento del Vehiculo
      */
     abstract public int costoMantenimientoVehiculo();
-    
+
     /**
-     * Llenar en tanque de gasolina al maximo
+     * Cargar en tanque una cantidad especifica de gasolina
      */
-    public void llenarGasolinaMax(){
-        tanqueGasolina=capacidadGas;       //si tenia algo dentro antes se pisara y por la maxima capacidad.
+    public void llenarGasolina(int litros){
+        if(capacidadGas<litros + tanqueGasolina)
+            throw new ExcepcionVehiculo("Litros mayor a la capacidad de Gasolina del " + tipo);
+        tanqueGasolina += litros;
     }
 
     /**
-     * LLeganar el tanque una cierta cantidad de litros
-     * @param litros la cantidad de litros que se cargan al tanque
+     * Rebaja de apoco la cantidad de Gasolina en el tanque
      */
-    public void llenarGasolina(int litros){
-        if(capacidadGas<litros+tanqueGasolina)
-            throw new ExcepcionVehiculo("Litros mayor a la capacidad de Gasolina disponible del " + tipo);
-        tanqueGasolina+=litros;
+    public void rebajarCantidadTanque(){
+        tanqueGasolina--;
+    }
+    /**
+     * Aumenta de apoco la cantidad de Gasolina en el tanque
+     */
+    public void subirKilometraje(){
+        kilometraje++;
     }
 
     //devolucion de mis atributos, podran ver lso datos pero no modificarlos!
@@ -93,6 +96,21 @@ public abstract class Vehiculo {
      * @return capacidad de gasolina del Vehiculo */
     public int capacidadGasolina(){
         return capacidadGas;
+    }
+    /**
+     * @return gazolina disponible del Vehiculo */
+    public int tanque(){
+        return tanqueGasolina;
+    }
+    /**
+     * @return velocidad maxima del Vehiculo */
+    public int velocidadMaxima(){
+        return velocidadMax;
+    }
+    /**
+     * @return tipo de Vehiculo */
+    public String tipoVehiculo() {
+        return tipo;
     }
 
 }

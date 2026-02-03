@@ -43,7 +43,7 @@ public class DiccionarioOrdenadoTest {
     }
 
     private void llenarDiccionario() {
-          diccionarioOrdenado.agregar(10, 10);
+        diccionarioOrdenado.agregar(10, 10);
         diccionarioOrdenado.agregar(7, 7);
         diccionarioOrdenado.agregar(13, 13);
         diccionarioOrdenado.agregar(5, 5);
