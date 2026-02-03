@@ -14,7 +14,7 @@ public class Mapa {
     static final int PROBABILIDAD_CONGESTION = 15; // en porcentaje
     static final int PROBABILIDAD_RECOMPENSA = 5; // en porcentaje
     private final String RUTA_MAPA_BASE = "pruebaMapa.csv";
-    private Lista<Lista<TipoCelda>> grillas;
+    private final Lista<Lista<TipoCelda>> grillas;
     private Coordenadas entrada;
     private Coordenadas salida;
     /**
@@ -190,7 +190,7 @@ public class Mapa {
         TipoCelda tipo = datoDeCelda(cX, cY);
 
         if (tipo == TipoCelda.RECOMPENSA) {
-            this.grillas.dato(cX).modificarDato(TipoCelda.TRANSITABLE, cY); // Al recoger recompensa, la celda vuelve a ser RANSITABLE
+            this.grillas.dato(cX).modificarDato(TipoCelda.TRANSITABLE_RECOMPENSA, cY); // Al recoger recompensa, la celda vuelve a ser RANSITABLE
             return true;
         }
         return false;
@@ -204,7 +204,7 @@ public class Mapa {
 	public int costoTransito(Coordenadas c){
 		int costo=VALOR_CALLE;
         TipoCelda tipo= datoDeCelda((c.obtenerX()), c.obtenerY());
-		if(tipo == tipo.CONGESTIONADA)
+		if(tipo == TipoCelda.CONGESTIONADA)
 			costo*=5;
 		return costo;
 	}

@@ -19,7 +19,7 @@ public class MenuPartida {
 		do{
 			opcion = menuJuego(entrada);
 			procesarOpcion(opcion,entrada);
-		}while(opcion!=6);
+		}while(opcion!=5);
 
 		entrada.cerrar();
 	}

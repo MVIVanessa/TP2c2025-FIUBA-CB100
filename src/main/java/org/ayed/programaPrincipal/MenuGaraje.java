@@ -40,7 +40,7 @@ public class MenuGaraje{
 
 			opcion = controlador.obtenerOpcion(10);
 			procesarOpcion(opcion, garaje, controlador);
-		}while (opcion!=1);
+		}while (opcion!=0);
 
 
 	}

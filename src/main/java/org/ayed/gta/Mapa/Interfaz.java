@@ -13,6 +13,7 @@ import javafx.scene.control.Label;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
@@ -32,9 +33,10 @@ public class Interfaz extends Application {
     private BorderPane root;
     private Label labelTiempo;
     private Label labelGasolina;
+    private Label labelMensaje;
 
     public Interfaz() {
-        instancia = this;
+        
     }
 
     public static Interfaz getInstancia() {
@@ -43,6 +45,7 @@ public class Interfaz extends Application {
 
     @Override
     public void start(Stage stage) {
+        instancia = this;
         root = new BorderPane();
 
         //----- MAPA -----//
@@ -57,7 +60,9 @@ public class Interfaz extends Application {
 
         //----- HUD (arriba derecha) -----//
         VBox hud = crearHUD();
-        root.setTop(hud);
+        HBox barraSuperior = crearBarraSuperior();
+        root.setTop(barraSuperior);
+
         BorderPane.setAlignment(hud, Pos.TOP_RIGHT);
 
         //----- GLOSARIO (izquierda) -----//
@@ -80,10 +85,22 @@ public class Interfaz extends Application {
                     jugador = mision.obtenerPosicionJugador();
                     actualizarHUD();
                     dibujarMapa();
+                    // congestión
+                    if (mapa.datoDeCelda(jugador.obtenerX(), jugador.obtenerY()) == TipoCelda.CONGESTIONADA) {
+                        mostrarMensaje("Zona congestionada: perdiste más tiempo ⏱️", Color.ORANGE);
+                    }
+                    // recompensa
+                    if (mapa.datoDeCelda(jugador.obtenerX(), jugador.obtenerY()) == TipoCelda.TRANSITABLE_RECOMPENSA) {
+                        mostrarMensaje("¡Recompensa recogida! 🎉", Color.GREEN);
+                        mapa.obtenerMapa().dato(jugador.obtenerX()).modificarDato(TipoCelda.TRANSITABLE, jugador.obtenerY());
+                    }
+
                 } catch (ExcepcionMision e) {
-                    System.out.println(e.getMessage());
+                    mostrarMensaje(e.getMessage(), Color.RED);
                 }
             }
+            //Limpiar al cerrar la app
+            stage.setOnCloseRequest(e -> { instancia = null;});
         });
     }
 
@@ -160,6 +177,7 @@ public class Interfaz extends Application {
             case ENTRADA: return Color.BLUE;
             case SALIDA: return Color.GREEN;
             case RECOMPENSA: return Color.MAGENTA;
+            case TRANSITABLE_RECOMPENSA: return Color.WHITE;
             default: return Color.LIGHTGRAY;
         }
     }
@@ -229,5 +247,41 @@ public class Interfaz extends Application {
 
         return glosario;
     }
+
+    private HBox crearBarraSuperior() {
+        labelMensaje = new Label("");
+        labelMensaje.setStyle(
+            "-fx-font-size: 14px;" +
+            "-fx-text-fill: darkred;"
+        );
+
+        VBox mensajes = new VBox(labelMensaje);
+        mensajes.setAlignment(Pos.CENTER_LEFT);
+        mensajes.setStyle("-fx-padding: 10;");
+
+        VBox hud = crearHUD();
+
+        HBox barra = new HBox(mensajes, hud);
+        barra.setAlignment(Pos.CENTER);
+        barra.setSpacing(20);
+        barra.setStyle(
+            "-fx-background-color: rgba(255,255,255,0.85);"
+        );
+
+        HBox.setHgrow(mensajes, javafx.scene.layout.Priority.ALWAYS);
+
+        return barra;
+    }
+
+    private void mostrarMensaje(String texto, Color color) {
+        labelMensaje.setText(texto);
+        labelMensaje.setTextFill(color);
+
+        PauseTransition pausa = new PauseTransition(Duration.seconds(1.5));
+        pausa.setOnFinished(e -> labelMensaje.setText(""));
+        pausa.play();
+    }
+
+
 
 }
