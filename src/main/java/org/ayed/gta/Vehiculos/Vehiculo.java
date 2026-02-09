@@ -68,7 +68,7 @@ public abstract class Vehiculo {
      * Aumenta de apoco la cantidad de Gasolina en el tanque
      */
     public void subirKilometraje(){
-        kilometraje--;
+        kilometraje++;
     }
 
     //devolucion de mis atributos, podran ver lso datos pero no modificarlos!

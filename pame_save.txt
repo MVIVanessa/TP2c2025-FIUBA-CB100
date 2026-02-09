@@ -1,0 +1,5 @@
+Jugador:pame
+Dinero:30
+Vehiculos:
+Auto, clasico, 0, AUTO, 4, 100, 10
+FIN

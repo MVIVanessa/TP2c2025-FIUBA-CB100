@@ -2,213 +2,148 @@ package org.ayed.programaPrincipal;
 
 import org.ayed.gta.Garaje.ArchivoGaraje;
 import org.ayed.gta.Garaje.Garaje;
-import org.ayed.gta.Vehiculos.Auto;
-import org.ayed.gta.Vehiculos.Vehiculo;
+import org.ayed.programaPrincipal.interfaz.Campo;
+import org.ayed.programaPrincipal.interfaz.Controlador;
+import org.ayed.programaPrincipal.interfaz.TipoCampo;
 
 public class MenuGaraje{
 	private final String FORMATO_RUTA = ".csv";
 	private String ruta;
 	private Garaje garaje;
+	Controlador controlador;
 
 	/**
 	 * Cosntructor
 	 * @param ruta ruta del archivo a guardar el garaje+
 	 */
-    MenuGaraje(String ruta, Garaje garaje){
+    public MenuGaraje(String ruta, Garaje garaje, Controlador controlador) {
         this.ruta = ruta+FORMATO_RUTA;
 		this.garaje= garaje;
+		this.controlador = controlador;
     }
-	/** Mostrara el menu de opciones
-	 */
-	public void mostrarMenu(){
-		ControladorEntradas controlador= new ControladorEntradas();
-		int opcion;
-		do{
-			System.out.println("-------MENU DE GARAJE--------");
-			System.out.println("Funciones");
-			System.out.println("1. Salir");
-			System.out.println("2. Mostrar informacion de todos los vehiculos.");
-			System.out.println("3. Eliminar un vehiculo.");
-			System.out.println("4. Mejorar el garaje.");
-			System.out.println("5. Agregar creditos.");
-			System.out.println("6. Mostrar el valor total del garaje.");
-			System.out.println("7. Mostrar el costo total diario de mantenimiento.");
-			System.out.println("8. Exportar la informacion del garaje en archivo "+ ruta);
-			System.out.println("9. Cargar un garaje a partir de el archivo "+ ruta);
-			System.out.println("10. Cargar gasolina un vehiculo segun su indice");
-			System.out.println("11. Cargar gasolina todos los Vehiculos en el garaje.");
-
-			opcion = controlador.obtenerOpcion(11);
-			procesarOpcion(opcion, garaje, controlador);
-		}while (opcion!=1);
-
-
-	}
 
 	/** Procesa la opcion elegida
 	 * @param opcion Opcion que eligio el usuario
 	 * @param controlador Controlador de entradas para interaccion con usuario
 	 * @param garaje Garaje alque aplicaremos cualquiera de las acciones
 	 */
-	private void procesarOpcion(int opcion, Garaje garaje, ControladorEntradas controlador){
+	public void procesarOpcion(int opcion, Controlador controlador){
+
 		switch (opcion) {
-			case 1 :
-				System.out.println("-------- SALIENDO --------");
+
+			case 1 : //Mostrar todos los vehiculos del garaje
+				controlador.mostrarVehiculos(controlador::mostrarMenuGaraje, garaje.obtenerVehiculo());
 				break;
-			case 2 :
-				mostrarInfo(garaje);
+			case 2 : //Eliminar un vehiculo del garaje (primero muestra todos los vehiculos)
+				Campo[] camposEliminar = {
+					new Campo("Nombre del Vehiculo a eliminar:", TipoCampo.TEXTO)
+				};
+				controlador.mostrarVehiculos(() -> controlador.mostrarFormularioEliminar(camposEliminar), garaje.obtenerVehiculo());
 				break;
-			case 3 :
-				eliminando(garaje, controlador);
+			case 3 : //Mejorar garaje
+				if (mejorar()) {
+					controlador.mostrarMensaje("Garaje mejorado correctamente. Capacidad actual: " + garaje.capacidadMaxima(),
+					() -> controlador.mostrarMenuGaraje());
+				} else {
+					controlador.mostrarMensaje("No se pudo mejorar el garaje. Verifique que tiene suficientes créditos.", 
+					() -> controlador.mostrarMenuGaraje());
+				}
 				break;
-			case 4 :
-				mejorar(garaje);
+			case 4 : //Agregar creditos al garaje
+				Campo[] camposAgregar = {
+					new Campo("Monto a agregar:", TipoCampo.ENTERO)
+				};
+				controlador.mostrarFormularioCreditosAgregados(camposAgregar);
 				break;
-			case 5 :
-				creditos(garaje, controlador);
-				break;
-			case 6 :
-				mostrarPrecioTotal(garaje);
+			case 5 : //Mostrar valor total del garaje
+					int monto= garaje.obtenerValorTotal();
+					controlador.mostrarMensaje("Valor total en el Garaje: "+ monto, 
+					() -> controlador.mostrarMenuGaraje());
 				break;                
-			case 7 :
-				mostrarCostoMantenimiento(garaje);
+			case 6 : //Mostrar costo total diario de mantenimiento del garaje
+				int costo= garaje.obtenerCostoMantenimiento();
+				controlador.mostrarMensaje("El costo total por mantenimiento del garaje es :"+ costo, 
+				() -> controlador.mostrarMenuGaraje());
 				break;
-			case 8 :
-				exportarGaraje(garaje);
+			case 7 : //Exportar informacion del garaje a un archivo
+				exportarGaraje();
+				controlador.mostrarMensaje("Garaje exportado correctamente a archivo.\n", 
+				() -> controlador.mostrarMenuGaraje());
 				break;
-			case 9 :
+			case 8 : //Importar informacion del garaje desde un archivo
 				garaje.copiarGaraje(importarGaraje());
 				if(!garaje.obtenerVehiculo().vacio())
-					System.out.println("Garaje cargado correctamente desde archivo.\n");
+					controlador.mostrarMensaje("Garaje cargado correctamente desde archivo.\n", 
+					() -> controlador.mostrarMenuGaraje());
 				break;
-			case 10:
-				cargarVehiculo(garaje, controlador);
+			case 9: //Cargar gasolina a un vehiculo segun su indice
+				Campo[] camposCargar = new Campo[]{
+					new Campo("Indice del Vehiculo:", TipoCampo.ENTERO),
+					new Campo("Cantidad de litros a cargar:", TipoCampo.ENTERO)
+				};
+				controlador.mostrarCargaPorIndice(camposCargar);
 				break;
-			case 11:
-				cargarVehiculos(garaje);
+			case 10: //Cargar gasolina a todos los vehiculos del garaje
+				cargarVehiculos();
+				break;
+			case 11 : //Salir del garaje
+					System.out.println("-------- SALIENDO --------");
+					controlador.mostrarMenuPrincipal();
 				break;
 			default:
-				System.out.println("Eleccion de opcion invalida, Ingrese de 1 al 11");
-			// Despues de cualquir proceso exceptuando el 10, mostrar el menu de opciones  
+				System.err.println("Error. Opcion no valida");  
 
 		}
 	}
 
-	/** Agregar un Vehiculo con el interaccion del usuario
-	 *  @param controlador Controlador de entradas para interaccion con usuario
-	 *  @param garaje Garaje al que agregamos el vehiculo 
-	 */
-	public void agregandoVehiculo(Garaje garaje, ControladorEntradas controlador){
-		System.out.println("Ingrese la informacion de Vehiculo");
-		System.out.print("Nombre: ");
 
-		String n = controlador.leerEntrada(false);   
-		System.out.print("Marca: ");
-		String m = controlador.leerEntrada(false);
-		
-		System.out.println("Tipo (Numeros)[1. AUTO  2. MOTO]: ");
-		int tipo = controlador.obtenerOpcion(2);
-
-		// como son de tipo numero debo asegurarme que se ingrese adecuadamente valores en numeros
-		System.out.print("Precio (numero): ");
-		int p = controlador.leerEntrada(true);
-		System.out.print("Capacidad de Gasolina(numeros): ");
-		int capacidadG = controlador.leerEntrada(true);
-		System.out.print("Velocidad (numero): Km/h ");
-		int velocidad = controlador.leerEntrada(true);
-
-		// convierto el numero a un tipo
-		String tipoV = "AUTO";
-		if(tipo == 2) 
-			tipoV= "MOTO";
-		Vehiculo vehiculo = crearVehiculo(n,m,tipoV,p,capacidadG,velocidad);
-		
-		try {
-			System.out.println(garaje.agregarVehiculo(vehiculo));
-			System.out.println("Se Agrego con exito: Vehiculo" + garaje.obtenerVehiculo().tamanio() );
-		} catch (Exception e) {
-			System.err.println(e);
-		}
-		
-	}
-	/** Mostrar informacion de Vehiculos en Garaje
-	 *  @param garaje Garaje que contiene vehiculos a mostrar su informacion 
-	 */
-	private void mostrarInfo(Garaje garaje){
-		try{
-			System.out.println("INFORMACION DE VEHICULOS DE GARAJE: ");
-			System.out.println("INDICE | NOMBRE | MARCA | PRECIO | TIPO | CANT RUEDAS | CAPACIDAD GASOLINA | VELOCIDAD ");
-			garaje.mostrarVehiculosGaraje();
-		} catch (Exception e) {
-			System.err.println(e);
-		}
-	}
 
 	/** Eliminar un Vehiculo con el interaccion del usuario
 	 *  @param controlador Controlador de entradas para interaccion con usuario
 	 *  @param garaje Garaje al que eliminaremos un vehiculo segun su nombre 
-	 */
-	private void eliminando(Garaje garaje, ControladorEntradas controlador){
+	*/
+	public void eliminar(String nombreVehiculo){
 		try{
-			System.out.print("Ingrese nombre de vehiculo que quiera eliminar: ");
-			
-			String nombre = controlador.leerEntrada(false);
-			garaje.eliminarVehiculo(nombre);
+			garaje.eliminarVehiculo(nombreVehiculo);;
 		}catch(Exception e){
 			System.err.println(e);
 		}
 
 	}
 
-	/** Mejora de  Almacen de Garaje mostrando alfinal espacio.
+	/** Mejora de Almacen de Garaje mostrando alfinal espacio.
 	 *  @param garaje Garaje al que mejoramos capacidad de almacen
 	 */
-	private void mejorar(Garaje garaje){
+	private boolean mejorar(){
 		try{
 			garaje.mejorarGaraje();
 			System.out.println("Capacidad de almacen de Vehiculos en Garaje despues de mejora: "+ garaje.capacidadMaxima());
 		}catch(Exception e){
 			System.err.println(e.getMessage());
+			return false;
 		}
-		
+		return true;
 	}
 
-	/** Mostrar costo de mantenimiento
-	 * @param garaje Garaje a calcular costo de mantenimiento
-	 */
-	private void mostrarCostoMantenimiento(Garaje garaje){
-		int costo= garaje.obtenerCostoMantenimiento();
-		System.out.println("El costo total por mantenimiento del garaje es :"+ costo);
-	}
 	/** Agregar creditos
-	 *  @param c Controlador de Entradas para Entrada de datos
+
 	 +  @param garaje Garaje a vincular cantidad de creditos
 	*/
-	private void creditos(Garaje garaje, ControladorEntradas controlador){
-		try{
-			System.out.print("Ingrese monto de creditos a agregar: ");
-			int credito = controlador.leerEntrada(true);
-			garaje.agregarCreditos(credito);
-			System.out.println("Creditos disponibles: "+ garaje.obtenerCreditos());
-		}catch(Exception e){
-			System.err.println(e);
+	public void agregarCreditos(String[] datos){
+		int monto = Integer.parseInt(datos[0]);
+		try {
+			garaje.agregarCreditos(monto);
+		} catch (Exception e) {
+			System.err.println(e.getMessage());
 		}
-
-	}
-
-	/** Mostrar Precio total en Garaje 
-	 * @param garaje GArane precio de monto total de precios en vehiculos dentro.
-	 */
-	private void mostrarPrecioTotal(Garaje garaje){
-		int monto= garaje.obtenerValorTotal();
-		System.out.println("Valor total en el Garaje: "+ monto);
+		System.out.println("Se agregaron " + monto + " créditos al garaje. Créditos actuales: " + garaje.obtenerCreditos());
 
 	}
 
 	/** Exportacion de informacion de Garaje a un archivo
 	 * @param garaje Garaje a exportar
 	 */
-	private void exportarGaraje(Garaje garaje){
+	private void exportarGaraje(){
 		try{
 			ArchivoGaraje arch = new ArchivoGaraje(ruta);
 			arch.escribirArchGaraje(garaje);
@@ -225,54 +160,31 @@ public class MenuGaraje{
 		return arch.leerArchGaraje();
 	}
 
-	/**
-	 * Interpreta los Las palabras del tipo de Vehiculo
-	 * @param nom nombre del vehiculo
-	 * @param marc marca del Vehiculo
-	 * @param t tipo de Vehiculo que se dice en el archivo
-	 * @param int prec precio del vehiculo
-	 * @param c capacidad de Gasolina del vehiculo
-	 * @param v velocidad del Vehiculo
-	 * @return tipo de vehiculo ya vuelto objeto TipoVehiculo 
-	* * throw ExcepcionArchivoGaraje el tipo de dato es irreconocible
-	*/
-	private Vehiculo crearVehiculo(String nom, String marc, String t, int prec,int c, int v){
-				Vehiculo vehiculo=null;
-				switch (t) {
-					case "AUTO":
-						vehiculo = new Auto(nom,marc,prec,c,v);
-						break;
-					case "MOTO":
-						//vehiculo = new Moto(nom,marc,prec,c,v);
-						break;
-					default:
-						System.err.println("Tipo de Vehiculo desconocido: " + t);
-				}
-		return vehiculo;
-	}
-
 	/** Cargar un vehiculo
-	 *  @param c Controlador de Entradas para Entrada de datos
-	 +  @param garaje Garaje a vincular cantidad de creditos
-	*/
-	private void cargarVehiculo(Garaje g, ControladorEntradas c){
-		System.out.println("Ingrese el indice del Vehiculo:");
-		int indice= c.obtenerOpcion(g.capacidadMaxima()-1);
-		System.out.println("Ingrese cantidad e litros a llenas(numero): ");
-		int litro= c.leerEntrada(true);
-		try {
-			g.cargarGasolinaVehiculo(litro, indice);
-		} catch (Exception e) {
-			System.err.println(e.getMessage());
+	 *  @param datos datos necesarios para cargar gasolina en un vehiculo
+	 * 				[indice, litros]
+	 */
+	public void cargarVehiculo(int[] datos){
+		if (garaje.obtenerCreditos() >= datos[1] * garaje.precioLitro()) {
+			try {
+				garaje.cargarGasolinaVehiculo(datos[1], datos[0]);
+			} catch (Exception e) {
+				controlador.mostrarMensaje("Error al cargar gasolina: " + e.getMessage(),
+				() -> controlador.mostrarMenuGaraje());
+			}
+		} else {
+			controlador.mostrarMensaje("Créditos insuficientes para cargar gasolina. Créditos actuales: " + garaje.obtenerCreditos(), 
+			() -> controlador.mostrarMenuGaraje());
 		}
 		
 	}
+
 	/** Carga todos los vehiculos en el garaje
 	 * @param garaje Garaje a vincular cantidad de creditos
 	 */
-	private void cargarVehiculos(Garaje g){
+	private void cargarVehiculos(){
 		try {
-			g.cargarTodosVehiculos();
+			garaje.cargarTodosVehiculos();
 		} catch (Exception e) {
 			System.err.println(e.getMessage());
 		}
