@@ -49,9 +49,9 @@ public class MenuPartida {
 		}
 
 	}
-	private void desplegarConcesionario(ControladorEntradas sc){
+	private void desplegarConcesionario(){
 		MenuConcesionario menuC= new MenuConcesionario(partida);
-		menuC.desplegarMenu(sc);
+		
 	}
 
 

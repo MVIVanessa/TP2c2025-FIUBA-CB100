@@ -7,7 +7,6 @@ import org.ayed.gta.Mapa.Mapa;
 import org.ayed.gta.Mapa.TipoCelda;
 import org.ayed.gta.Vehiculos.Exotico;
 import org.ayed.gta.Vehiculos.Vehiculo;
-import org.ayed.programaPrincipal.ControladorEntradas;
 import org.ayed.tda.vector.Vector;
 
 public abstract class Mision{
@@ -45,7 +44,7 @@ public abstract class Mision{
 	* @param comando comando ingresado por el usuario para moverse en el mapa
 	* @throws ExceptionMision cuando se elige un comando no posible por limitaciones del mapa 
 	*/
-	public void moverJugador(String comando, ControladorEntradas sc){
+	public void moverJugador(String comando){
 		boolean movio = false;
 		switch (comando.toUpperCase()) {
 			case "A":	// move Izquierda

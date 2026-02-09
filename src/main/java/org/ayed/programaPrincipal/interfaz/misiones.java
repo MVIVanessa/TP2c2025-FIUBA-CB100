@@ -80,7 +80,7 @@ public class misiones {
         String comando = event.getCode().toString();
         if ("WASDC".contains(comando)) {
             try {
-                mision.moverJugador(comando, null);
+                mision.moverJugador(comando);
                 jugador = mision.obtenerPosicionJugador();
                 actualizarHUD();
                 dibujarMapa();

@@ -94,7 +94,7 @@ public class MenuGaraje{
 	/** Agregar un Vehiculo con el interaccion del usuario
 	 *  @param controlador Controlador de entradas para interaccion con usuario
 	 *  @param garaje Garaje al que agregamos el vehiculo 
-	 */
+	 
 	public void agregandoVehiculosssssssssssssssss(Garaje garaje, ControladorEntradas controlador){
 		System.out.println("Ingrese la informacion de Vehiculo");
 		System.out.print("Nombre: ");
@@ -127,7 +127,8 @@ public class MenuGaraje{
 			System.err.println(e);
 		}
 		
-	}
+	}*/
+
 	/** Mostrar informacion de Vehiculos en Garaje
 	 *  @param garaje Garaje que contiene vehiculos a mostrar su informacion 
 	 */
@@ -145,8 +146,8 @@ public class MenuGaraje{
 	/** Eliminar un Vehiculo con el interaccion del usuario
 	 *  @param controlador Controlador de entradas para interaccion con usuario
 	 *  @param garaje Garaje al que eliminaremos un vehiculo segun su nombre 
-	 */
-	private void eliminando(Garaje garaje, ControladorEntradas controlador){
+	 
+	private void eliminando(Garaje garaje){
 		try{
 			System.out.print("Ingrese nombre de vehiculo que quiera eliminar: ");
 			
@@ -156,7 +157,7 @@ public class MenuGaraje{
 			System.err.println(e);
 		}
 
-	}
+	}*/
 
 	/** Mejora de Almacen de Garaje mostrando alfinal espacio.
 	 *  @param garaje Garaje al que mejoramos capacidad de almacen
@@ -236,7 +237,7 @@ public class MenuGaraje{
 	/** Cargar un vehiculo
 	 *  @param c Controlador de Entradas para Entrada de datos
 	 +  @param garaje Garaje a vincular cantidad de creditos
-	*/
+	
 	private void cargarVehiculo(Garaje g, ControladorEntradas c){
 		System.out.println("Ingrese el indice del Vehiculo:");
 		int indice= c.obtenerOpcion(g.capacidadMaxima()-1);
@@ -248,7 +249,8 @@ public class MenuGaraje{
 			System.err.println(e.getMessage());
 		}
 		
-	}
+	}*/
+
 	/** Carga todos los vehiculos en el garaje
 	 * @param garaje Garaje a vincular cantidad de creditos
 	 */
