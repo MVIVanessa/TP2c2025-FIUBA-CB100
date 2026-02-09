@@ -176,6 +176,15 @@ public class Concesionario {
         return false;
     }
 
+    public String busquedaPorIndice(int indice){
+        String resultado = "";
+        for (int i = 0; i < stock.tamanio(); i++) {
+            Vehiculo vehiculo = stock.dato(indice);
+            resultado = vehiculo.nombreVehiculo();
+        }
+        return resultado;
+    }
+
     /**
      * Devuelve el stock completo del concesionario.
      *

@@ -128,6 +128,29 @@ public class Interfaz extends Application {
         cambiarPantalla(menu.getRoot());
     }
 
+    public void mostrarMenuConcesionario(String nombreJugador, int[] datosJugador) {
+        MenuUI menu = new MenuUI(
+            "Concesionario",
+            opcionesMenus.opcionesConcesionario,
+            opcion -> controlador.procesarMenuConcesionario(opcion),
+            nombreJugador,
+            datosJugador
+        );
+
+        scene.setOnKeyPressed(menu::manejarTeclas);
+        cambiarPantalla(menu.getRoot());
+    }
+
+    public void mostrarMenuCompraConcesionario(String nombreJugador, int[] datosJugador, String[] vehiculos) {
+        MenuUI menu = new MenuUI(
+            "Autos disponibles para compra",
+            vehiculos,
+            opcion -> controlador.procesarCompraVehiculo(opcion),
+            nombreJugador,
+            datosJugador
+        );
+    }
+
     public void mostrarFormulario(Campo[] camposDefinidos, Consumer<String[]> onConfirmar) {
 
         pantallaObtenerDatos = new ObtenerDatos(camposDefinidos);

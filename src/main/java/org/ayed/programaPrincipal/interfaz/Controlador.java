@@ -1,23 +1,33 @@
 package org.ayed.programaPrincipal.interfaz;
 
+import org.ayed.gta.Concesionario.Concesionario;
 import org.ayed.gta.Garaje.Garaje;
 import org.ayed.gta.Misiones.Mision;
 import org.ayed.gta.Partida;
+import org.ayed.gta.Vehiculos.Vehiculo;
+import org.ayed.programaPrincipal.MenuConcesionario;
 import org.ayed.programaPrincipal.MenuGaraje;
 import org.ayed.programaPrincipal.MenuPartida;
+import org.ayed.tda.vector.Vector;
 
 public class Controlador {
     private final Partida partida;
+    private final Garaje garaje;
+    private final Concesionario concesionario;
+    
     private final MenuPartida menuPartida;
     private final MenuGaraje menuGaraje;
-    private final Garaje garaje;
+    private final MenuConcesionario menuConcesionario;
+    
     private int[] datosJugador; // [dia actual, dinero, creditos]
 
     public Controlador() {
         this.garaje = new Garaje();
+        this.concesionario = new Concesionario();
         this.partida = new Partida(garaje, this);
         menuPartida = new MenuPartida(partida);
         menuGaraje = new MenuGaraje(partida.nombre(), partida.garaje(), this);
+        menuConcesionario = new MenuConcesionario(partida, concesionario, this);
     }
 
     public void iniciar() {
@@ -74,6 +84,10 @@ public class Controlador {
         }
     }
 
+    public void procesarMenuConcesionario(int opcion) {
+        menuConcesionario.procesarOpcion(opcion, this);
+    }
+
     private void procesarCreditosAgregados(String[] datos) {
         menuGaraje.agregarCreditos(datos);
         mostrarMensaje(
@@ -117,7 +131,49 @@ public class Controlador {
         } catch (Exception e) {
             mostrarMensaje("Error al eliminar vehículo: " + e.getMessage(), () -> mostrarMenuGaraje());
         }
+        if (menuConcesionario.operacionExitosa()) {
+            mostrarMensaje("No se ha encontrado ningún vehículo con ese nombre.", () -> mostrarMenuConcesionario());
+        } else {
+            mostrarMenuConcesionario();
+        }
     }
+
+        public void procesarBusquedaPorNombre(String[] datos) {
+            String nombre = datos[0];
+
+            Vector<Vehiculo> resultado =
+                concesionario.buscarPorNombre(nombre);
+
+            if (resultado.vacio()) {
+                mostrarMensaje(
+                    "No se encontraron vehículos con ese nombre.",
+                    this::mostrarMenuConcesionario
+                );
+            } else {
+                mostrarVehiculos(
+                    this::mostrarMenuConcesionario,
+                    resultado
+                );
+            }
+        }
+
+        public void procesarCompraVehiculo(int indiceVehiculo) {
+            
+            String nombreVehiculo = concesionario.busquedaPorIndice(indiceVehiculo);
+            menuConcesionario.comprar(nombreVehiculo);
+
+            if (menuConcesionario.operacionExitosa()) {
+                mostrarMensaje(
+                    "¡Compra exitosa! " + nombreVehiculo + " ha sido agregado a tu garaje.",
+                    this::mostrarMenuConcesionario
+                );
+            } else {
+                mostrarMensaje(
+                    "No se pudo completar la compra. Asegúrate de tener suficiente dinero y que el vehículo no sea exótico.",
+                    this::mostrarMenuConcesionario
+                );
+            }
+        }
 
     //mostrar menus y mensajes a traves de la interfaz grafica
 
@@ -176,12 +232,12 @@ public class Controlador {
     }
 
 	/** Mostrar informacion de Vehiculos en Garaje
-	 *  @param garaje Garaje que contiene vehiculos a mostrar su informacion 
+	 *  @param callback Funcion a ejecutar al finalizar de mostrar los vehiculos (ej: volver al menu del garaje)
 	 */
-	public void mostrarTodosLosVehiculos(Runnable callback){
-		String autos = garaje.obtenerVehiculosToString();
+	public void mostrarVehiculos(Runnable callback, Vector<Vehiculo> vehiculos) {
+		String autos = vectorToString(vehiculos);
 		if (autos.isEmpty()) {
-			mostrarMensaje("No hay vehículos en el garaje.", () -> mostrarMenuGaraje());
+			mostrarMensaje("No hay vehículos almacenados.", () -> { callback.run(); });
 		} else {
 			mostrarMensaje("Vehículos en el garaje:\n" + autos,
 				() -> callback.run());	
@@ -193,6 +249,24 @@ public class Controlador {
             campos,
             this::procesarEliminacion
         );
+    }
+
+    public void mostrarMenuConcesionario() {
+        datosJugador = new int[] {partida.diaActual(), partida.dinero(), partida.garaje().obtenerCreditos()};
+        Interfaz.getInstancia().mostrarMenuConcesionario(partida.nombre(), datosJugador);
+    }
+
+    public void mostrarBusquedaPorNombre(Campo[] campos) {
+        Interfaz.getInstancia().mostrarFormulario(
+            campos,
+            this::procesarBusquedaPorNombre
+         );
+    }
+
+    public void mostrarMenuCompraConcesionario() {
+        datosJugador = new int[] {partida.diaActual(), partida.dinero(), partida.garaje().obtenerCreditos()};
+        String [] vehiculos = vectorToStringCadena(concesionario.obtenerStock());
+        Interfaz.getInstancia().mostrarMenuCompraConcesionario(partida.nombre(), datosJugador, vehiculos);
     }
 
     //obtener atributos necesarios
@@ -207,6 +281,24 @@ public class Controlador {
 
     public void cerrar() {
         Interfaz.cerrar();
+    }
+
+    //Auxiliares
+
+    private String vectorToString(Vector<Vehiculo> vehiculos) {
+        String resultado = "";
+        for (int i = 0; i < vehiculos.tamanio(); i++) {
+            resultado += vehiculos.dato(i).informacionVehiculo() + "\n";
+        }
+        return resultado;
+    }
+
+    private String[] vectorToStringCadena(Vector<Vehiculo> vehiculos) {
+        String[] resultado = new String[vehiculos.tamanio()];
+        for (int i = 0; i < vehiculos.tamanio(); i++) {
+            resultado[i] = vehiculos.dato(i).informacionVehiculo();
+        }
+        return resultado;
     }
 }
 

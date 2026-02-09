@@ -31,6 +31,7 @@ public class opcionesMenus {
 		"Buscar vehiculo por Nombre",
 		"Buscar Vehiculo por Marca",
 		"Mostrar Stock Completo",
+		"Comprar un Vehiculo",
 		"Salir del Concesionario"
 	};
 

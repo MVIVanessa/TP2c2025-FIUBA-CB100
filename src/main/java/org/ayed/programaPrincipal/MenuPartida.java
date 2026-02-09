@@ -1,6 +1,5 @@
 package org.ayed.programaPrincipal;
 
-import org.ayed.gta.Concesionario.MenuConcesionario;
 import org.ayed.gta.Partida;
 import org.ayed.programaPrincipal.interfaz.Controlador;
 
@@ -31,7 +30,7 @@ public class MenuPartida {
 				partida.guardarPartida();
 				break;
 			case 4: 
-				//desplegarConcesionario(sc); temporalmente deshabilitado
+				controlador.mostrarMenuConcesionario();
 				break;
 			case 5:
 				controlador.mostrarMensaje("Dinero en cuenta: $"+ partida.dinero(), 
@@ -49,10 +48,4 @@ public class MenuPartida {
 		}
 
 	}
-	private void desplegarConcesionario(){
-		MenuConcesionario menuC= new MenuConcesionario(partida);
-		
-	}
-
-
 }

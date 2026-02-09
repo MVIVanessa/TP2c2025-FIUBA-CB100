@@ -32,13 +32,13 @@ public class MenuGaraje{
 		switch (opcion) {
 
 			case 1 : //Mostrar todos los vehiculos del garaje
-				controlador.mostrarTodosLosVehiculos(controlador::mostrarMenuGaraje);
+				controlador.mostrarVehiculos(controlador::mostrarMenuGaraje, garaje.obtenerVehiculo());
 				break;
 			case 2 : //Eliminar un vehiculo del garaje (primero muestra todos los vehiculos)
 				Campo[] camposEliminar = {
 					new Campo("Nombre del Vehiculo a eliminar:", TipoCampo.TEXTO)
 				};
-				controlador.mostrarTodosLosVehiculos(() -> controlador.mostrarFormularioEliminar(camposEliminar));
+				controlador.mostrarVehiculos(() -> controlador.mostrarFormularioEliminar(camposEliminar), garaje.obtenerVehiculo());
 				break;
 			case 3 : //Mejorar garaje
 				if (mejorar()) {
