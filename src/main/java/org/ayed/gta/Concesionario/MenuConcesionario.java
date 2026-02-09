@@ -7,9 +7,11 @@ import org.ayed.tda.vector.Vector;
 
 public class MenuConcesionario {
 	Partida partidaJugador;
-	
+	private Concesionario conc;
+
 	public MenuConcesionario(Partida p){
 		partidaJugador=p;
+		conc = Concesionario.crearConcesionarioDefault();
 	}
 	public void desplegarMenu(ControladorEntradas sc){
 		System.out.println(" _____________ CONCESIONARIO ____________");
@@ -27,7 +29,6 @@ public class MenuConcesionario {
 	 * @param controlador Controlador de entradas para interaccion con usuario
 	 */
 	private void procesarOpcion(int op, ControladorEntradas sc){
-		Concesionario conc= new Concesionario();
 		Vector<Vehiculo> respuesta=null;
 		switch (op) {
 			case 0:
@@ -69,7 +70,7 @@ public class MenuConcesionario {
 	private Vector<Vehiculo> busquedaPorMarca(ControladorEntradas sc, Concesionario c){
 		System.out.println("Ingrese marca de Vehiculo para buscar");
 		String marca= sc.leerEntrada(false);
-		return c.buscarPorNombre(marca);
+		return c.buscarPorMarca(marca);
 
 	}
 
@@ -79,7 +80,7 @@ public class MenuConcesionario {
 	private void mostrarInfo(Vector<Vehiculo> vehiculos){
 		try{
 			System.out.println("INFORMACION DE VEHICULOS DE GARAJE: ");
-			System.out.println("INDICE | NOMBRE | MARCA | PRECIO | TIPO | CANT RUEDAS | CAPACIDAD GASOLINA | VELOCIDAD ");
+			System.out.println("NOMBRE | MARCA | PRECIO | TIPO | CANT RUEDAS | CAPACIDAD GASOLINA | VELOCIDAD ");
 			for (int i = 0; i < vehiculos.tamanio(); i++) {
 				System.out.println(vehiculos.dato(i).informacionVehiculo());
 			};

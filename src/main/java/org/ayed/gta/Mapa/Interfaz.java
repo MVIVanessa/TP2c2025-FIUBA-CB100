@@ -34,11 +34,15 @@ public class Interfaz extends Application {
     private Label labelTiempo;
     private Label labelGasolina;
     private Label labelMensaje;
-
+    /**
+     * Constructor de Interfaz
+     */
     public Interfaz() {
         
     }
-
+    /** Devuelve la interfaz
+     * @return interfaz
+     */
     public static Interfaz getInstancia() {
         return instancia;
     }

@@ -38,43 +38,6 @@ public abstract class Mision{
 		recompensaExotico=null;
 	}
 
-	/**Muestra el mapa de la jugada con la respectiva posicion del jugador
-	 *@throws ExcepcionMision si el mapa es nulo
-	*/
-	public void despliegueDeMapa(){
-		try {
-			if(mapa==null)
-				throw new ExcepcionMision("Juego No puede continuar, no hay mapa");
-			System.out.println("############# Mapa #############");
-			for (int x = 0; x < mapa.cantFilas(); x++) {
-				System.out.print("#");
-				for (int y = 0; y < mapa.cantColumnas(); y++) {
-					if (x == jugador.obtenerX() && y == jugador.obtenerY()) {
-						System.out.print('J');
-					}else if(mapa.datoDeCelda(x,y) == TipoCelda.RECOMPENSA)
-						System.out.print("R");
-					else if(mapa.destino().compararCoordenadas(new Coordenadas(x, y))) // si es true son iguales y es celda salida
-						System.out.print("D"); 
-					else if ( mapa.datoDeCelda(x,y) == TipoCelda.CONGESTIONADA)
-						System.out.print("^");
-					else if(gps.buscarCoordenadas(new Coordenadas(x, y)))	// si es true significa que estamos en el camino de gps
-						System.out.print('*');
-					else if (mapa.datoDeCelda(x,y) == TipoCelda.EDIFICIO){
-						System.out.print("E"); 
-					}else {
-						System.out.print(" "); 
-					}
-					System.out.print(" "); 
-				}
-				System.out.println("#");
-
-			}	
-			System.out.println("################################");
-		} catch (ExcepcionMision e) {
-			System.err.println("Error al desplegar Mapa");
-		}
-
-	}
 	
 	/** Mueve al jugador segun el comando ingresado 
 	* @param comando comando ingresado por el usuario para moverse en el mapa
@@ -245,11 +208,15 @@ public abstract class Mision{
 	    recompensaCreditosExtra = 0;
 	    recompensaExotico = null;
 	}
-	/*devuelve la reconpoensaCredito Extra del casillo rosa */
+	/** devuelve la reconpoensaCredito Extra del casillo rosa 
+	* @retunr valor de la reconpensa recogida del mapa
+	*/
 	public int recompensaCreditosExtra() {
 	    return recompensaCreditosExtra;
 	}
-	/*devuelve la reconpoensaCredito */
+	/**devuelve la reconpoensaCredito 
+	* @retrun la recompensa de credito por completar mision 
+	*/
 	public abstract int recompensaCredito();
 
 	/*Devuelve la reconpensa de un Cehiculo exotico */
@@ -279,22 +246,23 @@ public abstract class Mision{
 	}
 	/**
 	 * Devuelve el valor del dinero de recompensa
-	 * @return
+	 * @return la recompensa de dinero por completar mision 
 	 */
 	public abstract int recompensaDinero();
-	
-	/**recoge la recompensa de credito
-	* @return la recompensa de credito por completar mision 
-	*/
 
 	public Mapa obtenerMapa(){
 		return this.mapa;
 	}
-
+	/**devuelve el GPS segun la posicion actual del jugador
+	* @return GPS segun coordenadas del jugador
+	*/
 	public Gps obtenerGps(){
 		return this.gps;
 	}
 
+	/**devuelve las coordenadas del jugador
+	* @return coordenadas de la posicion del jugador
+	*/
 	public Coordenadas obtenerPosicionJugador() {
 		return jugador;
 	}

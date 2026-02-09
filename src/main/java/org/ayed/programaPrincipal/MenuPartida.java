@@ -8,9 +8,9 @@ public class MenuPartida {
 	private Partida partida;
 	/**Comienza una Partida */
 	public MenuPartida(){
-		partida= new Partida();
 	}
 	public void empezarPartida(){
+		partida=new Partida();
 		ControladorEntradas entrada=new ControladorEntradas();
 		//ingreso de nombre de usuario y creacion de archivo
 		partida.ingresarNombre(entrada);
@@ -34,7 +34,7 @@ public class MenuPartida {
 							"| 1. Ir al Garaje                      |\n"+
 							"| 2. Guardar partida en un archivo     |\n"+
 							"| 3. Ir a Concesionario		       |\n"+
-							"| 4. Mostrar dinero en cuenta			|\n"+
+							"| 4. Mostrar dinero en cuenta          |\n"+
 							"| 5. Salir (No guarda cambios)         |\n"+
 							"|______________________________________|");
 
@@ -64,6 +64,7 @@ public class MenuPartida {
 					
 					if(partida.partidaNueva(sc)){
 						partida.guardarPartida();
+						empezarPartida();
 					}
 				break;
 			case 1:

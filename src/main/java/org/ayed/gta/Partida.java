@@ -56,14 +56,11 @@ public class Partida {
 		}
 			// verifica que complua las condiciones para seguir jugando misiones
     	if(noFallo){
-			if(dinero < garaje.obtenerCostoMantenimiento())
+			if(dinero < garaje.obtenerCostoMantenimiento() && partidasIniciales==0)
         		System.out.println("No tienes dinero suficiente para iniciar otra misión.");
 			if (salir)
-				System.out.println("Finalizaste la partida.");
-		}else{
-			
+				System.out.println("Saliendo de misiones");
 		}
-
 	}
 	/**
 	 * Crea la mision segun su modo segu eleccion de jugador
@@ -234,10 +231,22 @@ public class Partida {
 	* @param sc controlador de entradas
 	*/ 
 	public boolean partidaNueva(ControladorEntradas sc){
-		System.out.println("Desea abrir una nueva partida?( 0.si 1.no):");
-		boolean salir= NO_SEGUIR == sc.obtenerOpcion(1);
-		return (!noFallo || (dinero-garaje.obtenerCostoMantenimiento()<0 || partidasIniciales>0)) && !salir;
+    // Si la misión falló o no puede seguir por dinero
+		boolean noPuedeSeguir = !noFallo || (dinero - garaje.obtenerCostoMantenimiento() < 0 || partidasIniciales>0);
+
+		if (!noPuedeSeguir) {
+			// Puede seguir jugando normalmente
+			return false;
+		}
+
+		// Si llegó acá, debe decidir si quiere nueva partida
+		System.out.println("No puedes seguir jugando esta partida.");
+		System.out.println("¿Deseas comenzar una nueva partida? (0.si 1.no): ");
+
+		int opcion = sc.obtenerOpcion(1);
+		return opcion == 0; // true = nueva partida, false = salir
 	}
+	
 	/**devuelde el nombre del jugador de la partida */
 	public String nombre(){
 		return nombreJugador;
