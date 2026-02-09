@@ -4,6 +4,7 @@ import org.ayed.gta.Garaje.ArchivoGaraje;
 import org.ayed.gta.Garaje.Garaje;
 import org.ayed.gta.Vehiculos.Auto;
 import org.ayed.gta.Vehiculos.Vehiculo;
+import org.ayed.programaPrincipal.interfaz.Controlador;
 
 public class MenuGaraje{
 	private final String FORMATO_RUTA = ".csv";
@@ -14,43 +15,18 @@ public class MenuGaraje{
 	 * Cosntructor
 	 * @param ruta ruta del archivo a guardar el garaje+
 	 */
-    MenuGaraje(String ruta, Garaje garaje){
+    public MenuGaraje(String ruta, Garaje garaje){
         this.ruta = ruta+FORMATO_RUTA;
 		this.garaje= garaje;
     }
-	/** Mostrara el menu de opciones
-	 */
-	public void mostrarMenu(){
-		ControladorEntradas controlador= new ControladorEntradas();
-		int opcion;
-		do{
-			System.out.println("-------MENU DE GARAJE--------");
-			System.out.println("Funciones");
-			System.out.println("1. Salir");
-			System.out.println("2. Mostrar informacion de todos los vehiculos.");
-			System.out.println("3. Eliminar un vehiculo.");
-			System.out.println("4. Mejorar el garaje.");
-			System.out.println("5. Agregar creditos.");
-			System.out.println("6. Mostrar el valor total del garaje.");
-			System.out.println("7. Mostrar el costo total diario de mantenimiento.");
-			System.out.println("8. Exportar la informacion del garaje en archivo "+ ruta);
-			System.out.println("9. Cargar un garaje a partir de el archivo "+ ruta);
-			System.out.println("10. Cargar gasolina un vehiculo segun su indice");
-			System.out.println("11. Cargar gasolina todos los Vehiculos en el garaje.");
-
-			opcion = controlador.obtenerOpcion(11);
-			procesarOpcion(opcion, garaje, controlador);
-		}while (opcion!=1);
-
-
-	}
 
 	/** Procesa la opcion elegida
 	 * @param opcion Opcion que eligio el usuario
 	 * @param controlador Controlador de entradas para interaccion con usuario
 	 * @param garaje Garaje alque aplicaremos cualquiera de las acciones
 	 */
-	private void procesarOpcion(int opcion, Garaje garaje, ControladorEntradas controlador){
+	public void procesarOpcion(int opcion, Garaje garaje, Controlador controlador){
+
 		switch (opcion) {
 			case 1 :
 				System.out.println("-------- SALIENDO --------");
@@ -59,13 +35,13 @@ public class MenuGaraje{
 				mostrarInfo(garaje);
 				break;
 			case 3 :
-				eliminando(garaje, controlador);
+				//eliminando(garaje, controlador);
 				break;
 			case 4 :
 				mejorar(garaje);
 				break;
 			case 5 :
-				creditos(garaje, controlador);
+				//creditos(garaje, controlador);
 				break;
 			case 6 :
 				mostrarPrecioTotal(garaje);
@@ -82,7 +58,7 @@ public class MenuGaraje{
 					System.out.println("Garaje cargado correctamente desde archivo.\n");
 				break;
 			case 10:
-				cargarVehiculo(garaje, controlador);
+				//cargarVehiculo(garaje, controlador);
 				break;
 			case 11:
 				cargarVehiculos(garaje);

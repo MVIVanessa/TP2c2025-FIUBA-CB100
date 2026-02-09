@@ -20,6 +20,7 @@ public abstract class Mision{
 	private Gps gps;
 	protected int recompensaCreditos;
 	protected Vehiculo recompensaExotico;
+	private Vehiculo vehiculoSeleccionado;
 	
 	/**
 	 * Constructor de Mision
@@ -33,48 +34,12 @@ public abstract class Mision{
 		this.mapa = new Mapa();
 		jugador= mapa.posicionInicial();
 		gps= new Gps(mapa);
-		permitidos=null;
+		permitidos = new Vector<>();
 		recompensaCreditos=0;
 		recompensaExotico=null;
 	}
 
-	/**Muestra el mapa de la jugada con la respectiva posicion del jugador
-	 *@throws ExcepcionMision si el mapa es nulo
-	*/
-	public void despliegueDeMapa(){
-		try {
-			if(mapa==null)
-				throw new ExcepcionMision("Juego No puede continuar, no hay mapa");
-			System.out.println("############# Mapa #############");
-			for (int x = 0; x < mapa.cantFilas(); x++) {
-				System.out.print("#");
-				for (int y = 0; y < mapa.cantColumnas(); y++) {
-					if (x == jugador.obtenerX() && y == jugador.obtenerY()) {
-						System.out.print('J');
-					}else if(mapa.datoDeCelda(x,y) == TipoCelda.RECOMPENSA)
-						System.out.print("R");
-					else if(mapa.destino().compararCoordenadas(new Coordenadas(x, y))) // si es true son iguales y es celda salida
-						System.out.print("D"); 
-					else if ( mapa.datoDeCelda(x,y) == TipoCelda.CONGESTIONADA)
-						System.out.print("^");
-					else if(gps.buscarCoordenadas(new Coordenadas(x, y)))	// si es true significa que estamos en el camino de gps
-						System.out.print('*');
-					else if (mapa.datoDeCelda(x,y) == TipoCelda.EDIFICIO){
-						System.out.print("E"); 
-					}else {
-						System.out.print(" "); 
-					}
-					System.out.print(" "); 
-				}
-				System.out.println("#");
 
-			}	
-			System.out.println("################################");
-		} catch (ExcepcionMision e) {
-			System.err.println("Error al desplegar Mapa");
-		}
-
-	}
 	
 	/** Mueve al jugador segun el comando ingresado 
 	* @param comando comando ingresado por el usuario para moverse en el mapa
@@ -127,23 +92,7 @@ public abstract class Mision{
 			tomarRecompensaAdicional(jugador);
     	}
 	}
-	/*Muestra los comando del juego */
-	public void mostrarComandosJugador(){
-		System.out.println("Para Moverse alrededor del Mapa se usa las letras WASD ");
-		System.out.println("W= Arriba");
-		System.out.println("S= Abajo");
-		System.out.println("D= Derecha");
-		System.out.println("A= Izquierda");
-		System.out.println("Para llenar tanque del Vehiculo,ingresar 'C'");
-	}
 
-	public void glosario(){
-		System.out.println("E= Edificio");
-		System.out.println("^= Calle congestionada");
-		System.out.println("*= GPS hacia la salida");
-		System.out.println("ESPACIO= Calle transitable");
-		System.out.println("J= Ubicacion de Juagdor");
-	}
 
 	/**
 	 * Retorna true o false si la mision esta complatada
@@ -219,23 +168,11 @@ public abstract class Mision{
 	 * @param i indice del Vehiculo
 	 * @return	Vehiculo selecionado devuelve null si no se encuentra
 	 */
-	public Vehiculo seleccionarVehiculo(int i){
-		if(i<0 || i > permitidos.tamanio())
-			throw new ExcepcionMision("indice de vehiculo a seleccionar invalido");
-		return transporte= permitidos.dato(i);
+	public void seleccionarVehiculo(int i){
+		vehiculoSeleccionado = permitidos.dato(i - 1);
+		transporte = vehiculoSeleccionado;
 	}
 
-	/** Muestra el listado de Vehculos permitidos por el Modo de mision
-	 */
-	public void mostrarVehiculosPermitidos() {
-    	System.out.println("Vehículos disponibles para esta misión:");
-    	Vehiculo v;
-		for (int i=0; i< permitidos.tamanio(); i++ ) {
-			v= permitidos.dato(i);
-        	System.out.println(i + ") " + v.informacionVehiculo());
-        	i++;
-		}
-    }
 	
 	/**
 	 * Reinicia las recompensas.
@@ -293,6 +230,20 @@ public abstract class Mision{
 
 	public Coordenadas obtenerPosicionJugador() {
 		return jugador;
+	}
+
+	public String[] obtenerVehiculosPermitidos(){
+		Vehiculo v;
+		String[] autos = new String[permitidos.tamanio()];
+		for(int i=0; i<permitidos.tamanio(); i++) {
+			v= permitidos.dato(i);
+			autos[i]= v.informacionVehiculo();
+		}
+		return autos;
+	}
+
+	public Vehiculo obtenerVehiculoSeleccionado() {
+		return this.vehiculoSeleccionado;
 	}
 	
 }
