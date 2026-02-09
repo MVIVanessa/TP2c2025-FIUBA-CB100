@@ -50,6 +50,15 @@ public class Controlador {
         iniciarMision(m);
     }
 
+    public void procesarMenuContinuarJugando(int opcion) {
+        partida.continuarJugando(opcion);
+    }
+
+    private void procesarCreditosAgregados(String[] datos) {
+        menuGaraje.agregarCreditos(datos);
+        mostrarMensaje(
+        "Créditos actuales: " + garaje.obtenerCreditos(), TipoMenu.GARAJE);
+    }
 
     //mostrar menus y mensajes a traves de la interfaz grafica
 
@@ -81,6 +90,18 @@ public class Controlador {
         System.out.println("MOSTRANDO RESULTADO");
         Interfaz.getInstancia().mostrarResultadoMision(resultado);
     }
+
+    public void mostrarMenuContinuarJugando() {
+        Interfaz.getInstancia().mostrarMenuContinuarJugando(this);
+    }
+
+    public void mostrarFormularioCreditosAgregados(Campo[] campos) {
+        Interfaz.getInstancia().mostrarFormulario(
+            campos,
+            this::procesarCreditosAgregados
+        );
+    }
+
 
     //obtener atributos necesarios
 

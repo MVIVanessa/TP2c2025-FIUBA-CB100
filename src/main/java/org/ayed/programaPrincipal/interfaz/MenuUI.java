@@ -5,13 +5,15 @@ import java.util.function.Consumer;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 
 public class MenuUI {
 
-    private final VBox root;
+    private final BorderPane root;
+    private final VBox contenido;
     private final Label[] opciones;
     private int seleccion = 0;
     private final Consumer<Integer> onSeleccion;
@@ -19,13 +21,14 @@ public class MenuUI {
     public MenuUI(String titulo, String[] textos, Consumer<Integer> onSeleccion) {
         this.onSeleccion = onSeleccion;
 
-        root = new VBox(10);
-        root.setAlignment(Pos.CENTER);
+        root = new BorderPane();
+        contenido = new VBox(10);
+        contenido.setAlignment(Pos.CENTER);
 
         Label lblTitulo = new Label(titulo);
         lblTitulo.setTextFill(Color.GOLD);
         lblTitulo.setStyle("-fx-font-size: 24px; -fx-font-weight: bold;");
-        root.getChildren().add(lblTitulo);
+        contenido.getChildren().add(lblTitulo);
 
         opciones = new Label[textos.length];
 
@@ -33,9 +36,10 @@ public class MenuUI {
             Label l = new Label(textos[i]);
             l.setTextFill(Color.BLACK);
             opciones[i] = l;
-            root.getChildren().add(l);
+            contenido.getChildren().add(l);
         }
 
+        root.setCenter(contenido);
         actualizarSeleccion();
     }
 
@@ -66,7 +70,7 @@ public class MenuUI {
             );
         }
     }
-    
+
     public Pane getRoot() {
         return root;
     }

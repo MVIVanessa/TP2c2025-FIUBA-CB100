@@ -33,4 +33,9 @@ public class opcionesMenus {
 		"Dificil",
 	};
 
+	public final static String[] opcionesContinuarJugando = {
+		"Continuar",
+		"Salir"
+	};
+
 }

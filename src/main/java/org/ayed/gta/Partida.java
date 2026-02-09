@@ -24,6 +24,7 @@ public class Partida {
 	private Garaje garaje;
 	private boolean noFallo;
 	private Mision misionActual;
+	private boolean continuarJugando;
 
 	/**constructor de Partida
 	 */
@@ -51,15 +52,13 @@ public class Partida {
 	 * @param controlador controlador de entradas
 	 */
 	public void jugarPartida(Controlador controlador){
-		boolean salir = false;
-
 		controlador.mostrarMenuDificultad();
 
 		if (misionActual == null) return;
 
-		while(!salir && noFallo && dinero-garaje.obtenerCostoMantenimiento()>=0){
+		while(continuarJugando && noFallo && dinero-garaje.obtenerCostoMantenimiento()>=0){
 			noFallo = jugarMision(controlador, garaje);
-			salir = continuarJugando(controlador,garaje);
+			//controlador.mostrarMenuContinuarJugando();
 		}
 	}
 
@@ -119,12 +118,21 @@ public class Partida {
 	 * @param g garaje de la partida
 	 * @return true si se desea contunuar, false sino, o si no puede seguir aunque quiera al no tener suficiente dinero
 	 */
-	private boolean continuarJugando(Controlador controlador,Garaje g){
+	public void continuarJugando(int opcion) {
 		System.out.println("Desea seguir jugando?( 1.si 2.no): ");
-		//comparo con el numero para seguir
-		int op= 1; //temporalmente para evitar uso de sc
-		return op==NO_SEGUIR;
+		switch (opcion) {
+			case 1:
+				continuarJugando = true;
+				break;
+			case 2:
+				continuarJugando = false;
+				break;
+			default:
+				System.err.println("Opcion no valida, se asume que desea seguir jugando");
+				continuarJugando = true;
+		}
 	}
+
 	/**
 	 * Guarda la partida en un archivo con el nombre del jugador.
 	 * El archivo tendrá:

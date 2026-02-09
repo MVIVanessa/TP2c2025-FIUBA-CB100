@@ -1,9 +1,9 @@
 package org.ayed.programaPrincipal.interfaz;
 
-
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -28,8 +28,9 @@ public class VentanaMensaje {
     }
 
     public Pane getRoot() {
-        VBox root = new VBox(10);
-        root.setAlignment(Pos.CENTER);
+        BorderPane root = new BorderPane();
+        VBox contenido = new VBox(10);
+        contenido.setAlignment(Pos.CENTER);
 
         Label lblMensaje = new Label(mensaje);
         lblMensaje.setTextFill(Color.BLACK);
@@ -38,7 +39,8 @@ public class VentanaMensaje {
         Label lblInstruccion = new Label("Presione ENTER para continuar");
         lblInstruccion.setTextFill(Color.GRAY);
 
-        root.getChildren().addAll(lblMensaje, lblInstruccion);
+        contenido.getChildren().addAll(lblMensaje, lblInstruccion);
+        root.setCenter(contenido);
         return root;
     }
 

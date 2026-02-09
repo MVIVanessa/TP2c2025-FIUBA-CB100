@@ -1,11 +1,15 @@
 package org.ayed.programaPrincipal.interfaz;
 
+import java.util.function.Consumer;
+
 import org.ayed.gta.Garaje.Garaje;
 import org.ayed.gta.Misiones.Mision;
 
 import javafx.animation.PauseTransition;
 import javafx.application.Application;
 import javafx.scene.Scene;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
@@ -14,10 +18,9 @@ public class Interfaz extends Application {
     private static Interfaz instancia;
     private Stage stage;
     private Controlador controlador;
-    private Scene escenaMenuPrincipal;
-    private Scene escenaMisiones;
- misiones pantallaMisiones = new misiones();
-
+    private misiones pantallaMisiones;
+    private Scene scene;
+    private ObtenerDatos pantallaObtenerDatos;
 
     public static Interfaz getInstancia() {
         return instancia;
@@ -29,10 +32,18 @@ public class Interfaz extends Application {
         this.stage = stage;
 
         stage.setTitle("GTA - Interfaz Gráfica");
-        controlador = new Controlador();
-        controlador.iniciar();
 
+        BorderPane root = new BorderPane();
+        root.setPrefSize(Double.MAX_VALUE, Double.MAX_VALUE);
+
+        scene = new Scene(root);
+
+        stage.setScene(scene);
+        stage.setMaximized(true);
         stage.show();
+
+        controlador = new Controlador();
+        mostrarMenuPrincipal(controlador);
     }
 
 
@@ -43,9 +54,8 @@ public class Interfaz extends Application {
             controller::procesarMenuPrincipal
         );
 
-        Scene scene = new Scene(menu.getRoot(), 600, 400);
         scene.setOnKeyPressed(menu::manejarTeclas);
-        stage.setScene(scene);
+        cambiarPantalla(menu.getRoot());
     }
 
     public void mostrarMenuGaraje(Controlador controller, Garaje garaje) {
@@ -55,9 +65,8 @@ public class Interfaz extends Application {
             opcion -> controller.procesarMenuGaraje(opcion, garaje)
         );
 
-        Scene scene = new Scene(menu.getRoot(), 600, 400);
         scene.setOnKeyPressed(menu::manejarTeclas);
-        stage.setScene(scene);
+        cambiarPantalla(menu.getRoot());
     }
 
     public void mostrarMenuDificultad(Controlador controller) {
@@ -68,9 +77,8 @@ public class Interfaz extends Application {
             
         );
 
-        Scene scene = new Scene(menu.getRoot(), 600, 400);
         scene.setOnKeyPressed(menu::manejarTeclas);
-        stage.setScene(scene);
+        cambiarPantalla(menu.getRoot());
     }
 
     public void mostrarVehiculosPermitidos(Mision mision, Controlador controlador) {
@@ -81,39 +89,62 @@ public class Interfaz extends Application {
             }
         );
 
-        Scene scene = new Scene(menu.getRoot(), 600, 400);
         scene.setOnKeyPressed(menu::manejarTeclas);
-        stage.setScene(scene);
+        cambiarPantalla(menu.getRoot());
     }
 
     public void mostrarMensaje(String mensaje, TipoMenu menuAnterior, Controlador controlador) {
         VentanaMensaje ventana = new VentanaMensaje(mensaje, menuAnterior, controlador);
-        Scene scene = new Scene(ventana.getRoot(), 400, 200);
         scene.setOnKeyPressed(ventana::manejarTeclas);
-        stage.setScene(scene);
+        cambiarPantalla(ventana.getRoot());
     }
 
     public void iniciarMision(Mision mision) {
+        pantallaMisiones = new misiones();
         pantallaMisiones.establecerMision(mision, controlador);
 
-        escenaMisiones = new Scene(pantallaMisiones.getRoot(), 800, 600);
-        escenaMisiones.setOnKeyPressed(pantallaMisiones::manejarTeclas);
-
-        stage.setScene(escenaMisiones);
+        scene.setOnKeyPressed(pantallaMisiones::manejarTeclas);
+        cambiarPantalla(pantallaMisiones.getRoot());
     }
 
     public void mostrarResultadoMision(String resultado) {
-
         pantallaMisiones.mostrarResultado(resultado);
 
         PauseTransition pausa = new PauseTransition(Duration.seconds(2));
         pausa.setOnFinished(e -> {
-            pantallaMisiones.limpiarMision();
+            pantallaMisiones = null;
             mostrarMenuPrincipal(controlador);
         });
         pausa.play();
     }
 
+    public void mostrarMenuContinuarJugando(Controlador controlador) {
+        MenuUI menu = new MenuUI(
+            "¿Desea continuar jugando?",
+            opcionesMenus.opcionesContinuarJugando,
+            opcion -> controlador.procesarMenuContinuarJugando(opcion)
+        );
+
+        scene.setOnKeyPressed(menu::manejarTeclas);
+        cambiarPantalla(menu.getRoot());
+    }
+
+    public void mostrarFormulario(Campo[] camposDefinidos, Consumer<String[]> onConfirmar) {
+
+        pantallaObtenerDatos = new ObtenerDatos(camposDefinidos);
+
+        pantallaObtenerDatos.setOnConfirmar(() -> {
+            String[] datos = pantallaObtenerDatos.getDatosObtenidos();
+            onConfirmar.accept(datos);
+        });
+
+        cambiarPantalla(pantallaObtenerDatos.getRoot());
+    }
+
+    public void cambiarPantalla(Pane nuevoRoot) {
+        nuevoRoot.setPrefSize(Double.MAX_VALUE, Double.MAX_VALUE);
+        scene.setRoot(nuevoRoot);
+    }
 
     public static void lanzar(String[] args) {
         launch(args);
