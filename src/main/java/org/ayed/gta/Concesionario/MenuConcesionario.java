@@ -10,15 +10,7 @@ public class MenuConcesionario {
 	public MenuConcesionario(Partida p){
 		partidaJugador=p;
 	}
-	public void desplegarMenu(){
-		System.out.println(" _____________ CONCESIONARIO ____________");
-		System.out.println("| 0. Buscar Vehiculos por Nombre.        |");
-		System.out.println("| 1. Buscar Vehiculos por Marca.         |");
-		System.out.println("| 2. Mostrar todo el stock de Vehiculos. |");
-		System.out.println("| 3. volver a Menu Principal             |");
-		System.err.println("|________________________________________|");
 
-	}
 
 	/** Procesa la opcion elegida
 	 * @param opcion Opcion que eligio el usuario

@@ -27,6 +27,13 @@ public class opcionesMenus {
 		"Salir"
 	};
 
+	public final static String[] opcionesConcesionario = {
+		"Buscar vehiculo por Nombre",
+		"Buscar Vehiculo por Marca",
+		"Mostrar Stock Completo",
+		"Salir del Concesionario"
+	};
+
 	public final static String[] opcionesDificultad = {
 		"Facil",
 		"Medio",

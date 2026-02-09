@@ -2,7 +2,6 @@ package org.ayed.programaPrincipal.interfaz;
 
 import java.util.function.Consumer;
 
-import org.ayed.gta.Garaje.Garaje;
 import org.ayed.gta.Misiones.Mision;
 
 import javafx.application.Application;
@@ -58,11 +57,11 @@ public class Interfaz extends Application {
         cambiarPantalla(menu.getRoot());
     }
 
-    public void mostrarMenuGaraje(Garaje garaje, String nombreJugador, int[] datosJugador) {
+    public void mostrarMenuGaraje(String nombreJugador, int[] datosJugador) {
         MenuUI menu = new MenuUI(
             "Menu Garaje",
             opcionesMenus.opcionesGaraje,
-            opcion -> controlador.procesarMenuGaraje(opcion, garaje),
+            opcion -> controlador.procesarMenuGaraje(opcion),
             nombreJugador,
             datosJugador
         );
