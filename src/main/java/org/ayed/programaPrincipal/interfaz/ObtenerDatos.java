@@ -3,7 +3,6 @@ package org.ayed.programaPrincipal.interfaz;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.scene.input.KeyCode;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
@@ -36,26 +35,20 @@ public class ObtenerDatos {
         for (int i = 0; i < camposDefinidos.length; i++) {
             Label lbl = new Label(camposDefinidos[i].nombre);
             TextField tf = new TextField();
-            if (camposDefinidos[i].tipo == TipoCampo.ENTERO || camposDefinidos[i].tipo == TipoCampo.DECIMAL) {
+
+            if (camposDefinidos[i].tipo == TipoCampo.ENTERO
+                    || camposDefinidos[i].tipo == TipoCampo.DECIMAL) {
                 tf.setMaxWidth(200);
             } else {
                 tf.setMaxWidth(400);
             }
 
-            tf.setOnKeyPressed(e -> { 
-                if (e.getCode() == KeyCode.ENTER) confirmar();});
+            // ENTER → confirmar (forma correcta)
+            tf.setOnAction(e -> confirmar());
 
             camposUI[i] = tf;
-
             contenido.getChildren().addAll(lbl, tf);
-            
         }
-
-        contenido.setOnKeyPressed(e -> {
-            if (e.getCode() == KeyCode.ENTER) {
-                confirmar();
-            }
-        });
 
         root.setCenter(contenido);
         return root;
