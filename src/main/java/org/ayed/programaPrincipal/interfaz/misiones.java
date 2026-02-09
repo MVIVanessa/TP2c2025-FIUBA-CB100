@@ -1,14 +1,18 @@
-package org.ayed.gta.Mapa;
+package org.ayed.programaPrincipal.interfaz;
 
+import java.util.function.Consumer;
+
+import org.ayed.gta.Mapa.Coordenadas;
+import org.ayed.gta.Mapa.Gps;
+import org.ayed.gta.Mapa.Mapa;
+import org.ayed.gta.Mapa.TipoCelda;
 import org.ayed.gta.Misiones.ExcepcionMision;
 import org.ayed.gta.Misiones.Mision;
 import org.ayed.tda.iterador.Iterador;
 import org.ayed.tda.lista.Lista;
 
 import javafx.animation.PauseTransition;
-import javafx.application.Application;
 import javafx.geometry.Pos;
-import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
@@ -17,12 +21,9 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
-import javafx.stage.Stage;
 import javafx.util.Duration;
 
-public class Interfaz extends Application {
-
-    private static Interfaz instancia;
+public class misiones {
 
     private Mapa mapa;
     private Gps gps;
@@ -34,22 +35,23 @@ public class Interfaz extends Application {
     private Label labelTiempo;
     private Label labelGasolina;
     private Label labelMensaje;
-    /**
-     * Constructor de Interfaz
-     */
-    public Interfaz() {
-        
-    }
-    /** Devuelve la interfaz
-     * @return interfaz
-     */
-    public static Interfaz getInstancia() {
-        return instancia;
+
+    private Controlador controlador;
+    private Consumer<Boolean> onFinMision;
+    private boolean misionFinalizada;
+
+    // ===== CONSTRUCTOR =====
+    public misiones() {
+        inicializarUI();
     }
 
-    @Override
-    public void start(Stage stage) {
-        instancia = this;
+    // ===== ACCESO DESDE INTERFAZ =====
+    public BorderPane getRoot() {
+        return root;
+    }
+
+    // ===== INICIALIZACIÓN =====
+    private void inicializarUI() {
         root = new BorderPane();
 
         //----- MAPA -----//
@@ -62,61 +64,60 @@ public class Interfaz extends Application {
 
         root.setCenter(gridPane);
 
-        //----- HUD (arriba derecha) -----//
-        VBox hud = crearHUD();
+        //----- HUD / barra superior -----//
         HBox barraSuperior = crearBarraSuperior();
         root.setTop(barraSuperior);
 
-        BorderPane.setAlignment(hud, Pos.TOP_RIGHT);
-
-        //----- GLOSARIO (izquierda) -----//
+        //----- GLOSARIO -----//
         VBox glosario = crearGlosario();
         root.setLeft(glosario);
+    }
 
-        Scene scene = new Scene(root, 800, 600);
-        stage.setScene(scene);
-        stage.setTitle("Mapa GTA - JavaFX");
-        stage.show();
+    // ===== TECLADO =====
+    public void manejarTeclas(KeyEvent event) {
+        if (mision == null || misionFinalizada) return;
 
-        //----- CONTROLES -----//
-        scene.addEventHandler(KeyEvent.KEY_PRESSED, event -> {
-            if (mision == null) return;
+        String comando = event.getCode().toString();
+        if ("WASDC".contains(comando)) {
+            try {
+                mision.moverJugador(comando);
+                jugador = mision.obtenerPosicionJugador();
+                actualizarHUD();
+                dibujarMapa();
 
-            String comando = event.getCode().toString();
-            if ("WASDC".contains(comando)) {
-                try {
-                    mision.moverJugador(comando, null);
-                    jugador = mision.obtenerPosicionJugador();
-                    actualizarHUD();
-                    dibujarMapa();
-                    // congestión
-                    if (mapa.datoDeCelda(jugador.obtenerX(), jugador.obtenerY()) == TipoCelda.CONGESTIONADA) {
-                        mostrarMensaje("Zona congestionada: perdiste más tiempo ⏱️", Color.ORANGE);
+                if (mision.misionCompletada()) {
+                    misionFinalizada = true;
+                    if (onFinMision != null) {
+                        onFinMision.accept(true);
                     }
-                    // recompensa
-                    if (mapa.datoDeCelda(jugador.obtenerX(), jugador.obtenerY()) == TipoCelda.TRANSITABLE_RECOMPENSA) {
-                        mostrarMensaje("¡Recompensa recogida! 🎉", Color.GREEN);
-                        mapa.obtenerMapa().dato(jugador.obtenerX()).modificarDato(TipoCelda.TRANSITABLE, jugador.obtenerY());
-                    }
-
-                } catch (ExcepcionMision e) {
-                    mostrarMensaje(e.getMessage(), Color.RED);
                 }
+                else if (mision.fracaso()) {
+                    misionFinalizada = true;
+                    if (onFinMision != null) {
+                        onFinMision.accept(false);
+                    }
             }
-            //Limpiar al cerrar la app
-            stage.setOnCloseRequest(e -> { instancia = null;});
-        });
+
+            } catch (ExcepcionMision e) {
+                mostrarMensaje(e.getMessage(), Color.RED);
+            }
+        }
     }
 
 
-    public void establecerMision(Mision nuevaMision) {
+
+    // ===== API PÚBLICA =====
+    public void establecerMision(Mision nuevaMision, Controlador controlador) {
+        misionFinalizada = false;
         this.mision = nuevaMision;
         this.mapa = nuevaMision.obtenerMapa();
         this.gps = nuevaMision.obtenerGps();
         this.jugador = nuevaMision.obtenerPosicionJugador();
-    
+        this.controlador = controlador;
+
         gridPane.getChildren().clear();
         dibujarMapa();
+        actualizarHUD();
     }
 
     public void limpiarMision() {
@@ -124,7 +125,7 @@ public class Interfaz extends Application {
         mapa = null;
         gps = null;
         jugador = null;
-    
+
         gridPane.getChildren().clear();
         gridPane.add(mensajeEspera, 0, 0);
     }
@@ -135,16 +136,18 @@ public class Interfaz extends Application {
         Label mensaje = new Label(resultado);
         mensaje.setStyle("-fx-font-size: 24px; -fx-text-fill: green;");
         gridPane.add(mensaje, 0, 0);
-
-        pausar(1, this::limpiarMision);
+        misionFinalizada = true;
     }
 
-    
+    public void setOnFinMision(Consumer<Boolean> callback) {
+        this.onFinMision = callback;
+    }
 
-    //------------------------- Métodos privados -------------------------//
+    // ================= MÉTODOS PRIVADOS =================
 
     private void dibujarMapa() {
         if (mapa == null) return;
+
         gridPane.getChildren().clear();
 
         Lista<Lista<TipoCelda>> grilla = mapa.obtenerMapa();
@@ -154,13 +157,17 @@ public class Interfaz extends Application {
         while (filas.haySiguiente()) {
             Iterador<TipoCelda> columnas = filas.dato().iterador();
             int col = 0;
+
             while (columnas.haySiguiente()) {
                 TipoCelda tipo = columnas.dato();
                 Coordenadas coord = new Coordenadas(fila, col);
+
                 Rectangle rect = new Rectangle(35, 35);
                 rect.setFill(colorPara(tipo, coord));
                 rect.setStroke(Color.LIGHTGRAY);
+
                 gridPane.add(rect, col, fila);
+
                 columnas.siguiente();
                 col++;
             }
@@ -170,9 +177,15 @@ public class Interfaz extends Application {
     }
 
     private Color colorPara(TipoCelda tipo, Coordenadas coord) {
-        if (jugador != null && coord.compararCoordenadas(jugador)) return Color.BLACK;
-        if (gps != null && tipo != TipoCelda.RECOMPENSA && tipo != TipoCelda.ENTRADA && tipo != TipoCelda.SALIDA
-                && gps.buscarCoordenadas(coord)) return Color.YELLOW;
+        if (jugador != null && coord.compararCoordenadas(jugador))
+            return Color.BLACK;
+
+        if (gps != null &&
+            tipo != TipoCelda.RECOMPENSA &&
+            tipo != TipoCelda.ENTRADA &&
+            tipo != TipoCelda.SALIDA &&
+            gps.buscarCoordenadas(coord))
+            return Color.YELLOW;
 
         switch (tipo) {
             case TRANSITABLE: return Color.WHITE;
@@ -186,16 +199,6 @@ public class Interfaz extends Application {
         }
     }
 
-    private void pausar(int segundos, Runnable accionAlFinal) {
-        PauseTransition pausa = new PauseTransition(Duration.seconds(segundos));
-        pausa.setOnFinished(e -> accionAlFinal.run());
-        pausa.play();
-    }
-
-    public static void lanzar(String[] args) {
-        launch(args);
-    }
-    
     private VBox crearHUD() {
         labelTiempo = new Label("Tiempo: --");
         labelGasolina = new Label("Gasolina: --");
@@ -254,10 +257,7 @@ public class Interfaz extends Application {
 
     private HBox crearBarraSuperior() {
         labelMensaje = new Label("");
-        labelMensaje.setStyle(
-            "-fx-font-size: 14px;" +
-            "-fx-text-fill: darkred;"
-        );
+        labelMensaje.setStyle("-fx-font-size: 14px; -fx-text-fill: darkred;");
 
         VBox mensajes = new VBox(labelMensaje);
         mensajes.setAlignment(Pos.CENTER_LEFT);
@@ -268,9 +268,7 @@ public class Interfaz extends Application {
         HBox barra = new HBox(mensajes, hud);
         barra.setAlignment(Pos.CENTER);
         barra.setSpacing(20);
-        barra.setStyle(
-            "-fx-background-color: rgba(255,255,255,0.85);"
-        );
+        barra.setStyle("-fx-background-color: rgba(255,255,255,0.85);");
 
         HBox.setHgrow(mensajes, javafx.scene.layout.Priority.ALWAYS);
 
@@ -281,11 +279,8 @@ public class Interfaz extends Application {
         labelMensaje.setText(texto);
         labelMensaje.setTextFill(color);
 
-        PauseTransition pausa = new PauseTransition(Duration.seconds(1.5));
+        PauseTransition pausa = new PauseTransition(Duration.seconds(0.5));
         pausa.setOnFinished(e -> labelMensaje.setText(""));
         pausa.play();
     }
-
-
-
 }

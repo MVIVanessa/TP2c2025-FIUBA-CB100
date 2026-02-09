@@ -23,18 +23,9 @@ public class Concesionario {
     }
     
     /**
-     * Crea un concesionario con vehículos hardcodeados.
-     */
-    public static Concesionario crearConcesionarioDefault() {
-        Concesionario c = new Concesionario();
-        c.cargarCatalogoDefault();
-        return c;
-    }
-    
-    /**
      * Carga vehículos predeterminados al concesionario.
      */
-    private void cargarCatalogoDefault() {
+    public void cargarCatalogoDefault() {
         // AUTOS
         stock.agregar(new Auto("Peugeot", "208", 180, 45, 15000));
         stock.agregar(new Auto("Renault", "Clio", 170, 40, 14000));
@@ -174,6 +165,15 @@ public class Concesionario {
 
         // no se encontró el vehículo
         return false;
+    }
+
+    public String busquedaPorIndice(int indice){
+        String resultado = "";
+        for (int i = 0; i < stock.tamanio(); i++) {
+            Vehiculo vehiculo = stock.dato(indice);
+            resultado = vehiculo.nombreVehiculo();
+        }
+        return resultado;
     }
 
     /**

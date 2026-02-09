@@ -7,7 +7,6 @@ import org.ayed.gta.Mapa.Mapa;
 import org.ayed.gta.Mapa.TipoCelda;
 import org.ayed.gta.Vehiculos.Exotico;
 import org.ayed.gta.Vehiculos.Vehiculo;
-import org.ayed.programaPrincipal.ControladorEntradas;
 import org.ayed.tda.vector.Vector;
 
 public abstract class Mision{
@@ -20,6 +19,7 @@ public abstract class Mision{
 	private Gps gps;
 	protected int recompensaCreditosExtra;
 	protected Vehiculo recompensaExotico;
+	private Vehiculo vehiculoSeleccionado;
 	
 	/**
 	 * Constructor de Mision
@@ -33,17 +33,18 @@ public abstract class Mision{
 		this.mapa = new Mapa();
 		jugador= mapa.posicionInicial();
 		gps= new Gps(mapa);
-		permitidos=null;
+		permitidos = new Vector<>();
 		recompensaCreditosExtra=0;
 		recompensaExotico=null;
 	}
+
 
 	
 	/** Mueve al jugador segun el comando ingresado 
 	* @param comando comando ingresado por el usuario para moverse en el mapa
 	* @throws ExceptionMision cuando se elige un comando no posible por limitaciones del mapa 
 	*/
-	public void moverJugador(String comando, ControladorEntradas sc){
+	public void moverJugador(String comando){
 		boolean movio = false;
 		switch (comando.toUpperCase()) {
 			case "A":	// move Izquierda
@@ -90,24 +91,7 @@ public abstract class Mision{
 			tomarRecompensaAdicional(jugador);
     	}
 	}
-	/*Muestra los comando del juego */
-	public void mostrarComandosJugador(){
-		System.out.println("Para Moverse alrededor del Mapa se usa las letras WASD ");
-		System.out.println("W= Arriba");
-		System.out.println("S= Abajo");
-		System.out.println("D= Derecha");
-		System.out.println("A= Izquierda");
-		System.out.println("Para llenar tanque del Vehiculo,ingresar 'C'");
-	}
 
-	public void glosario(){
-		System.out.println("GRIS= Edificio");
-		System.out.println("ROSA= Calle congestionada");
-		System.out.println("AMARILLO= GPS hacia la salida");
-		System.out.println("BLANCO= Calle transitable");
-		System.out.println("NEGRO= Ubicacion de Juagdor");
-		System.out.println("VERDE = Destino");
-	}
 
 	/**
 	 * Retorna true o false si la mision esta complatada
@@ -183,23 +167,11 @@ public abstract class Mision{
 	 * @param i indice del Vehiculo
 	 * @return	Vehiculo selecionado devuelve null si no se encuentra
 	 */
-	public Vehiculo seleccionarVehiculo(int i){
-		if(i<0 || i > permitidos.tamanio())
-			throw new ExcepcionMision("indice de vehiculo a seleccionar invalido");
-		return transporte= permitidos.dato(i);
+	public void seleccionarVehiculo(int i){
+		vehiculoSeleccionado = permitidos.dato(i - 1);
+		transporte = vehiculoSeleccionado;
 	}
 
-	/** Muestra el listado de Vehculos permitidos por el Modo de mision
-	 */
-	public void mostrarVehiculosPermitidos() {
-    	System.out.println("Vehículos disponibles para esta misión:");
-    	Vehiculo v;
-		for (int i=0; i< permitidos.tamanio(); i++ ) {
-			v= permitidos.dato(i);
-        	System.out.println(i + ") " + v.informacionVehiculo());
-        	i++;
-		}
-    }
 	
 	/**
 	 * Reinicia las recompensas.
@@ -265,6 +237,20 @@ public abstract class Mision{
 	*/
 	public Coordenadas obtenerPosicionJugador() {
 		return jugador;
+	}
+
+	public String[] obtenerVehiculosPermitidos(){
+		Vehiculo v;
+		String[] autos = new String[permitidos.tamanio()];
+		for(int i=0; i<permitidos.tamanio(); i++) {
+			v= permitidos.dato(i);
+			autos[i]= v.informacionVehiculo();
+		}
+		return autos;
+	}
+
+	public Vehiculo obtenerVehiculoSeleccionado() {
+		return this.vehiculoSeleccionado;
 	}
 	
 }

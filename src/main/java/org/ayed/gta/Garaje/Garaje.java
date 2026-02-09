@@ -212,6 +212,11 @@ public class Garaje {
     public Vector<Vehiculo> obtenerVehiculo(){
         return vehiculos;
     }
+
+    public int precioLitro(){
+        return PRECIO_G;
+    }
+
     // Exclusivamente para el uso de archivoGaraje!
     /**
      * Constructor de Garaje
@@ -234,6 +239,19 @@ public class Garaje {
         for(int i=0; i < garaje.obtenerVehiculo().tamanio(); i++){
             this.vehiculos.agregar(garaje.obtenerVehiculo().dato(i));
         }
+    }
+    /** Obtener informacion de todos los Vehiculos en Garaje en String
+     * @return info de Vehiculos
+    */
+    public String obtenerVehiculosToString(){
+        String info = "";
+
+        for(int i=0; i< vehiculos.tamanio() ; i++){
+
+            info += vehiculos.dato(i).informacionVehiculo() + "\n";
+            
+        }
+        return info;
     }
 
 }
