@@ -30,13 +30,16 @@ public class MenuConcesionario {
 		
 		switch (op) {
 			case 1: // Búsqueda por nombre
-				Campo[] camposBusqueda = {
+				Campo[] camposNombre = {
 					new Campo("Nombre del Vehiculo a buscar:", TipoCampo.TEXTO)
 				};
-				controlador.mostrarBusquedaPorNombre(camposBusqueda);
+				controlador.mostrarBusquedaPorNombre(camposNombre);
 				break;
 			case 2: //Busqueda por marca
-				//respuesta= busquedaPorMarca(sc, conc);
+				Campo[] camposMarca = {
+					new Campo("Marca del Vehiculo a buscar:", TipoCampo.TEXTO)
+				};
+				controlador.mostrarBusquedaPorMarca(camposMarca);
 				break;
 			case 3:  //Mostrar stock completo
 				busqueda = concesionario.obtenerStock();
@@ -87,13 +90,17 @@ public class MenuConcesionario {
 	 * @param sc controlador de entradas
 	 * @param c concesionario
 	 * @return
-	 
-	private Vector<Vehiculo> busquedaPorMarca(ControladorEntradas sc, Concesionario c){
-		System.out.println("Ingrese marca de Vehiculo para buscar");
-		String marca= sc.leerEntrada(false);
-		return c.buscarPorNombre(marca);
-
-	}*/
+	*/
+	private Vector<Vehiculo> busquedaPorMarca(String marca) {
+		busqueda = concesionario.buscarPorMarca(marca);
+		if (busqueda.tamanio() == 0) {
+			operacionExitosa = false;
+		} else {
+			operacionExitosa = true;
+			controlador.mostrarVehiculos(controlador::mostrarMenuConcesionario, busqueda);
+		}
+		return busqueda;
+	}
 
 	public Boolean operacionExitosa() {
 		return operacionExitosa;

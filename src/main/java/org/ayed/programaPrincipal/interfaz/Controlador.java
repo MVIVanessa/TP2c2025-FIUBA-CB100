@@ -157,6 +157,25 @@ public class Controlador {
             }
         }
 
+        public void procesarBusquedaPorMarca(String[] datos) {
+            String marca = datos[0];
+
+            Vector<Vehiculo> resultado =
+                concesionario.buscarPorMarca(marca);
+
+            if (resultado.vacio()) {
+                mostrarMensaje(
+                    "No se encontraron vehículos de esa marca.",
+                    this::mostrarMenuConcesionario
+                );
+            } else {
+                mostrarVehiculos(
+                    this::mostrarMenuConcesionario,
+                    resultado
+                );
+            }
+        }
+
         public void procesarCompraVehiculo(int indiceVehiculo) {
             
             String nombreVehiculo = concesionario.busquedaPorIndice(indiceVehiculo);
@@ -260,6 +279,13 @@ public class Controlador {
         Interfaz.getInstancia().mostrarFormulario(
             campos,
             this::procesarBusquedaPorNombre
+         );
+    }
+
+    public void mostrarBusquedaPorMarca(Campo[] campos) {
+        Interfaz.getInstancia().mostrarFormulario(
+            campos,
+            this::procesarBusquedaPorMarca
          );
     }
 
