@@ -7,7 +7,6 @@ import org.ayed.gta.Vehiculos.Vehiculo;
 import org.ayed.programaPrincipal.interfaz.Campo;
 import org.ayed.programaPrincipal.interfaz.Controlador;
 import org.ayed.programaPrincipal.interfaz.TipoCampo;
-import org.ayed.programaPrincipal.interfaz.TipoMenu;
 import org.ayed.tda.vector.Vector;
 
 public class MenuGaraje{
@@ -35,16 +34,18 @@ public class MenuGaraje{
 
 			case 1 :
 				String info = vehiculosAMostrar(garaje);
-				controlador.mostrarMensaje(info, TipoMenu.GARAJE);
+				controlador.mostrarMensaje(info, () -> controlador.mostrarMenuGaraje());
 				break;
 			case 2 :
 				//eliminando(garaje, controlador);
 				break;
 			case 3 :
 				if (mejorar(garaje)) {
-					controlador.mostrarMensaje("Garaje mejorado correctamente. Capacidad actual: " + garaje.capacidadMaxima(), TipoMenu.GARAJE);
+					controlador.mostrarMensaje("Garaje mejorado correctamente. Capacidad actual: " + garaje.capacidadMaxima(),
+					() -> controlador.mostrarMenuGaraje());
 				} else {
-					controlador.mostrarMensaje("No se pudo mejorar el garaje. Verifique que tiene suficientes créditos.", TipoMenu.GARAJE);
+					controlador.mostrarMensaje("No se pudo mejorar el garaje. Verifique que tiene suficientes créditos.", 
+					() -> controlador.mostrarMenuGaraje());
 				}
 				break;
 			case 4 :
@@ -55,19 +56,24 @@ public class MenuGaraje{
 				break;
 			case 5 :
 					int monto= garaje.obtenerValorTotal();
-					controlador.mostrarMensaje("Valor total en el Garaje: "+ monto, TipoMenu.GARAJE);
+					controlador.mostrarMensaje("Valor total en el Garaje: "+ monto, 
+					() -> controlador.mostrarMenuGaraje());
 				break;                
 			case 6 :
 				int costo= garaje.obtenerCostoMantenimiento();
-				controlador.mostrarMensaje("El costo total por mantenimiento del garaje es :"+ costo, TipoMenu.GARAJE);
+				controlador.mostrarMensaje("El costo total por mantenimiento del garaje es :"+ costo, 
+				() -> controlador.mostrarMenuGaraje());
 				break;
 			case 7 :
 				exportarGaraje(garaje);
+				controlador.mostrarMensaje("Garaje exportado correctamente a archivo.\n", 
+				() -> controlador.mostrarMenuGaraje());
 				break;
 			case 8 :
 				garaje.copiarGaraje(importarGaraje());
 				if(!garaje.obtenerVehiculo().vacio())
-					controlador.mostrarMensaje("Garaje cargado correctamente desde archivo.\n", TipoMenu.GARAJE);
+					controlador.mostrarMensaje("Garaje cargado correctamente desde archivo.\n", 
+					() -> controlador.mostrarMenuGaraje());
 				break;
 			case 9:
 				//cargarVehiculo(garaje, controlador);
@@ -89,7 +95,7 @@ public class MenuGaraje{
 	 *  @param controlador Controlador de entradas para interaccion con usuario
 	 *  @param garaje Garaje al que agregamos el vehiculo 
 	 */
-	public void agregandoVehiculo(Garaje garaje, ControladorEntradas controlador){
+	public void agregandoVehiculosssssssssssssssss(Garaje garaje, ControladorEntradas controlador){
 		System.out.println("Ingrese la informacion de Vehiculo");
 		System.out.print("Nombre: ");
 

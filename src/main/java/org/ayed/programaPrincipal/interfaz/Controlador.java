@@ -7,21 +7,37 @@ import org.ayed.programaPrincipal.MenuGaraje;
 import org.ayed.programaPrincipal.MenuPartida;
 
 public class Controlador {
-
     private final Partida partida;
     private final MenuPartida menuPartida;
     private final MenuGaraje menuGaraje;
     private final Garaje garaje;
+    private int[] datosJugador; // [dia actual, dinero, creditos]
 
     public Controlador() {
         this.garaje = new Garaje();
-        this.partida = new Partida(garaje);
+        this.partida = new Partida(garaje, this);
         menuPartida = new MenuPartida(partida);
         menuGaraje = new MenuGaraje(partida.nombre(), partida.garaje());
     }
 
     public void iniciar() {
-        Interfaz.getInstancia().mostrarMenuPrincipal(this);
+        mostrarMensaje(
+            "Bienvenido al juego",
+            () -> mostrarIngresoNombreJugador(new Campo[] {
+                new Campo("Nombre", TipoCampo.TEXTO)
+            })
+        );
+    }
+    
+    public void empezarMision() {
+        if (!partida.puedeJugar()) {
+            mostrarMensaje(
+                "Game Over\nNo se puede continuar la partida. No tiene suficiente dinero.",
+                () -> Interfaz.cerrar()
+            );
+            return;
+        }
+        mostrarMenuDificultad();
     }
 
     //procesar opciones de los menus (redirecciona a la clase correspondiente que maneja la logica). Uso "interno".
@@ -51,48 +67,73 @@ public class Controlador {
     }
 
     public void procesarMenuContinuarJugando(int opcion) {
-        partida.continuarJugando(opcion);
+        if (opcion == 1) {
+            mostrarMenuPrincipal();
+        } else {
+            mostrarMensaje("Gracias por jugar. ¡Hasta la próxima!", () -> Interfaz.cerrar());
+        }
     }
 
     private void procesarCreditosAgregados(String[] datos) {
         menuGaraje.agregarCreditos(datos);
         mostrarMensaje(
-        "Créditos actuales: " + garaje.obtenerCreditos(), TipoMenu.GARAJE);
+        "Créditos actuales: " + garaje.obtenerCreditos(), () -> mostrarMenuGaraje());
+    }
+
+    private void procesarNombreJugador(String[] datos) {
+        partida.guardarNombre(datos[0]);
+        mostrarMensaje("Bienvenido " + datos[0] + "!", () -> mostrarMenuPrincipal());
+    }
+
+    public void procesarMisionFinalizada(boolean completada) {
+        partida.finalizarMision(completada);
+
+        if (completada) {
+            mostrarMensaje(
+                "¡Misión completada!",
+                this::mostrarMenuContinuarJugando
+            );
+        } else {
+            mostrarMensaje(
+                "Misión fallida",
+                this::mostrarMenuContinuarJugando
+            );
+        }
     }
 
     //mostrar menus y mensajes a traves de la interfaz grafica
 
     public void mostrarMenuPrincipal() {
-        Interfaz.getInstancia().mostrarMenuPrincipal(this);
+        datosJugador = new int[] {partida.diaActual(), partida.dinero(), partida.garaje().obtenerCreditos()};
+        Interfaz.getInstancia().mostrarMenuPrincipal(partida.nombre(), datosJugador);
     }
 
     public void mostrarMenuGaraje() {
-        Interfaz.getInstancia().mostrarMenuGaraje(this, garaje);
+        datosJugador = new int[] {partida.diaActual(), partida.dinero(), partida.garaje().obtenerCreditos()};
+        Interfaz.getInstancia().mostrarMenuGaraje(garaje, partida.nombre(), datosJugador);
     }
 
-    public void mostrarMensaje(String msg, TipoMenu tipo) {
-        Interfaz.getInstancia().mostrarMensaje(msg, tipo, this);
+    public void mostrarMensaje(String msg, Runnable onContinuar) {
+        Interfaz.getInstancia().mostrarMensaje(msg, onContinuar);
     }
 
     public void mostrarMenuDificultad() {
-        Interfaz.getInstancia().mostrarMenuDificultad(this);
+        datosJugador = new int[] {partida.diaActual(), partida.dinero(), partida.garaje().obtenerCreditos()};
+        Interfaz.getInstancia().mostrarMenuDificultad(partida.nombre(), datosJugador);
     }
 
     public void mostrarVehiculosPermitidos(Mision mision) {
-        Interfaz.getInstancia().mostrarVehiculosPermitidos(mision, this);
+        datosJugador = new int[] {partida.diaActual(), partida.dinero(), partida.garaje().obtenerCreditos()};
+        Interfaz.getInstancia().mostrarVehiculosPermitidos(mision, partida.nombre(), datosJugador);
     }
 
     public void iniciarMision(Mision mision) {
         Interfaz.getInstancia().iniciarMision(mision);
     }
 
-    public void mostrarResultadoMision(String resultado) {
-        System.out.println("MOSTRANDO RESULTADO");
-        Interfaz.getInstancia().mostrarResultadoMision(resultado);
-    }
-
     public void mostrarMenuContinuarJugando() {
-        Interfaz.getInstancia().mostrarMenuContinuarJugando(this);
+        datosJugador = new int[] {partida.diaActual(), partida.dinero(), partida.garaje().obtenerCreditos()};
+        Interfaz.getInstancia().mostrarMenuContinuarJugando(partida.nombre(), datosJugador);
     }
 
     public void mostrarFormularioCreditosAgregados(Campo[] campos) {
@@ -102,6 +143,12 @@ public class Controlador {
         );
     }
 
+    public void mostrarIngresoNombreJugador(Campo[] campos) {
+        Interfaz.getInstancia().mostrarFormulario(
+            campos,
+             this::procesarNombreJugador
+        );
+    }
 
     //obtener atributos necesarios
 
@@ -111,6 +158,10 @@ public class Controlador {
 
     public Partida partida() {
         return partida;
+    }
+
+    public void cerrar() {
+        Interfaz.cerrar();
     }
 }
 

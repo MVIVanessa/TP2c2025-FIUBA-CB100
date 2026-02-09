@@ -1,5 +1,7 @@
 package org.ayed.programaPrincipal.interfaz;
 
+import java.util.function.Consumer;
+
 import org.ayed.gta.Mapa.Coordenadas;
 import org.ayed.gta.Mapa.Gps;
 import org.ayed.gta.Mapa.Mapa;
@@ -35,7 +37,8 @@ public class misiones {
     private Label labelMensaje;
 
     private Controlador controlador;
-    private boolean misionFinalizada = false;
+    private Consumer<Boolean> onFinMision;
+    private boolean misionFinalizada;
 
     // ===== CONSTRUCTOR =====
     public misiones() {
@@ -84,11 +87,16 @@ public class misiones {
 
                 if (mision.misionCompletada()) {
                     misionFinalizada = true;
-                    controlador.mostrarResultadoMision("¡Misión Completada!");
-                } else if (mision.fracaso()) {
-                    misionFinalizada = true;
-                    controlador.mostrarResultadoMision("Misión Fallida.");
+                    if (onFinMision != null) {
+                        onFinMision.accept(true);
+                    }
                 }
+                else if (mision.fracaso()) {
+                    misionFinalizada = true;
+                    if (onFinMision != null) {
+                        onFinMision.accept(false);
+                    }
+            }
 
             } catch (ExcepcionMision e) {
                 mostrarMensaje(e.getMessage(), Color.RED);
@@ -129,6 +137,10 @@ public class misiones {
         mensaje.setStyle("-fx-font-size: 24px; -fx-text-fill: green;");
         gridPane.add(mensaje, 0, 0);
         misionFinalizada = true;
+    }
+
+    public void setOnFinMision(Consumer<Boolean> callback) {
+        this.onFinMision = callback;
     }
 
     // ================= MÉTODOS PRIVADOS =================
@@ -185,12 +197,6 @@ public class misiones {
             case TRANSITABLE_RECOMPENSA: return Color.WHITE;
             default: return Color.LIGHTGRAY;
         }
-    }
-
-    private void pausar(int segundos, Runnable accionAlFinal) {
-        PauseTransition pausa = new PauseTransition(Duration.seconds(segundos));
-        pausa.setOnFinished(e -> accionAlFinal.run());
-        pausa.play();
     }
 
     private VBox crearHUD() {
@@ -273,7 +279,7 @@ public class misiones {
         labelMensaje.setText(texto);
         labelMensaje.setTextFill(color);
 
-        PauseTransition pausa = new PauseTransition(Duration.seconds(1.5));
+        PauseTransition pausa = new PauseTransition(Duration.seconds(0.5));
         pausa.setOnFinished(e -> labelMensaje.setText(""));
         pausa.play();
     }

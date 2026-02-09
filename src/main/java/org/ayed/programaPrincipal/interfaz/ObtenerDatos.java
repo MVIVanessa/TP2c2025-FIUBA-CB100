@@ -27,7 +27,7 @@ public class ObtenerDatos {
         VBox contenido = new VBox(10);
         contenido.setAlignment(Pos.CENTER);
 
-        Label titulo = new Label("Ingrese los datos requeridos");
+        Label titulo = new Label("Ingrese los datos requeridos.");
         titulo.setTextFill(Color.GOLD);
         titulo.setStyle("-fx-font-size: 24px; -fx-font-weight: bold;");
         contenido.getChildren().add(titulo);
@@ -43,7 +43,6 @@ public class ObtenerDatos {
                 tf.setMaxWidth(400);
             }
 
-            // ENTER → confirmar (forma correcta)
             tf.setOnAction(e -> confirmar());
 
             camposUI[i] = tf;

@@ -5,13 +5,11 @@ import java.util.function.Consumer;
 import org.ayed.gta.Garaje.Garaje;
 import org.ayed.gta.Misiones.Mision;
 
-import javafx.animation.PauseTransition;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
-import javafx.util.Duration;
 
 public class Interfaz extends Application {
 
@@ -43,37 +41,56 @@ public class Interfaz extends Application {
         stage.show();
 
         controlador = new Controlador();
-        mostrarMenuPrincipal(controlador);
+        controlador.iniciar();
     }
 
 
-    public void mostrarMenuPrincipal(Controlador controller) {
+    public void mostrarMenuPrincipal(String nombreJugador, int[] datosJugador) {
         MenuUI menu = new MenuUI(
             "Menu Principal",
             opcionesMenus.opcionesPrincipal,
-            controller::procesarMenuPrincipal
+            controlador::procesarMenuPrincipal,
+            nombreJugador,
+            datosJugador
         );
 
         scene.setOnKeyPressed(menu::manejarTeclas);
         cambiarPantalla(menu.getRoot());
     }
 
-    public void mostrarMenuGaraje(Controlador controller, Garaje garaje) {
+    public void mostrarMenuGaraje(Garaje garaje, String nombreJugador, int[] datosJugador) {
         MenuUI menu = new MenuUI(
             "Menu Garaje",
             opcionesMenus.opcionesGaraje,
-            opcion -> controller.procesarMenuGaraje(opcion, garaje)
+            opcion -> controlador.procesarMenuGaraje(opcion, garaje),
+            nombreJugador,
+            datosJugador
         );
 
         scene.setOnKeyPressed(menu::manejarTeclas);
         cambiarPantalla(menu.getRoot());
     }
 
-    public void mostrarMenuDificultad(Controlador controller) {
+    public void mostrarMenuDificultad(String nombreJugador, int[] datosJugador) {
         MenuUI menu = new MenuUI(
             "Seleccionar Dificultad",
             opcionesMenus.opcionesDificultad,
-            controller::procesarMenuDificultad
+            controlador::procesarMenuDificultad,
+            nombreJugador,
+            datosJugador
+        );
+
+        scene.setOnKeyPressed(menu::manejarTeclas);
+        cambiarPantalla(menu.getRoot());
+    }
+
+    public void mostrarVehiculosPermitidos(Mision mision, String nombreJugador, int[] datosJugador) {
+        MenuUI menu = new MenuUI(
+            "Vehículos Permitidos",
+            mision.obtenerVehiculosPermitidos(),
+            opcion -> { controlador.procesarSeleccionVehiculo(opcion); },
+            nombreJugador,
+            datosJugador
             
         );
 
@@ -81,20 +98,8 @@ public class Interfaz extends Application {
         cambiarPantalla(menu.getRoot());
     }
 
-    public void mostrarVehiculosPermitidos(Mision mision, Controlador controlador) {
-        MenuUI menu = new MenuUI(
-            "Vehículos Permitidos",
-            mision.obtenerVehiculosPermitidos(),
-            opcion -> { controlador.procesarSeleccionVehiculo(opcion);
-            }
-        );
-
-        scene.setOnKeyPressed(menu::manejarTeclas);
-        cambiarPantalla(menu.getRoot());
-    }
-
-    public void mostrarMensaje(String mensaje, TipoMenu menuAnterior, Controlador controlador) {
-        VentanaMensaje ventana = new VentanaMensaje(mensaje, menuAnterior, controlador);
+    public void mostrarMensaje(String mensaje, Runnable onContinuar) {
+        VentanaMensaje ventana = new VentanaMensaje(mensaje, onContinuar);
         scene.setOnKeyPressed(ventana::manejarTeclas);
         cambiarPantalla(ventana.getRoot());
     }
@@ -103,26 +108,21 @@ public class Interfaz extends Application {
         pantallaMisiones = new misiones();
         pantallaMisiones.establecerMision(mision, controlador);
 
+        pantallaMisiones.setOnFinMision(completada -> {
+            controlador.procesarMisionFinalizada(completada);
+        });
+
         scene.setOnKeyPressed(pantallaMisiones::manejarTeclas);
         cambiarPantalla(pantallaMisiones.getRoot());
     }
 
-    public void mostrarResultadoMision(String resultado) {
-        pantallaMisiones.mostrarResultado(resultado);
-
-        PauseTransition pausa = new PauseTransition(Duration.seconds(2));
-        pausa.setOnFinished(e -> {
-            pantallaMisiones = null;
-            mostrarMenuPrincipal(controlador);
-        });
-        pausa.play();
-    }
-
-    public void mostrarMenuContinuarJugando(Controlador controlador) {
+    public void mostrarMenuContinuarJugando(String nombreJugador, int[] datosJugador) {
         MenuUI menu = new MenuUI(
             "¿Desea continuar jugando?",
             opcionesMenus.opcionesContinuarJugando,
-            opcion -> controlador.procesarMenuContinuarJugando(opcion)
+            opcion -> controlador.procesarMenuContinuarJugando(opcion),
+            nombreJugador,
+            datosJugador
         );
 
         scene.setOnKeyPressed(menu::manejarTeclas);
@@ -148,5 +148,11 @@ public class Interfaz extends Application {
 
     public static void lanzar(String[] args) {
         launch(args);
+    }
+
+    public static void cerrar() {
+        if (instancia != null && instancia.stage != null) {
+            instancia.stage.close();
+        }
     }
 }

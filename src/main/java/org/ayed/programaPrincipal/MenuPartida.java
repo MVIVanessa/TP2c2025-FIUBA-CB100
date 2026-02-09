@@ -3,22 +3,13 @@ package org.ayed.programaPrincipal;
 import org.ayed.gta.Concesionario.MenuConcesionario;
 import org.ayed.gta.Partida;
 import org.ayed.programaPrincipal.interfaz.Controlador;
-import org.ayed.programaPrincipal.interfaz.TipoMenu;
-
-import javafx.application.Platform;
 
 public class MenuPartida {
 	private Partida partida;
-	/**Comienza una Partida */
+	
 	public MenuPartida(Partida partida) {
 		this.partida = partida;
 	}
-	public void empezarPartida(){
-		//ControladorEntradas entrada=new ControladorEntradas();
-		//ingreso de nombre de usuario y creacion de archivo
-		partida.ingresarNombre();
-	}
-
 
 	/**
 	 * Procesa la opcion
@@ -28,11 +19,7 @@ public class MenuPartida {
 	public void procesarOpcion(int op, Controlador controlador){
 		switch (op) {
 			case 1:
-				partida.jugarPartida(controlador);
-				if(partida.partidaNueva()){
-					partida.guardarPartida();
-					empezarPartida();
-				}
+				controlador.empezarMision();
 				break;
 			case 2:
 				// ir a garaje. Desplega el menu de acciones de garaje
@@ -40,20 +27,22 @@ public class MenuPartida {
 				break;
 			case 3:
 				// guarda la partida en un archivo
-				controlador.mostrarMensaje("Partida guardada correctamente.", TipoMenu.PRINCIPAL);
+				controlador.mostrarMensaje("Partida guardada correctamente.", () -> controlador.mostrarMenuPrincipal());
 				partida.guardarPartida();
 				break;
 			case 4: 
 				//desplegarConcesionario(sc); temporalmente deshabilitado
 				break;
 			case 5:
-				controlador.mostrarMensaje("Dinero en cuenta: $"+ partida.dinero(), TipoMenu.PRINCIPAL);
+				controlador.mostrarMensaje("Dinero en cuenta: $"+ partida.dinero(), 
+				() -> controlador.mostrarMenuPrincipal());
 				System.out.println("Dinero en cuenta: $"+ partida.dinero());
 				break;
 			case 6:
-				controlador.mostrarMensaje("Créditos:\nDesarrollado por el grupo 6 de AYED - 2C 2024", TipoMenu.PRINCIPAL);
+				controlador.mostrarMensaje("Créditos:\nDesarrollado por el grupo 6 de AYED - 2C 2024", 
+				() -> controlador.mostrarMenuPrincipal());
 				System.out.println("Termino la partida");
-				Platform.exit();
+				controlador.cerrar();
 				break;
 			default:
 				System.err.println("Error en procesar opcion");
