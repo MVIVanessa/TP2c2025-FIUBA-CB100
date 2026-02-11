@@ -44,6 +44,11 @@ public abstract class Vehiculo {
         return info;
     }
 
+    public String informacionVehiculoUI(){
+        String info= nombre + "\t|\t"+ marca + "\t|\t" + precio + "\t\t|\t" + tipo + "\t|\t" + ruedas + "\t\t\t|\t" + capacidadGas + "\t\t\t\t\t|\t"+ velocidadMax;
+        return info;
+    }
+
     /**
      * @return costo de MAntenimiento del Vehiculo
      */

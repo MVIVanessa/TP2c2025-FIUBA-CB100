@@ -35,7 +35,7 @@ public class Interfaz extends Application {
         instancia = this;
         this.stage = stage;
 
-        stage.setTitle("GTA - Interfaz Gráfica");
+        stage.setTitle("GTA VI - Conduciendo Por La Ciudad");
 
         BorderPane root = new BorderPane();
         root.setPrefSize(Double.MAX_VALUE, Double.MAX_VALUE);

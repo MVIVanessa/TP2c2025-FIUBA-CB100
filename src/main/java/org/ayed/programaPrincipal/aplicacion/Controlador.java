@@ -40,7 +40,7 @@ public class Controlador {
 
     public void iniciar() {
         mostrarMensaje(
-            "¡Bienvenido al Garaje de GTA VI!",
+            "¡Bienvenido/a a GTA VI: Conduciendo Por La Ciudad!",
             () -> mostrarIngresoNombreJugador(new Campo[] {
                 new Campo("Nombre", TipoCampo.TEXTO)
             })
@@ -145,7 +145,9 @@ public class Controlador {
 		if (autos.isEmpty()) {
 			mostrarMensaje("No hay vehículos almacenados.", () -> { callback.run(); });
 		} else {
-			mostrarMensaje("Vehículos en el garaje:\n" + autos,
+			mostrarMensaje("Vehículos en el garaje:\n" +
+                            "Nombre \t|\tMarca \t|\tPrecio \t|\tTipo \t|\tCant. Ruedas \t|\tCapacidad de Gasolina \t|\tVelocidad Máxima\n" +
+                            autos,
 				() -> callback.run());	
 		}
 	}
@@ -323,7 +325,7 @@ public class Controlador {
     private String vectorToString(Vector<Vehiculo> vehiculos) {
         String resultado = "";
         for (int i = 0; i < vehiculos.tamanio(); i++) {
-            resultado += vehiculos.dato(i).informacionVehiculo() + "\n";
+            resultado += vehiculos.dato(i).informacionVehiculoUI() + "\n";
         }
         return resultado;
     }
@@ -331,7 +333,7 @@ public class Controlador {
     private String[] vectorToStringCadena(Vector<Vehiculo> vehiculos) {
         String[] resultado = new String[vehiculos.tamanio()];
         for (int i = 0; i < vehiculos.tamanio(); i++) {
-            resultado[i] = vehiculos.dato(i).informacionVehiculo();
+            resultado[i] = vehiculos.dato(i).informacionVehiculoUI();
         }
         return resultado;
     }
