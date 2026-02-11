@@ -2,7 +2,7 @@ package org.ayed.gta.Vehiculos;
 public class Exotico extends Vehiculo{
 	private final int COSTO_EXOTICO = 50;
 	private static final String TIPO ="EXOTICO"; //para imprimir la info
-	private final int COSTO_X_KM_EXOTICO= 10;
+	private final int COSTO_X_EXOTICO= 100;
 	
 	private String nombre;
 	private int precio;
@@ -31,7 +31,7 @@ public class Exotico extends Vehiculo{
         for (int r= 1; r<= ruedas; r++){ //podria haber un exotico con 0 ruedas
             costoRuedas+= r*10;
         }
-		int costoM = this.capacidadGas*COSTO_GASOLINA + COSTO_EXOTICO + costoRuedas + 100;
+		int costoM = capacidadGasolina()*COSTO_GASOLINA + COSTO_EXOTICO + costoRuedas + COSTO_X_EXOTICO;
 		return costoM;
 	}
 }

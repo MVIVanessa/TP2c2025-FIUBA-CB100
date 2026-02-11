@@ -11,7 +11,6 @@ import org.ayed.gta.Misiones.Moderada;
 import org.ayed.gta.Vehiculos.Auto;
 import org.ayed.gta.Vehiculos.Vehiculo;
 import org.ayed.programaPrincipal.interfaz.Controlador;
-import org.ayed.tda.lista.Lista;
 
 public class Partida {
 
@@ -20,7 +19,6 @@ public class Partida {
 
 	private int partinasIniciales = 5;
 
-	private Lista<Mision> misiones;
 	private String nombreJugador;
 	private int dinero;
 	private Garaje garaje;
@@ -35,10 +33,8 @@ public class Partida {
 	// ================= CONSTRUCTOR =================
 
 	public Partida(Garaje garaje, Controlador controlador) {
-		this.misiones = new Lista<>();
 		this.garaje = garaje;
 		this.controlador = controlador;
-
 		garaje.agregarVehiculo(VEHICULO_BASICO);
 		this.dinero = 0;
 		this.noFallo = true;
