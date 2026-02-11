@@ -9,9 +9,9 @@ import org.ayed.programaPrincipal.frontend.formulario.TipoCampo;
 import org.ayed.tda.vector.Vector;
 
 public class MenuConcesionario {
-	private Partida partidaJugador;
-	private Controlador controlador;
-	private Concesionario concesionario;
+	private	final Partida partidaJugador;
+	private final Controlador controlador;
+	private final Concesionario concesionario;
 	private Vector<Vehiculo> busqueda;
 	private Boolean operacionExitosa = false;
 	
@@ -31,10 +31,10 @@ public class MenuConcesionario {
 		
 		switch (op) {
 			case 1: // Búsqueda por nombre
-				busquedaPorNombre(controlador);
+				busquedaPorNombre();
 				break;
 			case 2: //Busqueda por marca
-				busquedaPorMarca(controlador);
+				busquedaPorMarca();
 				break;
 			case 3:  //Mostrar stock completo
 				busqueda = concesionario.obtenerStock();
@@ -43,7 +43,6 @@ public class MenuConcesionario {
 			case 4: //Comprar un vehiculo (primero muestra el stock completo)
 				if (concesionario.obtenerStock().tamanio() == 0) {
 					controlador.mostrarMensaje("No hay vehículos disponibles para comprar.", controlador::mostrarMenuConcesionario);
-					return;
 				} else {
 				controlador.mostrarMenuCompraConcesionario();
 				}
@@ -52,26 +51,17 @@ public class MenuConcesionario {
 				controlador.mostrarMenuPrincipal();
 				break;
 			default:
-				System.err.println("Error surgio en procesar la opcion");
+				System.err.println("Opción inválida en MenuConcesionario.");
 		}
 	}
-	/**
-	 * Busca por el nombre ingresado 
-	 * @param c controlador
-	 * @return
-	*/
-	private  void busquedaPorNombre(Controlador c){
+
+	private  void busquedaPorNombre(){
 		Campo[] camposNombre = {
 					new Campo("Nombre del Vehiculo a buscar:", TipoCampo.TEXTO)
 				};
-		c.mostrarBusquedaPorNombre(camposNombre);
+		controlador.mostrarBusquedaPorNombre(camposNombre);
 	}
-	/**
-	 * Compra el vehiculo segun el indice pedido al usuario
-	 * @param sc
-	 * @param respuesta
-	 * @param c
-	 */
+
 	public void comprar(String nombreVehiculo) {	
 		try {
 			concesionario.comprar(nombreVehiculo, partidaJugador);
@@ -81,16 +71,11 @@ public class MenuConcesionario {
 		}
 	}
 
-	/**
-	 * Busca por l marca ingresado 
-	 * @param c controlador de entradas
-	 * @return
-	*/
-	private void busquedaPorMarca (Controlador c) {
+	private void busquedaPorMarca () {
 		Campo[] camposMarca = {
-					new Campo("Marca del Vehiculo a buscar:", TipoCampo.TEXTO)
-			};
-		c.mostrarBusquedaPorMarca(camposMarca);
+			new Campo("Marca del Vehiculo a buscar:", TipoCampo.TEXTO)
+		};
+		controlador.mostrarBusquedaPorMarca(camposMarca);
 	}
 
 	public Boolean operacionExitosa() {

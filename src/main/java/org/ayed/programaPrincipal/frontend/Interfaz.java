@@ -27,6 +27,9 @@ public class Interfaz extends Application {
         return instancia;
     }
 
+    /**
+     * Inicia la aplicación JavaFX y muestra la ventana principal. 
+     */
     @Override
     public void start(Stage stage) {
         instancia = this;
@@ -47,7 +50,14 @@ public class Interfaz extends Application {
         controlador.iniciar();
     }
 
+    // ---------------------------- MÉTODOS PARA MOSTRAR PANTALLAS ----------------------------
 
+    // ------------------------ MENÚS -------------------------
+    
+    /**
+     * Construye el menú principal y lo muestra.
+     * Luego pasa al controlador la opción seleccionada.
+     */
     public void mostrarMenuPrincipal(String nombreJugador, int[] datosJugador) {
         MenuUI menu = new MenuUI(
             "Menu Principal",
@@ -91,7 +101,7 @@ public class Interfaz extends Application {
         MenuUI menu = new MenuUI(
             "Vehículos Permitidos",
             mision.obtenerVehiculosPermitidos(),
-            opcion -> { controlador.procesarSeleccionVehiculo(opcion); },
+            opcion ->  controlador.procesarSeleccionVehiculo(opcion),
             nombreJugador,
             datosJugador
             
@@ -99,24 +109,6 @@ public class Interfaz extends Application {
 
         scene.setOnKeyPressed(menu::manejarTeclas);
         cambiarPantalla(menu.getRoot());
-    }
-
-    public void mostrarMensaje(String mensaje, Runnable onContinuar) {
-        VentanaMensaje ventana = new VentanaMensaje(mensaje, onContinuar);
-        scene.setOnKeyPressed(ventana::manejarTeclas);
-        cambiarPantalla(ventana.getRoot());
-    }
-
-    public void iniciarMision(Mision mision) {
-        pantallaMisiones = new PantallaMision();
-        pantallaMisiones.establecerMision(mision, controlador);
-
-        pantallaMisiones.setOnFinMision(completada -> {
-            controlador.procesarMisionFinalizada(completada);
-        });
-
-        scene.setOnKeyPressed(pantallaMisiones::manejarTeclas);
-        cambiarPantalla(pantallaMisiones.getRoot());
     }
 
     public void mostrarMenuContinuarJugando(String nombreJugador, int[] datosJugador) {
@@ -153,24 +145,56 @@ public class Interfaz extends Application {
             nombreJugador,
             datosJugador
         );
+
+        scene.setOnKeyPressed(menu::manejarTeclas);
+        cambiarPantalla(menu.getRoot());
     }
 
+    // ------------------------ PANTALLAS DE INFORMACIÓN Y FORMULARIOS -------------------------
+
+    /**
+     * Muestra una ventana emergente con el mensaje especificado.
+     * Al final ejecuta la acción proporcionada.
+     */
+    public void mostrarMensaje(String mensaje, Runnable onContinuar) {
+        VentanaMensaje ventana = new VentanaMensaje(mensaje, onContinuar);
+        scene.setOnKeyPressed(ventana::manejarTeclas);
+        cambiarPantalla(ventana.getRoot());
+    }
+
+    /**
+     * Inicia la pantalla de misión.
+     * Al terminar avisa al controlador si la misión fue completada o no.
+     */
+    public void iniciarMision(Mision mision) {
+        pantallaMisiones = new PantallaMision();
+        pantallaMisiones.establecerMision(mision, controlador);
+
+        pantallaMisiones.setOnFinMision(completada -> {
+            controlador.procesarMisionFinalizada(completada);
+        });
+
+        scene.setOnKeyPressed(pantallaMisiones::manejarTeclas);
+        cambiarPantalla(pantallaMisiones.getRoot());
+    }
+
+    /**
+     * Muestra un formulario para ingresar datos.
+     * Al confirmar los valida y luego pasa los datos ingresados al controlador.
+     */
     public void mostrarFormulario(Campo[] camposDefinidos, Consumer<String[]> onConfirmar) {
 
         pantallaObtenerDatos = new FormularioEntrada(camposDefinidos);
 
         pantallaObtenerDatos.setOnConfirmar(() -> {
-            String[] datos = pantallaObtenerDatos.getDatosObtenidos();
+            String[] datos = pantallaObtenerDatos.obtenerDatosObtenidos();
             onConfirmar.accept(datos);
         });
 
         cambiarPantalla(pantallaObtenerDatos.getRoot());
     }
 
-    public void cambiarPantalla(Pane nuevoRoot) {
-        nuevoRoot.setPrefSize(Double.MAX_VALUE, Double.MAX_VALUE);
-        scene.setRoot(nuevoRoot);
-    }
+    // ============================= MÉTODOS DE CONTROL DE LA APLICACIÓN =============================
 
     public static void lanzar(String[] args) {
         launch(args);
@@ -181,4 +205,12 @@ public class Interfaz extends Application {
             instancia.stage.close();
         }
     }
+
+    // ----------------------- MÉTODOS AUXILIARES -------------------------
+
+    private void cambiarPantalla(Pane nuevoRoot) {
+        nuevoRoot.setPrefSize(Double.MAX_VALUE, Double.MAX_VALUE);
+        scene.setRoot(nuevoRoot);
+    }
+
 }

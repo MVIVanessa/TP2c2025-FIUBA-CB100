@@ -53,6 +53,19 @@ public class FormularioEntrada {
         return root;
     }
 
+    /**
+     * Establece la acción a ejecutar cuando el usuario confirme la entrada de datos y estos sean válidos.
+     */
+    public void setOnConfirmar(Runnable onConfirmar) {
+        this.onConfirmar = onConfirmar;
+    }
+
+    // ----------------------- MÉTODOS AUXILIARES -------------------------
+
+    /**
+     * Valida los datos ingresados por el usuario.
+     * @throws NumberFormatException Si el valor ingresado no es del tipo esperado (ENTERO o DECIMAL).
+     */
     private void confirmar() {
         datosObtenidos = new String[camposUI.length];
 
@@ -98,11 +111,9 @@ public class FormularioEntrada {
         tf.requestFocus();
     }
 
-    public void setOnConfirmar(Runnable onConfirmar) {
-        this.onConfirmar = onConfirmar;
-    }
+    //  ----------------------- GETTERS -------------------------
 
-    public String[] getDatosObtenidos() {
+    public String[] obtenerDatosObtenidos() {
         return datosObtenidos;
     }
 }

@@ -31,7 +31,6 @@ public class PantallaMision {
     private GridPane gridPane;
     private Mision mision;
     private Coordenadas jugador;
-    private Label mensajeEspera;
     private BorderPane root;
     private Label labelTiempo;
     private Label labelGasolina;
@@ -41,40 +40,27 @@ public class PantallaMision {
     private Consumer<Boolean> onFinMision;
     private boolean misionFinalizada;
 
-    // ===== CONSTRUCTOR =====
     public PantallaMision() {
         inicializarUI();
     }
 
-    // ===== ACCESO DESDE INTERFAZ =====
-    public BorderPane getRoot() {
-        return root;
-    }
-
-    // ===== INICIALIZACIÓN =====
     private void inicializarUI() {
         root = new BorderPane();
 
-        //----- MAPA -----//
+        // MAPA
         gridPane = new GridPane();
         gridPane.setAlignment(Pos.CENTER);
-
-        mensajeEspera = new Label("Esperando misión :)");
-        mensajeEspera.setStyle("-fx-font-size: 24px; -fx-text-fill: gray;");
-        gridPane.add(mensajeEspera, 0, 0);
-
         root.setCenter(gridPane);
 
-        //----- HUD / barra superior -----//
+        // HUD / barra superior
         HBox barraSuperior = crearBarraSuperior();
         root.setTop(barraSuperior);
 
-        //----- GLOSARIO -----//
+        // GLOSARIO
         VBox glosario = crearGlosario();
         root.setLeft(glosario);
     }
 
-    // ===== TECLADO =====
     public void manejarTeclas(KeyEvent event) {
         if (mision == null || misionFinalizada) return;
 
@@ -105,9 +91,6 @@ public class PantallaMision {
         }
     }
 
-
-
-    // ===== API PÚBLICA =====
     public void establecerMision(Mision nuevaMision, Controlador controlador) {
         misionFinalizada = false;
         this.mision = nuevaMision;
@@ -119,16 +102,6 @@ public class PantallaMision {
         gridPane.getChildren().clear();
         dibujarMapa();
         actualizarHUD();
-    }
-
-    public void limpiarMision() {
-        mision = null;
-        mapa = null;
-        gps = null;
-        jugador = null;
-
-        gridPane.getChildren().clear();
-        gridPane.add(mensajeEspera, 0, 0);
     }
 
     public void mostrarResultado(String resultado) {
@@ -283,5 +256,11 @@ public class PantallaMision {
         PauseTransition pausa = new PauseTransition(Duration.seconds(0.5));
         pausa.setOnFinished(e -> labelMensaje.setText(""));
         pausa.play();
+    }
+
+    // ------------------------ GETTERS --------------------------
+
+    public BorderPane getRoot() {
+        return root;
     }
 }

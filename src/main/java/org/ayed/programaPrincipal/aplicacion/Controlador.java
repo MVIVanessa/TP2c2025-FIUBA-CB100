@@ -24,6 +24,11 @@ public class Controlador {
     
     private int[] datosJugador; // [dia actual, dinero, creditos]
 
+    /**
+     * Coordina la lógica de la partida y la interfaz gráfica.
+     * Recibe eventos de la UI, ejecuta acciones del modelo
+     * y decide qué pantalla mostrar a continuación.
+     */
     public Controlador() {
         this.garaje = new Garaje();
         this.concesionario = new Concesionario();
@@ -53,8 +58,116 @@ public class Controlador {
         mostrarMenuDificultad();
     }
 
-    //procesar opciones de los menus (redirecciona a la clase correspondiente que maneja la logica). Uso "interno".
 
+   // ----------------------- MÉTODOS PARA MOSTRAR MENÚS Y MENSAJES A TRAVÉS DE LA INTERFAZ GRÁFICA -------------------------
+   // Lógica ->  Controlador (preparar datos) -> Interfaz (mostrar menú con datos)
+
+   // MENÚS
+
+    public void mostrarMenuPrincipal() {
+        datosJugador = new int[] {partida.diaActual(), partida.dinero(), partida.garaje().obtenerCreditos()};
+        Interfaz.getInstancia().mostrarMenuPrincipal(partida.nombre(), datosJugador);
+    }
+
+    public void mostrarMenuGaraje() {
+        datosJugador = new int[] {partida.diaActual(), partida.dinero(), partida.garaje().obtenerCreditos()};
+        Interfaz.getInstancia().mostrarMenuGaraje(partida.nombre(), datosJugador);
+    }
+
+    public void mostrarMenuDificultad() {
+        datosJugador = new int[] {partida.diaActual(), partida.dinero(), partida.garaje().obtenerCreditos()};
+        Interfaz.getInstancia().mostrarMenuDificultad(partida.nombre(), datosJugador);
+    }
+
+    public void mostrarMenuContinuarJugando() {
+        datosJugador = new int[] {partida.diaActual(), partida.dinero(), partida.garaje().obtenerCreditos()};
+        Interfaz.getInstancia().mostrarMenuContinuarJugando(partida.nombre(), datosJugador);
+    }
+
+    public void mostrarMenuConcesionario() {
+        datosJugador = new int[] {partida.diaActual(), partida.dinero(), partida.garaje().obtenerCreditos()};
+        Interfaz.getInstancia().mostrarMenuConcesionario(partida.nombre(), datosJugador);
+    }
+
+    public void mostrarMenuCompraConcesionario() {
+        datosJugador = new int[] {partida.diaActual(), partida.dinero(), partida.garaje().obtenerCreditos()};
+        String [] vehiculos = vectorToStringCadena(concesionario.obtenerStock());
+        Interfaz.getInstancia().mostrarMenuCompraConcesionario(partida.nombre(), datosJugador, vehiculos);
+    }
+
+    // INGRESO DE DATOS
+
+    public void mostrarIngresoNombreJugador(Campo[] campos) {
+        Interfaz.getInstancia().mostrarFormulario(
+            campos,
+             this::procesarNombreJugador
+        );
+    }
+
+    public void mostrarFormularioCreditosAgregados(Campo[] campos) {
+        Interfaz.getInstancia().mostrarFormulario(
+            campos,
+            this::procesarCreditosAgregados
+        );
+    }
+
+    public void mostrarFormularioEliminar(Campo[] campos) {
+        Interfaz.getInstancia().mostrarFormulario(
+            campos,
+            this::procesarEliminacion
+        );
+    }
+
+    // OTROS
+
+    public void mostrarMensaje(String msg, Runnable onContinuar) {
+        Interfaz.getInstancia().mostrarMensaje(msg, onContinuar);
+    }
+
+    public void mostrarVehiculosPermitidos(Mision mision) {
+        datosJugador = new int[] {partida.diaActual(), partida.dinero(), partida.garaje().obtenerCreditos()};
+        Interfaz.getInstancia().mostrarVehiculosPermitidos(mision, partida.nombre(), datosJugador);
+    }
+
+    public void iniciarMision(Mision mision) {
+        Interfaz.getInstancia().iniciarMision(mision);
+    }
+
+    public void mostrarCargaPorIndice(Campo[] campos) {
+        Interfaz.getInstancia().mostrarFormulario(
+            campos,
+            this::procesarCargaPorIndice
+        );
+    }
+
+	public void mostrarVehiculos(Runnable callback, Vector<Vehiculo> vehiculos) {
+		String autos = vectorToString(vehiculos);
+		if (autos.isEmpty()) {
+			mostrarMensaje("No hay vehículos almacenados.", () -> { callback.run(); });
+		} else {
+			mostrarMensaje("Vehículos en el garaje:\n" + autos,
+				() -> callback.run());	
+		}
+	}
+
+    public void mostrarBusquedaPorNombre(Campo[] campos) {
+        Interfaz.getInstancia().mostrarFormulario(
+            campos,
+            this::procesarBusquedaPorNombre
+         );
+    }
+
+    public void mostrarBusquedaPorMarca(Campo[] campos) {
+        Interfaz.getInstancia().mostrarFormulario(
+            campos,
+            this::procesarBusquedaPorMarca
+         );
+    }
+
+    // ----------------------- MÉTODOS PARA PROCESAR LAS OPCIONES SELECCIONADAS EN LOS MENÚS -------------------------
+    // Interfaz (muestra menú; obtiene opción) -> Controlador (procesar opción) -> Lógica (ejecutar acción según opción)
+
+    // MENÚS
     public void procesarMenuPrincipal(int opcion) {
         menuPartida.procesarOpcion(opcion, this);
     }
@@ -78,25 +191,26 @@ public class Controlador {
         mostrarVehiculosPermitidos(m);
     }
 
-    public void procesarSeleccionVehiculo(int opcion) {
-        Mision m = partida.misionActual();
-        m.seleccionarVehiculo(opcion);
-
-        iniciarMision(m);
+    public void procesarMenuConcesionario(int opcion) {
+        menuConcesionario.procesarOpcion(opcion, this);
     }
 
     public void procesarMenuContinuarJugando(int opcion) {
         if (opcion == 1) {
             mostrarMenuDificultad();
         } else {
-            mostrarMenuPrincipal();;
+            mostrarMenuPrincipal();
         }
     }
 
-    public void procesarMenuConcesionario(int opcion) {
-        menuConcesionario.procesarOpcion(opcion, this);
-    }
+    // OTROS
 
+    public void procesarSeleccionVehiculo(int opcion) {
+        Mision m = partida.misionActual();
+        m.seleccionarVehiculo(opcion);
+
+        iniciarMision(m);
+    }
     private void procesarCreditosAgregados(String[] datos) {
         menuGaraje.agregarCreditos(datos);
         mostrarMensaje(
@@ -203,122 +317,8 @@ public class Controlador {
             }
         }
 
-    //mostrar menus y mensajes a traves de la interfaz grafica
 
-    public void mostrarMenuPrincipal() {
-        datosJugador = new int[] {partida.diaActual(), partida.dinero(), partida.garaje().obtenerCreditos()};
-        Interfaz.getInstancia().mostrarMenuPrincipal(partida.nombre(), datosJugador);
-    }
-
-    public void mostrarMenuGaraje() {
-        datosJugador = new int[] {partida.diaActual(), partida.dinero(), partida.garaje().obtenerCreditos()};
-        Interfaz.getInstancia().mostrarMenuGaraje(partida.nombre(), datosJugador);
-    }
-
-    public void mostrarMensaje(String msg, Runnable onContinuar) {
-        Interfaz.getInstancia().mostrarMensaje(msg, onContinuar);
-    }
-
-    public void mostrarMenuDificultad() {
-        datosJugador = new int[] {partida.diaActual(), partida.dinero(), partida.garaje().obtenerCreditos()};
-        Interfaz.getInstancia().mostrarMenuDificultad(partida.nombre(), datosJugador);
-    }
-
-    public void mostrarVehiculosPermitidos(Mision mision) {
-        datosJugador = new int[] {partida.diaActual(), partida.dinero(), partida.garaje().obtenerCreditos()};
-        Interfaz.getInstancia().mostrarVehiculosPermitidos(mision, partida.nombre(), datosJugador);
-    }
-
-    public void iniciarMision(Mision mision) {
-        Interfaz.getInstancia().iniciarMision(mision);
-    }
-
-    public void mostrarMenuContinuarJugando() {
-        datosJugador = new int[] {partida.diaActual(), partida.dinero(), partida.garaje().obtenerCreditos()};
-        Interfaz.getInstancia().mostrarMenuContinuarJugando(partida.nombre(), datosJugador);
-    }
-
-    public void mostrarFormularioCreditosAgregados(Campo[] campos) {
-        Interfaz.getInstancia().mostrarFormulario(
-            campos,
-            this::procesarCreditosAgregados
-        );
-    }
-
-    public void mostrarIngresoNombreJugador(Campo[] campos) {
-        Interfaz.getInstancia().mostrarFormulario(
-            campos,
-             this::procesarNombreJugador
-        );
-    }
-
-    public void mostrarCargaPorIndice(Campo[] campos) {
-        Interfaz.getInstancia().mostrarFormulario(
-            campos,
-            this::procesarCargaPorIndice
-        );
-    }
-
-	/** Mostrar informacion de Vehiculos en Garaje
-	 *  @param callback Funcion a ejecutar al finalizar de mostrar los vehiculos (ej: volver al menu del garaje)
-	 */
-	public void mostrarVehiculos(Runnable callback, Vector<Vehiculo> vehiculos) {
-		String autos = vectorToString(vehiculos);
-		if (autos.isEmpty()) {
-			mostrarMensaje("No hay vehículos almacenados.", () -> { callback.run(); });
-		} else {
-			mostrarMensaje("Vehículos en el garaje:\n" + autos,
-				() -> callback.run());	
-		}
-	}
-
-    public void mostrarFormularioEliminar(Campo[] campos) {
-        Interfaz.getInstancia().mostrarFormulario(
-            campos,
-            this::procesarEliminacion
-        );
-    }
-
-    public void mostrarMenuConcesionario() {
-        datosJugador = new int[] {partida.diaActual(), partida.dinero(), partida.garaje().obtenerCreditos()};
-        Interfaz.getInstancia().mostrarMenuConcesionario(partida.nombre(), datosJugador);
-    }
-
-    public void mostrarBusquedaPorNombre(Campo[] campos) {
-        Interfaz.getInstancia().mostrarFormulario(
-            campos,
-            this::procesarBusquedaPorNombre
-         );
-    }
-
-    public void mostrarBusquedaPorMarca(Campo[] campos) {
-        Interfaz.getInstancia().mostrarFormulario(
-            campos,
-            this::procesarBusquedaPorMarca
-         );
-    }
-
-    public void mostrarMenuCompraConcesionario() {
-        datosJugador = new int[] {partida.diaActual(), partida.dinero(), partida.garaje().obtenerCreditos()};
-        String [] vehiculos = vectorToStringCadena(concesionario.obtenerStock());
-        Interfaz.getInstancia().mostrarMenuCompraConcesionario(partida.nombre(), datosJugador, vehiculos);
-    }
-
-    //obtener atributos necesarios
-
-    public Garaje garaje() {
-        return garaje;
-    }
-
-    public Partida partida() {
-        return partida;
-    }
-
-    public void cerrar() {
-        Interfaz.cerrar();
-    }
-
-    //Auxiliares
+    // ----------------------- MÉTODOS AUXILIARES -------------------------
 
     private String vectorToString(Vector<Vehiculo> vehiculos) {
         String resultado = "";
@@ -335,5 +335,20 @@ public class Controlador {
         }
         return resultado;
     }
+
+        // ----------------------- GETTERS -------------------------
+
+    public Garaje garaje() {
+        return garaje;
+    }
+
+    public Partida partida() {
+        return partida;
+    }
+
+    public void cerrar() {
+        Interfaz.cerrar();
+    }
+
 }
 
