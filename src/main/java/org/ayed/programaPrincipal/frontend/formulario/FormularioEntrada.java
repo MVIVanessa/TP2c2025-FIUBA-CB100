@@ -1,4 +1,4 @@
-package org.ayed.programaPrincipal.interfaz;
+package org.ayed.programaPrincipal.frontend.formulario;
 
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
@@ -8,14 +8,14 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 
-public class ObtenerDatos {
+public class FormularioEntrada {
 
     private final Campo[] camposDefinidos;
     private final TextField[] camposUI;
     private String[] datosObtenidos;
     private Runnable onConfirmar;
 
-    public ObtenerDatos(Campo[] camposDefinidos) {
+    public FormularioEntrada(Campo[] camposDefinidos) {
         this.camposDefinidos = camposDefinidos;
         this.camposUI = new TextField[camposDefinidos.length];
     }

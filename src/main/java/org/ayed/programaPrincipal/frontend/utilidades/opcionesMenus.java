@@ -1,4 +1,4 @@
-package org.ayed.programaPrincipal.interfaz;
+package org.ayed.programaPrincipal.frontend.utilidades;
 
 public class opcionesMenus {
 

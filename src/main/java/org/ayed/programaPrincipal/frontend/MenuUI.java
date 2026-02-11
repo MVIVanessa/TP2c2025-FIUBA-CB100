@@ -1,4 +1,4 @@
-package org.ayed.programaPrincipal.interfaz;
+package org.ayed.programaPrincipal.frontend;
 
 import java.util.function.Consumer;
 

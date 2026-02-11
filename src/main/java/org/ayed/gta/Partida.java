@@ -10,7 +10,7 @@ import org.ayed.gta.Misiones.Mision;
 import org.ayed.gta.Misiones.Moderada;
 import org.ayed.gta.Vehiculos.Auto;
 import org.ayed.gta.Vehiculos.Vehiculo;
-import org.ayed.programaPrincipal.interfaz.Controlador;
+import org.ayed.programaPrincipal.aplicacion.Controlador;
 import org.ayed.tda.lista.Lista;
 
 public class Partida {

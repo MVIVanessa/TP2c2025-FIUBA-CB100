@@ -1,10 +1,10 @@
-package org.ayed.programaPrincipal;
+package org.ayed.programaPrincipal.menu;
 
 import org.ayed.gta.Garaje.ArchivoGaraje;
 import org.ayed.gta.Garaje.Garaje;
-import org.ayed.programaPrincipal.interfaz.Campo;
-import org.ayed.programaPrincipal.interfaz.Controlador;
-import org.ayed.programaPrincipal.interfaz.TipoCampo;
+import org.ayed.programaPrincipal.aplicacion.Controlador;
+import org.ayed.programaPrincipal.frontend.formulario.Campo;
+import org.ayed.programaPrincipal.frontend.formulario.TipoCampo;
 
 public class MenuGaraje{
 	private final String FORMATO_RUTA = ".csv";

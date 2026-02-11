@@ -1,8 +1,12 @@
-package org.ayed.programaPrincipal.interfaz;
+package org.ayed.programaPrincipal.frontend;
 
 import java.util.function.Consumer;
 
 import org.ayed.gta.Misiones.Mision;
+import org.ayed.programaPrincipal.aplicacion.Controlador;
+import org.ayed.programaPrincipal.frontend.formulario.Campo;
+import org.ayed.programaPrincipal.frontend.formulario.FormularioEntrada;
+import org.ayed.programaPrincipal.frontend.utilidades.opcionesMenus;
 
 import javafx.application.Application;
 import javafx.scene.Scene;
@@ -15,9 +19,9 @@ public class Interfaz extends Application {
     private static Interfaz instancia;
     private Stage stage;
     private Controlador controlador;
-    private misiones pantallaMisiones;
+    private PantallaMision pantallaMisiones;
     private Scene scene;
-    private ObtenerDatos pantallaObtenerDatos;
+    private FormularioEntrada pantallaObtenerDatos;
 
     public static Interfaz getInstancia() {
         return instancia;
@@ -104,7 +108,7 @@ public class Interfaz extends Application {
     }
 
     public void iniciarMision(Mision mision) {
-        pantallaMisiones = new misiones();
+        pantallaMisiones = new PantallaMision();
         pantallaMisiones.establecerMision(mision, controlador);
 
         pantallaMisiones.setOnFinMision(completada -> {
@@ -153,7 +157,7 @@ public class Interfaz extends Application {
 
     public void mostrarFormulario(Campo[] camposDefinidos, Consumer<String[]> onConfirmar) {
 
-        pantallaObtenerDatos = new ObtenerDatos(camposDefinidos);
+        pantallaObtenerDatos = new FormularioEntrada(camposDefinidos);
 
         pantallaObtenerDatos.setOnConfirmar(() -> {
             String[] datos = pantallaObtenerDatos.getDatosObtenidos();

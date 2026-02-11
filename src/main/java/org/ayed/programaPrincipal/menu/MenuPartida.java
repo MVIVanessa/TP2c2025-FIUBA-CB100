@@ -1,7 +1,7 @@
-package org.ayed.programaPrincipal;
+package org.ayed.programaPrincipal.menu;
 
 import org.ayed.gta.Partida;
-import org.ayed.programaPrincipal.interfaz.Controlador;
+import org.ayed.programaPrincipal.aplicacion.Controlador;
 
 public class MenuPartida {
 	private Partida partida;

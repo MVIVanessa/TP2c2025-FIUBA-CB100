@@ -1,11 +1,11 @@
-package org.ayed.programaPrincipal;
+package org.ayed.programaPrincipal.menu;
 
 import org.ayed.gta.Concesionario.Concesionario;
 import org.ayed.gta.Partida;
 import org.ayed.gta.Vehiculos.Vehiculo;
-import org.ayed.programaPrincipal.interfaz.Campo;
-import org.ayed.programaPrincipal.interfaz.Controlador;
-import org.ayed.programaPrincipal.interfaz.TipoCampo;
+import org.ayed.programaPrincipal.aplicacion.Controlador;
+import org.ayed.programaPrincipal.frontend.formulario.Campo;
+import org.ayed.programaPrincipal.frontend.formulario.TipoCampo;
 import org.ayed.tda.vector.Vector;
 
 public class MenuConcesionario {

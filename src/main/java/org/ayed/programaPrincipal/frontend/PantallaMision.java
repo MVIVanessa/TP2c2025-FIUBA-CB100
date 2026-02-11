@@ -1,4 +1,4 @@
-package org.ayed.programaPrincipal.interfaz;
+package org.ayed.programaPrincipal.frontend;
 
 import java.util.function.Consumer;
 
@@ -8,6 +8,7 @@ import org.ayed.gta.Mapa.Mapa;
 import org.ayed.gta.Mapa.TipoCelda;
 import org.ayed.gta.Misiones.ExcepcionMision;
 import org.ayed.gta.Misiones.Mision;
+import org.ayed.programaPrincipal.aplicacion.Controlador;
 import org.ayed.tda.iterador.Iterador;
 import org.ayed.tda.lista.Lista;
 
@@ -23,7 +24,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
 
-public class misiones {
+public class PantallaMision {
 
     private Mapa mapa;
     private Gps gps;
@@ -41,7 +42,7 @@ public class misiones {
     private boolean misionFinalizada;
 
     // ===== CONSTRUCTOR =====
-    public misiones() {
+    public PantallaMision() {
         inicializarUI();
     }
 

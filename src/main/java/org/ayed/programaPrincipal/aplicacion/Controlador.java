@@ -1,13 +1,16 @@
-package org.ayed.programaPrincipal.interfaz;
+package org.ayed.programaPrincipal.aplicacion;
 
 import org.ayed.gta.Concesionario.Concesionario;
 import org.ayed.gta.Garaje.Garaje;
 import org.ayed.gta.Misiones.Mision;
 import org.ayed.gta.Partida;
 import org.ayed.gta.Vehiculos.Vehiculo;
-import org.ayed.programaPrincipal.MenuConcesionario;
-import org.ayed.programaPrincipal.MenuGaraje;
-import org.ayed.programaPrincipal.MenuPartida;
+import org.ayed.programaPrincipal.frontend.Interfaz;
+import org.ayed.programaPrincipal.frontend.formulario.Campo;
+import org.ayed.programaPrincipal.frontend.formulario.TipoCampo;
+import org.ayed.programaPrincipal.menu.MenuConcesionario;
+import org.ayed.programaPrincipal.menu.MenuGaraje;
+import org.ayed.programaPrincipal.menu.MenuPartida;
 import org.ayed.tda.vector.Vector;
 
 public class Controlador {
