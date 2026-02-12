@@ -226,10 +226,15 @@ public class Controlador {
     private void procesarCargaPorIndice(String[] datos) {
         int indice = Integer.parseInt(datos[0]);
         int litros = Integer.parseInt(datos[1]);
-        menuGaraje.cargarVehiculo(new int[]{indice, litros});
-        mostrarMensaje(
-            "Vehículo cargado correctamente.", () -> mostrarMenuGaraje()
-        );
+        if(menuGaraje.cargarVehiculo(new int[]{indice, litros})){
+            mostrarMensaje(
+                "Vehículo cargado correctamente.", () -> mostrarMenuGaraje()
+            );
+        }else{
+            mostrarMensaje(
+                "Vehículo no pudo ser cargado por salfo insuficiente.", () -> mostrarMenuGaraje()
+            );
+        }
     }
 
     private void procesarNombreJugador(String[] datos) {

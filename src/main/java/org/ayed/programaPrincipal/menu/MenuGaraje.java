@@ -78,7 +78,7 @@ public class MenuGaraje{
 				break;
 			case 9: //Cargar gasolina a un vehiculo segun su indice
 				Campo[] camposCargar = new Campo[]{
-					new Campo("Indice del Vehiculo:", TipoCampo.ENTERO),
+					new Campo("Indice del Vehiculo(Empieza desde cero):", TipoCampo.ENTERO),
 					new Campo("Cantidad de litros a cargar:", TipoCampo.ENTERO)
 				};
 				controlador.mostrarCargaPorIndice(camposCargar);
@@ -130,10 +130,12 @@ public class MenuGaraje{
 	/** Cargar un vehiculo
 	 *  @param datos [indice, litros]
 	 */
-	public void cargarVehiculo(int[] datos){
+	public boolean cargarVehiculo(int[] datos){
+		boolean cargado=false;
 		if (garaje.obtenerCreditos() >= datos[1] * garaje.precioLitro()) {
 			try {
 				garaje.cargarGasolinaVehiculo(datos[1], datos[0]);
+				cargado=true;
 			} catch (Exception e) {
 				controlador.mostrarMensaje("Error al cargar gasolina: " + e.getMessage(),
 				() -> controlador.mostrarMenuGaraje());
@@ -142,6 +144,7 @@ public class MenuGaraje{
 			controlador.mostrarMensaje("Créditos insuficientes para cargar gasolina. Créditos actuales: " + garaje.obtenerCreditos(), 
 			() -> controlador.mostrarMenuGaraje());
 		}
+		return cargado;
 		
 	}
 
