@@ -29,10 +29,9 @@ public class Auto extends Vehiculo{
 	}
 	@Override
 	public int costoMantenimientoVehiculo(){
-	
-		int costoM= this.capacidadGas*COSTO_GASOLINA + COSTO_AUTO*this.ruedas;
+		int costoM = capacidadGasolina()*COSTO_GASOLINA + COSTO_AUTO*RUEDA_AUTO;
 		
-		if(CADAKM >= kilometraje)
+		if(CADAKM <= kilometraje)
 			costoM+= CADAKM * COSTO_X_KM_AUTO;
 		return costoM;
 	}

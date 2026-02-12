@@ -78,13 +78,20 @@ public class MenuGaraje{
 				break;
 			case 9: //Cargar gasolina a un vehiculo segun su indice
 				Campo[] camposCargar = new Campo[]{
-					new Campo("Indice del Vehiculo:", TipoCampo.ENTERO),
+					new Campo("Indice del Vehiculo(Empieza desde cero):", TipoCampo.ENTERO),
 					new Campo("Cantidad de litros a cargar:", TipoCampo.ENTERO)
 				};
 				controlador.mostrarCargaPorIndice(camposCargar);
 				break;
 			case 10: //Cargar gasolina a todos los vehiculos del garaje
-				cargarVehiculos();
+				
+					if(cargarVehiculos()){
+						controlador.mostrarMensaje("Vehiculos cargados correctamente.\n", 
+						() -> controlador.mostrarMenuGaraje());
+					}else{
+						controlador.mostrarMensaje("Saldo insuficiente para cargar todos los vehiculos\n", 
+						() -> controlador.mostrarMenuGaraje());
+					}
 				break;
 			case 11 : //Volver al menu principal
 					System.out.println("-------- SALIENDO --------");
@@ -96,15 +103,19 @@ public class MenuGaraje{
 		}
 	}
 
-	public void eliminar(String nombreVehiculo){
+	public boolean eliminar(String nombreVehiculo){
 		try{
 			garaje.eliminarVehiculo(nombreVehiculo);
+			return true;
 		}catch(Exception e){
 			System.err.println(e);
+			return false;
 		}
-
 	}
-
+	/**
+	 * Agrega creditos
+	 * @param datos monto que se ingresa para acreditar
+	 */
 	public void agregarCreditos(String[] datos){
 		int monto = Integer.parseInt(datos[0]);
 		try {
@@ -119,10 +130,12 @@ public class MenuGaraje{
 	/** Cargar un vehiculo
 	 *  @param datos [indice, litros]
 	 */
-	public void cargarVehiculo(int[] datos){
+	public boolean cargarVehiculo(int[] datos){
+		boolean cargado=false;
 		if (garaje.obtenerCreditos() >= datos[1] * garaje.precioLitro()) {
 			try {
 				garaje.cargarGasolinaVehiculo(datos[1], datos[0]);
+				cargado=true;
 			} catch (Exception e) {
 				controlador.mostrarMensaje("Error al cargar gasolina: " + e.getMessage(),
 				() -> controlador.mostrarMenuGaraje());
@@ -131,6 +144,7 @@ public class MenuGaraje{
 			controlador.mostrarMensaje("Créditos insuficientes para cargar gasolina. Créditos actuales: " + garaje.obtenerCreditos(), 
 			() -> controlador.mostrarMenuGaraje());
 		}
+		return cargado;
 		
 	}
 
@@ -154,12 +168,15 @@ public class MenuGaraje{
 	/** 
 	 * Carga la gasolina de todos los vehiculos.
 	 */
-	private void cargarVehiculos(){
+	private boolean cargarVehiculos(){
+		boolean cargados=false;
 		try {
 			garaje.cargarTodosVehiculos();
+			cargados= true;
 		} catch (Exception e) {
 			System.err.println(e.getMessage());
 		}
+		return cargados;
 	}
 
 	private boolean mejorar(){
@@ -167,7 +184,6 @@ public class MenuGaraje{
 			garaje.mejorarGaraje();
 			System.out.println("Capacidad de almacen de Vehiculos en Garaje despues de mejora: "+ garaje.capacidadMaxima());
 		}catch(Exception e){
-			System.err.println(e.getMessage());
 			return false;
 		}
 		return true;

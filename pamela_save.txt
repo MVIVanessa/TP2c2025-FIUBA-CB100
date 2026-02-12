@@ -1,5 +1,0 @@
-Jugador:pamela
-Dinero:30040
-Vehiculos:
-Auto, clasico, 0, AUTO, 4, 100, 10
-FIN

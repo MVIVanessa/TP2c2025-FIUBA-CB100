@@ -29,9 +29,9 @@ public class Moto extends Vehiculo{
 	@Override
 	public int costoMantenimientoVehiculo(){
 	
-		int costoM = this.capacidadGas*COSTO_GASOLINA + COSTO_MOTO*this.ruedas;
+		int costoM = capacidadGasolina()*COSTO_GASOLINA + COSTO_MOTO*RUEDA_MOTO;
 		
-		if(CADAKM >= kilometraje)
+		if(CADAKM <= kilometraje)
 			costoM += CADAKM * COSTO_X_KM_MOTO;
 		return costoM;
 	}

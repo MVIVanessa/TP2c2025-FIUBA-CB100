@@ -80,8 +80,12 @@ public class Controlador {
     }
 
     public void mostrarMenuContinuarJugando() {
-        datosJugador = new int[] {partida.diaActual(), partida.dinero(), partida.garaje().obtenerCreditos()};
-        Interfaz.getInstancia().mostrarMenuContinuarJugando(partida.nombre(), datosJugador);
+        if(!partida.noFallo())
+            mostrarMenuPrincipal();
+        else{
+            datosJugador = new int[] {partida.diaActual(), partida.dinero(), partida.garaje().obtenerCreditos()};
+            Interfaz.getInstancia().mostrarMenuContinuarJugando(partida.nombre(), datosJugador);
+        }
     }
 
     public void mostrarMenuConcesionario() {
@@ -222,10 +226,15 @@ public class Controlador {
     private void procesarCargaPorIndice(String[] datos) {
         int indice = Integer.parseInt(datos[0]);
         int litros = Integer.parseInt(datos[1]);
-        menuGaraje.cargarVehiculo(new int[]{indice, litros});
-        mostrarMensaje(
-            "Vehículo cargado correctamente.", () -> mostrarMenuGaraje()
-        );
+        if(menuGaraje.cargarVehiculo(new int[]{indice, litros})){
+            mostrarMensaje(
+                "Vehículo cargado correctamente.", () -> mostrarMenuGaraje()
+            );
+        }else{
+            mostrarMensaje(
+                "Vehículo no pudo ser cargado por salfo insuficiente.", () -> mostrarMenuGaraje()
+            );
+        }
     }
 
     private void procesarNombreJugador(String[] datos) {
@@ -248,21 +257,19 @@ public class Controlador {
             );
         }
     }
-
+    /**
+     * Procesa la eliminacion del un vehiculo del garaje
+     * @param datos Indice del vehiculo a eliminar
+     */
     public void procesarEliminacion(String[] datos) {
-        try {
-            menuGaraje.eliminar(datos[0]);
-            mostrarMensaje("Vehículo eliminado correctamente.", () -> mostrarMenuGaraje());
-        } catch (Exception e) {
-            mostrarMensaje("Error al eliminar vehículo: " + e.getMessage(), () -> mostrarMenuGaraje());
-        }
-        if (menuConcesionario.operacionExitosa()) {
-            mostrarMensaje("No se ha encontrado ningún vehículo con ese nombre.", () -> mostrarMenuConcesionario());
+        boolean eliminado = menuGaraje.eliminar(datos[0]);
+        if (eliminado) {
+            mostrarMensaje("Vehículo eliminado correctamente.", this::mostrarMenuGaraje);
         } else {
-            mostrarMenuConcesionario();
+            mostrarMensaje("No se encontró ningún vehículo con ese nombre.", this::mostrarMenuGaraje);
         }
-    }
 
+    }
         public void procesarBusquedaPorNombre(String[] datos) {
             String nombre = datos[0];
 
@@ -303,7 +310,7 @@ public class Controlador {
 
         public void procesarCompraVehiculo(int indiceVehiculo) {
             
-            String nombreVehiculo = concesionario.busquedaPorIndice(indiceVehiculo);
+            String nombreVehiculo = concesionario.obtenerStock().dato(indiceVehiculo-1).nombreVehiculo();
             menuConcesionario.comprar(nombreVehiculo);
 
             if (menuConcesionario.operacionExitosa()) {
@@ -313,7 +320,7 @@ public class Controlador {
                 );
             } else {
                 mostrarMensaje(
-                    "No se pudo completar la compra. Asegúrate de tener suficiente dinero y que el vehículo no sea exótico.",
+                    "No se pudo completar la compra. Asegúrate de tener suficiente dinero",
                     this::mostrarMenuConcesionario
                 );
             }

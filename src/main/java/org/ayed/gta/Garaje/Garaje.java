@@ -188,7 +188,7 @@ public class Garaje {
     public void cargarTodosVehiculos(){
         int litro;
         for( int i=0; i<vehiculos.tamanio(); i++){
-            litro= vehiculos.dato(i).capacidadGasolina() -vehiculos.dato(i).tanque();
+            litro= vehiculos.dato(i).capacidadGasolina()- vehiculos.dato(i).tanque();
             cargarGasolinaVehiculo(litro, i);
         }
     }

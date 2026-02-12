@@ -134,7 +134,6 @@ public class Concesionario {
         if (jugador == null) {
             throw new IllegalArgumentException("El jugador no puede ser null");
         }
-
         // busco un vehículo con el nombre exacto
         for (int i = 0; i < stock.tamanio(); i++) {
             Vehiculo vehiculo = stock.dato(i);
@@ -151,11 +150,9 @@ public class Concesionario {
                 if (jugador.dinero() < vehiculo.precioVehiculo()) {
                     return false;
                 }
-
                 // descuenta dinero y agrega el vehículo al jugador
-                jugador.restarDinero(vehiculo.precioVehiculo());
+                jugador.restarDinero(vehiculo.precioVehiculo(), true);
                 jugador.garaje().agregarVehiculo(vehiculo);
-
                 // se elimina del stock
                 stock.eliminar(i);
 
@@ -165,15 +162,6 @@ public class Concesionario {
 
         // no se encontró el vehículo
         return false;
-    }
-
-    public String busquedaPorIndice(int indice){
-        String resultado = "";
-        for (int i = 0; i < stock.tamanio(); i++) {
-            Vehiculo vehiculo = stock.dato(indice);
-            resultado = vehiculo.nombreVehiculo();
-        }
-        return resultado;
     }
 
     /**

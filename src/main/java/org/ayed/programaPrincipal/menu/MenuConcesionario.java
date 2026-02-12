@@ -54,7 +54,9 @@ public class MenuConcesionario {
 				System.err.println("Opción inválida en MenuConcesionario.");
 		}
 	}
-
+	/**
+	 * BUsca un vehiculo dentro del concesionario por una fraccion del nombre
+	 */
 	private  void busquedaPorNombre(){
 		Campo[] camposNombre = {
 					new Campo("Nombre del Vehiculo a buscar:", TipoCampo.TEXTO)
@@ -62,15 +64,20 @@ public class MenuConcesionario {
 		controlador.mostrarBusquedaPorNombre(camposNombre);
 	}
 
+	/**
+	 * Compra de vehiculo por nombre exacto
+	 * @param nombreVehiculo para comprar el vehiculos
+	 */
 	public void comprar(String nombreVehiculo) {	
 		try {
-			concesionario.comprar(nombreVehiculo, partidaJugador);
-			operacionExitosa = true;
+			operacionExitosa = concesionario.comprar(nombreVehiculo, partidaJugador);;
 		} catch (Exception e) {
 			operacionExitosa = false;
 		}
 	}
-
+	/**
+	 * BUsca un vehiculo dentro del concesionario por una fraccion del nombre de la marca
+	 */
 	private void busquedaPorMarca () {
 		Campo[] camposMarca = {
 			new Campo("Marca del Vehiculo a buscar:", TipoCampo.TEXTO)
