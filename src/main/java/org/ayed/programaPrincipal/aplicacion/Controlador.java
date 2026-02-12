@@ -80,8 +80,12 @@ public class Controlador {
     }
 
     public void mostrarMenuContinuarJugando() {
-        datosJugador = new int[] {partida.diaActual(), partida.dinero(), partida.garaje().obtenerCreditos()};
-        Interfaz.getInstancia().mostrarMenuContinuarJugando(partida.nombre(), datosJugador);
+        if(!partida.noFallo())
+            mostrarMenuPrincipal();
+        else{
+            datosJugador = new int[] {partida.diaActual(), partida.dinero(), partida.garaje().obtenerCreditos()};
+            Interfaz.getInstancia().mostrarMenuContinuarJugando(partida.nombre(), datosJugador);
+        }
     }
 
     public void mostrarMenuConcesionario() {

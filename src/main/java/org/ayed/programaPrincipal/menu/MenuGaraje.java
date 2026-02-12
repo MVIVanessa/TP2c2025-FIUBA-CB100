@@ -84,7 +84,14 @@ public class MenuGaraje{
 				controlador.mostrarCargaPorIndice(camposCargar);
 				break;
 			case 10: //Cargar gasolina a todos los vehiculos del garaje
-				cargarVehiculos();
+				
+					if(cargarVehiculos()){
+						controlador.mostrarMensaje("Vehiculos cargados correctamente.\n", 
+						() -> controlador.mostrarMenuGaraje());
+					}else{
+						controlador.mostrarMensaje("Saldo insuficiente para cargar todos los vehiculos\n", 
+						() -> controlador.mostrarMenuGaraje());
+					}
 				break;
 			case 11 : //Volver al menu principal
 					System.out.println("-------- SALIENDO --------");
@@ -158,12 +165,15 @@ public class MenuGaraje{
 	/** 
 	 * Carga la gasolina de todos los vehiculos.
 	 */
-	private void cargarVehiculos(){
+	private boolean cargarVehiculos(){
+		boolean cargados=false;
 		try {
 			garaje.cargarTodosVehiculos();
+			cargados= true;
 		} catch (Exception e) {
 			System.err.println(e.getMessage());
 		}
+		return cargados;
 	}
 
 	private boolean mejorar(){
@@ -171,7 +181,6 @@ public class MenuGaraje{
 			garaje.mejorarGaraje();
 			System.out.println("Capacidad de almacen de Vehiculos en Garaje despues de mejora: "+ garaje.capacidadMaxima());
 		}catch(Exception e){
-			System.err.println(e.getMessage());
 			return false;
 		}
 		return true;
