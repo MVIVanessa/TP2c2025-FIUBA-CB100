@@ -1,17 +1,17 @@
-package org.ayed.programaPrincipal;
+package org.ayed.programaPrincipal.menu;
 
 import org.ayed.gta.Concesionario.Concesionario;
 import org.ayed.gta.Partida;
 import org.ayed.gta.Vehiculos.Vehiculo;
-import org.ayed.programaPrincipal.interfaz.Campo;
-import org.ayed.programaPrincipal.interfaz.Controlador;
-import org.ayed.programaPrincipal.interfaz.TipoCampo;
+import org.ayed.programaPrincipal.aplicacion.Controlador;
+import org.ayed.programaPrincipal.frontend.formulario.Campo;
+import org.ayed.programaPrincipal.frontend.formulario.TipoCampo;
 import org.ayed.tda.vector.Vector;
 
 public class MenuConcesionario {
-	private Partida partidaJugador;
-	private Controlador controlador;
-	private Concesionario concesionario;
+	private	final Partida partidaJugador;
+	private final Controlador controlador;
+	private final Concesionario concesionario;
 	private Vector<Vehiculo> busqueda;
 	private Boolean operacionExitosa = false;
 	
@@ -31,10 +31,10 @@ public class MenuConcesionario {
 		
 		switch (op) {
 			case 1: // Búsqueda por nombre
-				busquedaPorNombre(controlador);
+				busquedaPorNombre();
 				break;
 			case 2: //Busqueda por marca
-				busquedaPorMarca(controlador);
+				busquedaPorMarca();
 				break;
 			case 3:  //Mostrar stock completo
 				busqueda = concesionario.obtenerStock();
@@ -43,7 +43,6 @@ public class MenuConcesionario {
 			case 4: //Comprar un vehiculo (primero muestra el stock completo)
 				if (concesionario.obtenerStock().tamanio() == 0) {
 					controlador.mostrarMensaje("No hay vehículos disponibles para comprar.", controlador::mostrarMenuConcesionario);
-					return;
 				} else {
 				controlador.mostrarMenuCompraConcesionario();
 				}
@@ -52,45 +51,38 @@ public class MenuConcesionario {
 				controlador.mostrarMenuPrincipal();
 				break;
 			default:
-				System.err.println("Error surgio en procesar la opcion");
+				System.err.println("Opción inválida en MenuConcesionario.");
 		}
 	}
 	/**
-	 * Busca por el nombre ingresado 
-	 * @param c controlador
-	 * @return
-	*/
-	private  void busquedaPorNombre(Controlador c){
+	 * BUsca un vehiculo dentro del concesionario por una fraccion del nombre
+	 */
+	private  void busquedaPorNombre(){
 		Campo[] camposNombre = {
 					new Campo("Nombre del Vehiculo a buscar:", TipoCampo.TEXTO)
 				};
-		c.mostrarBusquedaPorNombre(camposNombre);
+		controlador.mostrarBusquedaPorNombre(camposNombre);
 	}
+
 	/**
-	 * Compra el vehiculo segun el indice pedido al usuario
-	 * @param sc
-	 * @param respuesta
-	 * @param c
+	 * Compra de vehiculo por nombre exacto
+	 * @param nombreVehiculo para comprar el vehiculos
 	 */
 	public void comprar(String nombreVehiculo) {	
 		try {
-			concesionario.comprar(nombreVehiculo, partidaJugador);
-			operacionExitosa = true;
+			operacionExitosa = concesionario.comprar(nombreVehiculo, partidaJugador);;
 		} catch (Exception e) {
 			operacionExitosa = false;
 		}
 	}
-
 	/**
-	 * Busca por l marca ingresado 
-	 * @param c controlador de entradas
-	 * @return
-	*/
-	private void busquedaPorMarca (Controlador c) {
+	 * BUsca un vehiculo dentro del concesionario por una fraccion del nombre de la marca
+	 */
+	private void busquedaPorMarca () {
 		Campo[] camposMarca = {
-					new Campo("Marca del Vehiculo a buscar:", TipoCampo.TEXTO)
-			};
-		c.mostrarBusquedaPorMarca(camposMarca);
+			new Campo("Marca del Vehiculo a buscar:", TipoCampo.TEXTO)
+		};
+		controlador.mostrarBusquedaPorMarca(camposMarca);
 	}
 
 	public Boolean operacionExitosa() {

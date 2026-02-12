@@ -1,4 +1,4 @@
-package org.ayed.programaPrincipal.interfaz;
+package org.ayed.programaPrincipal.frontend;
 
 import java.util.function.Consumer;
 
@@ -18,8 +18,15 @@ public class MenuUI {
     private final Label[] opciones;
     private int seleccion = 0;
     private final Consumer<Integer> onSeleccion;
-    private int[] datosJugador; // [dia actual, dinero, creditos]
 
+    /**
+     * Constructor de la clase MenuUI.
+     * @param titulo
+     * @param textos Las opciones del menú.
+     * @param onSeleccion Funcion que se ejecuta luego de que el usuario seleccione una opción.
+     * @param nombreJugador
+     * @param datosJugador
+     */
     public MenuUI(
         String titulo,
         String[] textos,
@@ -28,11 +35,10 @@ public class MenuUI {
         int[] datosJugador
     ) {
         this.onSeleccion = onSeleccion;
-        this.datosJugador = datosJugador;
 
         root = new BorderPane();
 
-        // ===== BARRA SUPERIOR =====
+        //  BARRA SUPERIOR
         root.setTop(crearBarraSuperior(
             nombreJugador,
             datosJugador[0],
@@ -40,7 +46,7 @@ public class MenuUI {
             datosJugador[2]
         ));
 
-        // ===== CONTENIDO CENTRAL (MENÚ) =====
+        // CONTENIDO CENTRAL (MENÚ)
         contenido = new VBox(10);
         contenido.setAlignment(Pos.CENTER);
 
@@ -63,7 +69,23 @@ public class MenuUI {
         actualizarSeleccion();
     }
 
-    // ===== HUD SUPERIOR =====
+    public void manejarTeclas(KeyEvent e) {
+        if (opciones.length == 0) return;
+
+        switch (e.getCode()) {
+            case W : mover(-1); break;
+            case S : mover(1); break;
+            case ENTER : {
+                if (onSeleccion != null) {
+                    onSeleccion.accept(seleccion + 1);
+                }
+            } break;
+            default: break;
+        }
+    }
+
+    // ----------------------- MÉTODOS AUXILIARES -------------------------
+
     private Pane crearBarraSuperior(
         String nombreJugador,
         int dia,
@@ -94,21 +116,6 @@ public class MenuUI {
         return barra;
     }
 
-    // ===== TECLAS =====
-    public void manejarTeclas(KeyEvent e) {
-        if (opciones.length == 0) return;
-
-        switch (e.getCode()) {
-            case W : mover(-1); break;
-            case S : mover(1); break;
-            case ENTER : {
-                if (onSeleccion != null) {
-                    onSeleccion.accept(seleccion + 1);
-                }
-            } break;
-        }
-    }
-
     private void mover(int delta) {
         seleccion = (seleccion + delta + opciones.length) % opciones.length;
         actualizarSeleccion();
@@ -122,6 +129,8 @@ public class MenuUI {
         }
     }
 
+    // ----------------------- GETTERS -------------------------
+    
     public Pane getRoot() {
         return root;
     }

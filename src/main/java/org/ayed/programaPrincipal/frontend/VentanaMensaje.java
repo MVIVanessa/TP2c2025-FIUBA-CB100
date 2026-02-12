@@ -1,4 +1,4 @@
-package org.ayed.programaPrincipal.interfaz;
+package org.ayed.programaPrincipal.frontend;
 
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;

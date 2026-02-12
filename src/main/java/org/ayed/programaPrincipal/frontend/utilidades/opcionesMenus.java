@@ -1,4 +1,4 @@
-package org.ayed.programaPrincipal.interfaz;
+package org.ayed.programaPrincipal.frontend.utilidades;
 
 public class opcionesMenus {
 
@@ -24,7 +24,7 @@ public class opcionesMenus {
 		"Cargar un garaje a partir de el archivo " + ruta,
 		"Cargar gasolina un vehiculo segun su indice",
 		"Cargar gasolina todos los Vehiculos en el garaje.",
-		"Salir"
+		"Volver al Menu Principal"
 	};
 
 	public final static String[] opcionesConcesionario = {
@@ -32,7 +32,7 @@ public class opcionesMenus {
 		"Buscar Vehiculo por Marca",
 		"Mostrar Stock Completo",
 		"Comprar un Vehiculo",
-		"Salir del Concesionario"
+		"Volver al Menu Principal"
 	};
 
 	public final static String[] opcionesDificultad = {

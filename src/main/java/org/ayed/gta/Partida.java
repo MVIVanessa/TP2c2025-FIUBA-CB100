@@ -10,14 +10,14 @@ import org.ayed.gta.Misiones.Mision;
 import org.ayed.gta.Misiones.Moderada;
 import org.ayed.gta.Vehiculos.Auto;
 import org.ayed.gta.Vehiculos.Vehiculo;
-import org.ayed.programaPrincipal.interfaz.Controlador;
+import org.ayed.programaPrincipal.aplicacion.Controlador;
 
 public class Partida {
 
 	private final Vehiculo VEHICULO_BASICO =
 			new Auto("Auto", "clasico", 0, 100, 10);
 
-	private int partinasIniciales = 5;
+	private int partinasIniciales = 10;
 
 	private String nombreJugador;
 	private int dinero;
@@ -43,7 +43,10 @@ public class Partida {
 	}
 
 	// ================= FLUJO DE JUEGO =================
-
+	/**
+	 * Decide si puede jugar
+	 * @return true si cumple las condiciones para seguir jugando
+	 */
 	public boolean puedeJugar() {
 		return (dinero - garaje.obtenerCostoMantenimiento() >= 0  || partinasIniciales>0)&& noFallo;
 	}
@@ -87,7 +90,7 @@ public class Partida {
 		}
 
 		diaActual++;
-		restarDinero(garaje.obtenerCostoMantenimiento());
+		restarDinero(garaje.obtenerCostoMantenimiento(), false);
 	}
 
 	// ================= CONTINUAR JUGANDO =================
@@ -141,13 +144,14 @@ public class Partida {
 	}
 
 	/**devuelde el nombre del jugador de la partida */
-	public void restarDinero(int monto){
-		if(partinasIniciales>0)
+	public void restarDinero(int monto, boolean comprando){
+		if(partinasIniciales>0 && !comprando)
 			partinasIniciales--;
-		else if(monto>dinero)
+		else if(monto>dinero && comprando)
 			System.err.println("No hay suficiente dinero");
 		else
 			dinero-=monto;
+
 	}
 
 	

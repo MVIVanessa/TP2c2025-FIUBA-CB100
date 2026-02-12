@@ -1,10 +1,10 @@
-package org.ayed.programaPrincipal;
+package org.ayed.programaPrincipal.menu;
 
 import org.ayed.gta.Garaje.ArchivoGaraje;
 import org.ayed.gta.Garaje.Garaje;
-import org.ayed.programaPrincipal.interfaz.Campo;
-import org.ayed.programaPrincipal.interfaz.Controlador;
-import org.ayed.programaPrincipal.interfaz.TipoCampo;
+import org.ayed.programaPrincipal.aplicacion.Controlador;
+import org.ayed.programaPrincipal.frontend.formulario.Campo;
+import org.ayed.programaPrincipal.frontend.formulario.TipoCampo;
 
 public class MenuGaraje{
 	private final String FORMATO_RUTA = ".csv";
@@ -86,7 +86,7 @@ public class MenuGaraje{
 			case 10: //Cargar gasolina a todos los vehiculos del garaje
 				cargarVehiculos();
 				break;
-			case 11 : //Salir del garaje
+			case 11 : //Volver al menu principal
 					System.out.println("-------- SALIENDO --------");
 					controlador.mostrarMenuPrincipal();
 				break;
@@ -96,39 +96,19 @@ public class MenuGaraje{
 		}
 	}
 
-
-
-	/** Eliminar un Vehiculo con el interaccion del usuario
-	 *  @param controlador Controlador de entradas para interaccion con usuario
-	 *  @param garaje Garaje al que eliminaremos un vehiculo segun su nombre 
-	*/
-	public void eliminar(String nombreVehiculo){
+	public boolean eliminar(String nombreVehiculo){
 		try{
-			garaje.eliminarVehiculo(nombreVehiculo);;
+			garaje.eliminarVehiculo(nombreVehiculo);
+			return true;
 		}catch(Exception e){
 			System.err.println(e);
-		}
-
-	}
-
-	/** Mejora de Almacen de Garaje mostrando alfinal espacio.
-	 *  @param garaje Garaje al que mejoramos capacidad de almacen
-	 */
-	private boolean mejorar(){
-		try{
-			garaje.mejorarGaraje();
-			System.out.println("Capacidad de almacen de Vehiculos en Garaje despues de mejora: "+ garaje.capacidadMaxima());
-		}catch(Exception e){
-			System.err.println(e.getMessage());
 			return false;
 		}
-		return true;
 	}
-
-	/** Agregar creditos
-
-	 +  @param garaje Garaje a vincular cantidad de creditos
-	*/
+	/**
+	 * Agrega creditos
+	 * @param datos monto que se ingresa para acreditar
+	 */
 	public void agregarCreditos(String[] datos){
 		int monto = Integer.parseInt(datos[0]);
 		try {
@@ -140,29 +120,8 @@ public class MenuGaraje{
 
 	}
 
-	/** Exportacion de informacion de Garaje a un archivo
-	 * @param garaje Garaje a exportar
-	 */
-	private void exportarGaraje(){
-		try{
-			ArchivoGaraje arch = new ArchivoGaraje(ruta);
-			arch.escribirArchGaraje(garaje);
-		}catch(Exception e){
-			System.err.println(e);
-		}
-
-	}
-
-	/** Importacion de informacion a un Garaje desde un archivo
-	 */
-	private Garaje importarGaraje(){
-		ArchivoGaraje arch= new ArchivoGaraje(ruta);
-		return arch.leerArchGaraje();
-	}
-
 	/** Cargar un vehiculo
-	 *  @param datos datos necesarios para cargar gasolina en un vehiculo
-	 * 				[indice, litros]
+	 *  @param datos [indice, litros]
 	 */
 	public void cargarVehiculo(int[] datos){
 		if (garaje.obtenerCreditos() >= datos[1] * garaje.precioLitro()) {
@@ -179,8 +138,25 @@ public class MenuGaraje{
 		
 	}
 
-	/** Carga todos los vehiculos en el garaje
-	 * @param garaje Garaje a vincular cantidad de creditos
+	// ----------------------- MÉTODOS AUXILIARES -------------------------
+
+	private void exportarGaraje(){
+		try{
+			ArchivoGaraje arch = new ArchivoGaraje(ruta);
+			arch.escribirArchGaraje(garaje);
+		}catch(Exception e){
+			System.err.println(e);
+		}
+
+	}
+
+	private Garaje importarGaraje(){
+		ArchivoGaraje arch= new ArchivoGaraje(ruta);
+		return arch.leerArchGaraje();
+	}
+
+	/** 
+	 * Carga la gasolina de todos los vehiculos.
 	 */
 	private void cargarVehiculos(){
 		try {
@@ -189,5 +165,18 @@ public class MenuGaraje{
 			System.err.println(e.getMessage());
 		}
 	}
+
+	private boolean mejorar(){
+		try{
+			garaje.mejorarGaraje();
+			System.out.println("Capacidad de almacen de Vehiculos en Garaje despues de mejora: "+ garaje.capacidadMaxima());
+		}catch(Exception e){
+			System.err.println(e.getMessage());
+			return false;
+		}
+		return true;
+	}
+
 }
+
 

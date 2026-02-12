@@ -1,4 +1,4 @@
-package org.ayed.programaPrincipal.interfaz;
+package org.ayed.programaPrincipal.frontend.formulario;
 
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
@@ -8,14 +8,14 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 
-public class ObtenerDatos {
+public class FormularioEntrada {
 
     private final Campo[] camposDefinidos;
     private final TextField[] camposUI;
     private String[] datosObtenidos;
     private Runnable onConfirmar;
 
-    public ObtenerDatos(Campo[] camposDefinidos) {
+    public FormularioEntrada(Campo[] camposDefinidos) {
         this.camposDefinidos = camposDefinidos;
         this.camposUI = new TextField[camposDefinidos.length];
     }
@@ -53,6 +53,19 @@ public class ObtenerDatos {
         return root;
     }
 
+    /**
+     * Establece la acción a ejecutar cuando el usuario confirme la entrada de datos y estos sean válidos.
+     */
+    public void setOnConfirmar(Runnable onConfirmar) {
+        this.onConfirmar = onConfirmar;
+    }
+
+    // ----------------------- MÉTODOS AUXILIARES -------------------------
+
+    /**
+     * Valida los datos ingresados por el usuario.
+     * @throws NumberFormatException Si el valor ingresado no es del tipo esperado (ENTERO o DECIMAL).
+     */
     private void confirmar() {
         datosObtenidos = new String[camposUI.length];
 
@@ -98,11 +111,9 @@ public class ObtenerDatos {
         tf.requestFocus();
     }
 
-    public void setOnConfirmar(Runnable onConfirmar) {
-        this.onConfirmar = onConfirmar;
-    }
+    //  ----------------------- GETTERS -------------------------
 
-    public String[] getDatosObtenidos() {
+    public String[] obtenerDatosObtenidos() {
         return datosObtenidos;
     }
 }
