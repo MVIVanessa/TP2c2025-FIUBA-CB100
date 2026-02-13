@@ -14,8 +14,8 @@ public class Dificil extends Mision {
 
     private static final String[] TIPOS = {"AUTO", "MOTO", "EXOTICO"};
 
-    public Dificil() {
-        super(TIEMPO_MAX);
+    public Dificil(Garaje g) {
+        super(TIEMPO_MAX,g);
         generarTipoRequerido();
     }
 

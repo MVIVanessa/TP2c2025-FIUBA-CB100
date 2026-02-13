@@ -59,13 +59,13 @@ public class Partida {
 	public void elegirModo(int opcion) {
 		switch (opcion) {
 			case 1:
-				misionActual = new Facil();
+				misionActual = new Facil(garaje);
 				break;
 			case 2:
-				misionActual = new Moderada();
+				misionActual = new Moderada(garaje);
 				break;
 			case 3:
-				misionActual = new Dificil();
+				misionActual = new Dificil(garaje);
 				break;
 			default:
 				throw new IllegalArgumentException("Modo de juego inválido");

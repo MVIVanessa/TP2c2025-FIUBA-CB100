@@ -1,5 +1,6 @@
 package org.ayed.gta.Misiones;
 
+import org.ayed.gta.Garaje.ExcepcionGaraje;
 import org.ayed.gta.Garaje.Garaje;
 import org.ayed.gta.Mapa.Coordenadas;
 import org.ayed.gta.Mapa.Gps;
@@ -10,6 +11,8 @@ import org.ayed.gta.Vehiculos.Vehiculo;
 import org.ayed.tda.vector.Vector;
 
 public abstract class Mision{
+	private final int PRECIO_G=1;
+
 	protected Vector<Vehiculo> permitidos;
 	private Vehiculo transporte;		//vehiculo que usara el jugador para la mision
 	private double tiempoJuego;			//en segundos
@@ -20,13 +23,14 @@ public abstract class Mision{
 	protected int recompensaCreditosExtra;
 	protected Vehiculo recompensaExotico;
 	private Vehiculo vehiculoSeleccionado;
+	private Garaje garaje;
 	
 	/**
 	 * Constructor de Mision
 	 * @param tiempo tiempo de juego limite para jugar
 	 * @param v Vehiculo con el que jugara el jugador
 	 */
-    Mision( double tiempo) {
+    Mision( double tiempo, Garaje g) {
 		this.tiempoJuego= 0;
 		this.transporte=null;
 		this.tiempoMision= tiempo;
@@ -36,6 +40,7 @@ public abstract class Mision{
 		permitidos = new Vector<>();
 		recompensaCreditosExtra=0;
 		recompensaExotico=null;
+		garaje=g;
 	}
 
 
@@ -78,7 +83,11 @@ public abstract class Mision{
 				break;
 			case "C": //lena el tanque al maximo solo tres veces
 				int l = transporte.capacidadGasolina() - transporte.tanque();
+				if(l*PRECIO_G > garaje.obtenerCreditos())
+           			throw new ExcepcionGaraje("Credito insuficiente para la operacion");
 				transporte.llenarGasolina(l);
+				garaje.restarCredito(l*PRECIO_G);
+
 			default:
 				System.out.println("Comando invalido");
 			
