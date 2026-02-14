@@ -134,7 +134,6 @@ public class Concesionario {
         if (jugador == null) {
             throw new IllegalArgumentException("El jugador no puede ser null");
         }
-        TipoOperacion estadoOperacion = TipoOperacion.ERROR_DESCONOCIDO;
         // busco un vehículo con el nombre exacto
         for (int i = 0; i < stock.tamanio(); i++) {
             Vehiculo vehiculo = stock.dato(i);
@@ -158,12 +157,10 @@ public class Concesionario {
                 stock.eliminar(i);
 
                return TipoOperacion.EXITO;
-            } else {
-                estadoOperacion = TipoOperacion.VEHICULO_NO_ENCONTRADO;
-            }
+            } 
         }
         
-        return estadoOperacion;
+        return TipoOperacion.VEHICULO_NO_ENCONTRADO;
     }
 
     /**
