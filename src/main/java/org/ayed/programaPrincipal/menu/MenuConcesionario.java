@@ -75,7 +75,8 @@ public class MenuConcesionario {
 	 */
 	public void comprar(String nombreVehiculo) {	
 		try {
-			estadoOperacion = concesionario.comprar(nombreVehiculo, partidaJugador);
+
+			operacionExitosa = concesionario.comprar(nombreVehiculo, partidaJugador);;
 		} catch (Exception e) {
 			System.err.println("Error al comprar el vehículo: " + e.getMessage());
 			estadoOperacion = TipoOperacion.ERROR_DESCONOCIDO;
