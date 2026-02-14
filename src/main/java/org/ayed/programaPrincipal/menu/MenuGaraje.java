@@ -8,7 +8,7 @@ import org.ayed.programaPrincipal.frontend.formulario.TipoCampo;
 
 public class MenuGaraje{
 	private final String FORMATO_RUTA = ".csv";
-	private String ruta;
+	private String ruta="garajeGuardado";
 	private Garaje garaje;
 	Controlador controlador;
 
