@@ -17,7 +17,7 @@ public class Partida {
 	private final Vehiculo VEHICULO_BASICO =
 			new Auto("Auto", "clasico", 0, 100, 10);
 
-	private int partinasIniciales = 10;
+	private int PARTIDAS_INICIALES = 10;
 
 	private String nombreJugador;
 	private int dinero;
@@ -36,7 +36,7 @@ public class Partida {
 		this.garaje = garaje;
 		this.controlador = controlador;
 		garaje.agregarVehiculo(VEHICULO_BASICO);
-		this.dinero = 0;
+		this.dinero = garaje.obtenerCostoMantenimiento()*PARTIDAS_INICIALES;
 		this.noFallo = true;
 		this.continuarJugando = true;
 		this.diaActual = 1;
@@ -48,7 +48,7 @@ public class Partida {
 	 * @return true si cumple las condiciones para seguir jugando
 	 */
 	public boolean puedeJugar() {
-		return (dinero - garaje.obtenerCostoMantenimiento() >= 0  || partinasIniciales>0)&& noFallo;
+		return (dinero - garaje.obtenerCostoMantenimiento() >= 0)&& noFallo;
 	}
 
 	// ================= ELECCIÓN DE MISIÓN =================
@@ -59,13 +59,13 @@ public class Partida {
 	public void elegirModo(int opcion) {
 		switch (opcion) {
 			case 1:
-				misionActual = new Facil();
+				misionActual = new Facil(garaje);
 				break;
 			case 2:
-				misionActual = new Moderada();
+				misionActual = new Moderada(garaje);
 				break;
 			case 3:
-				misionActual = new Dificil();
+				misionActual = new Dificil(garaje);
 				break;
 			default:
 				throw new IllegalArgumentException("Modo de juego inválido");
@@ -80,17 +80,19 @@ public class Partida {
 
 	public void finalizarMision(boolean completada) {
 		if (completada) {
-			dinero += misionActual.recompensaCredito();
-
+			System.out.println(misionActual().recompensaDinero());
+			dinero += misionActual.recompensaDinero();
+			garaje.agregarCreditos(misionActual().recompensaCredito());
 			if (misionActual.recompensaExotico() != null) {
 				garaje.agregarVehiculo(misionActual.recompensaExotico());
+				garaje.agregarCreditos(misionActual().recompensaCreditosExtra());
 			}
 		} else {
 			noFallo = false; // ← IMPORTANTE
 		}
 
 		diaActual++;
-		restarDinero(garaje.obtenerCostoMantenimiento(), false);
+		restarDinero(garaje.obtenerCostoMantenimiento());
 	}
 
 	// ================= CONTINUAR JUGANDO =================
@@ -143,11 +145,11 @@ public class Partida {
 		}
 	}
 
-	/**devuelde el nombre del jugador de la partida */
-	public void restarDinero(int monto, boolean comprando){
-		if(partinasIniciales>0 && !comprando)
-			partinasIniciales--;
-		else if(monto>dinero && comprando)
+	/**Resta un monto de dinero
+	 * @param
+	 */
+	public void restarDinero(int monto){
+		if(monto>dinero)
 			System.err.println("No hay suficiente dinero");
 		else
 			dinero-=monto;

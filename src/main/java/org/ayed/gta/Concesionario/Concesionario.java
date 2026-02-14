@@ -151,7 +151,7 @@ public class Concesionario {
                     return false;
                 }
                 // descuenta dinero y agrega el vehículo al jugador
-                jugador.restarDinero(vehiculo.precioVehiculo(), true);
+                jugador.restarDinero(vehiculo.precioVehiculo());
                 jugador.garaje().agregarVehiculo(vehiculo);
                 // se elimina del stock
                 stock.eliminar(i);

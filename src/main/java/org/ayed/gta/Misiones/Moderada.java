@@ -10,8 +10,8 @@ public class Moderada extends Mision {
     private final int RECOMPENSA_CREDITOS = 20;
     private static final double TIEMPO_MAX = 500;
 
-    public Moderada() {
-        super(TIEMPO_MAX);
+    public Moderada(Garaje g) {
+        super(TIEMPO_MAX,g);
     }
 
     @Override

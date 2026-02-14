@@ -10,8 +10,8 @@ public class Facil extends Mision {
     private final int RECOMPENSA_CREDITOS = 10;
     private static final double TIEMPO_MAX = 1000;
 
-    public Facil() {
-        super(TIEMPO_MAX);
+    public Facil(Garaje g) {
+        super(TIEMPO_MAX,g);
     }
 
     @Override
