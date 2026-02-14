@@ -72,6 +72,15 @@ public class PantallaMision {
                 actualizarHUD();
                 dibujarMapa();
 
+                if (mapa.datoDeCelda(jugador.obtenerX(), jugador.obtenerY()) == TipoCelda.CONGESTIONADA) {
+                    mostrarMensaje("Zona congestionada: perdiste más tiempo ⏱", Color.ORANGE);
+                }
+                // recompensa
+                if (mapa.datoDeCelda(jugador.obtenerX(), jugador.obtenerY()) == TipoCelda.TRANSITABLE_RECOMPENSA) {
+                    mostrarMensaje("¡Recompensa recogida!", Color.GREEN);
+                    mapa.obtenerMapa().dato(jugador.obtenerX()).modificarDato(TipoCelda.TRANSITABLE, jugador.obtenerY());
+                }
+
                 if (mision.misionCompletada()) {
                     misionFinalizada = true;
                     if (onFinMision != null) {
