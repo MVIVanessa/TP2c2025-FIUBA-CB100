@@ -72,6 +72,15 @@ public class PantallaMision {
                 actualizarHUD();
                 dibujarMapa();
 
+                if (mapa.datoDeCelda(jugador.obtenerX(), jugador.obtenerY()) == TipoCelda.CONGESTIONADA) {
+                    mostrarMensaje("Zona congestionada: perdiste más tiempo ⏱", Color.ORANGE);
+                }
+                // recompensa
+                if (mapa.datoDeCelda(jugador.obtenerX(), jugador.obtenerY()) == TipoCelda.TRANSITABLE_RECOMPENSA) {
+                    mostrarMensaje("¡Recompensa recogida!", Color.GREEN);
+                    mapa.obtenerMapa().dato(jugador.obtenerX()).modificarDato(TipoCelda.TRANSITABLE, jugador.obtenerY());
+                }
+
                 if (mision.misionCompletada()) {
                     misionFinalizada = true;
                     if (onFinMision != null) {
@@ -152,7 +161,7 @@ public class PantallaMision {
 
     private Color colorPara(TipoCelda tipo, Coordenadas coord) {
         if (jugador != null && coord.compararCoordenadas(jugador))
-            return Color.BLACK;
+            return Color.DARKBLUE;
 
         if (gps != null &&
             tipo != TipoCelda.RECOMPENSA &&
@@ -163,7 +172,7 @@ public class PantallaMision {
 
         switch (tipo) {
             case TRANSITABLE: return Color.WHITE;
-            case EDIFICIO: return Color.DARKGRAY;
+            case EDIFICIO: return Color.BLACK;
             case CONGESTIONADA: return Color.RED;
             case ENTRADA: return Color.BLUE;
             case SALIDA: return Color.GREEN;
@@ -214,7 +223,8 @@ public class PantallaMision {
         Label colores = new Label(
             "Colores:\n" +
             "Blanco → Transitable\n" +
-            "Negro → Jugador\n" +
+            "Negro → Edificio\n" +
+            "Azul oscuro → Jugador\n" +
             "Rojo → Congestionada\n" +
             "Azul → Entrada\n" +
             "Verde → Salida\n" +
