@@ -34,7 +34,7 @@ public class Controlador {
         this.concesionario = new Concesionario();
         this.partida = new Partida(garaje, this);
         menuPartida = new MenuPartida(partida);
-        menuGaraje = new MenuGaraje(partida.nombre(), partida.garaje(), this);
+        menuGaraje = new MenuGaraje(partida, partida.garaje(), this);
         menuConcesionario = new MenuConcesionario(partida, concesionario, this);
     }
 
