@@ -168,7 +168,7 @@ public class Interfaz extends Application {
      */
     public void iniciarMision(Mision mision) {
         pantallaMisiones = new PantallaMision();
-        pantallaMisiones.establecerMision(mision, controlador);
+        pantallaMisiones.establecerMision(mision);
 
         pantallaMisiones.setOnFinMision(completada -> {
             controlador.procesarMisionFinalizada(completada);

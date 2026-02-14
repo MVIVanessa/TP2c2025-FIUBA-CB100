@@ -36,7 +36,6 @@ public class PantallaMision {
     private Label labelGasolina;
     private Label labelMensaje;
 
-    private Controlador controlador;
     private Consumer<Boolean> onFinMision;
     private boolean misionFinalizada;
 
@@ -100,13 +99,13 @@ public class PantallaMision {
         }
     }
 
-    public void establecerMision(Mision nuevaMision, Controlador controlador) {
+    public void establecerMision(Mision nuevaMision) {
         misionFinalizada = false;
         this.mision = nuevaMision;
         this.mapa = nuevaMision.obtenerMapa();
         this.gps = nuevaMision.obtenerGps();
         this.jugador = nuevaMision.obtenerPosicionJugador();
-        this.controlador = controlador;
+
 
         gridPane.getChildren().clear();
         dibujarMapa();

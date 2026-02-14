@@ -21,7 +21,6 @@ public class Mapa {
      * Constructor de Mapa.
      */
     public Mapa() {
-        //this.tipoMision = tipoMision;
         this.grillas = leerMapaDesdeCSV(RUTA_MAPA_BASE);
         this.CANTIDAD_FILAS = this.grillas.tamanio();
         this.CANTIDAD_COLUMNAS = this.grillas.dato(0).tamanio();
@@ -52,7 +51,7 @@ public class Mapa {
      * Hay una sola celda de recompensa por mapa.
      */
     private void establecerCeldaRecompensa() {
-        Random rand = new Random(); //va a depender del tipo de misión
+        Random rand = new Random();
         boolean hayRecompensa = false;
         Iterador<Lista<TipoCelda>> recorridoFilas = this.grillas.iterador();
 
@@ -76,7 +75,7 @@ public class Mapa {
      * Utiliza un generador de números aleatorios para decidir qué celdas se congestionan.
      */
     private void establecerCongestion() {
-        Random rand = new Random(); //va a depender del tipo de misión
+        Random rand = new Random();
         Iterador<Lista<TipoCelda>> recorridoFilas = this.grillas.iterador();
 
         while (recorridoFilas.haySiguiente()) {
