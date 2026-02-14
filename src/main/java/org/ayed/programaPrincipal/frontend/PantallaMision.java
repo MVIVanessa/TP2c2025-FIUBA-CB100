@@ -161,7 +161,7 @@ public class PantallaMision {
 
     private Color colorPara(TipoCelda tipo, Coordenadas coord) {
         if (jugador != null && coord.compararCoordenadas(jugador))
-            return Color.BLACK;
+            return Color.DARKBLUE;
 
         if (gps != null &&
             tipo != TipoCelda.RECOMPENSA &&
@@ -172,7 +172,7 @@ public class PantallaMision {
 
         switch (tipo) {
             case TRANSITABLE: return Color.WHITE;
-            case EDIFICIO: return Color.DARKGRAY;
+            case EDIFICIO: return Color.BLACK;
             case CONGESTIONADA: return Color.RED;
             case ENTRADA: return Color.BLUE;
             case SALIDA: return Color.GREEN;
@@ -223,7 +223,8 @@ public class PantallaMision {
         Label colores = new Label(
             "Colores:\n" +
             "Blanco → Transitable\n" +
-            "Negro → Jugador\n" +
+            "Negro → Edificio\n" +
+            "Azul oscuro → Jugador\n" +
             "Rojo → Congestionada\n" +
             "Azul → Entrada\n" +
             "Verde → Salida\n" +
