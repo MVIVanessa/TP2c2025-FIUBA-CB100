@@ -70,6 +70,7 @@ public class MenuConcesionario {
 	 */
 	public void comprar(String nombreVehiculo) {	
 		try {
+
 			operacionExitosa = concesionario.comprar(nombreVehiculo, partidaJugador);;
 		} catch (Exception e) {
 			operacionExitosa = false;

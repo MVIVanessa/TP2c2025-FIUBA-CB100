@@ -2,24 +2,27 @@ package org.ayed.programaPrincipal.menu;
 
 import org.ayed.gta.Garaje.ArchivoGaraje;
 import org.ayed.gta.Garaje.Garaje;
+import org.ayed.gta.Partida;
 import org.ayed.programaPrincipal.aplicacion.Controlador;
 import org.ayed.programaPrincipal.frontend.formulario.Campo;
 import org.ayed.programaPrincipal.frontend.formulario.TipoCampo;
 
 public class MenuGaraje{
 	private final String FORMATO_RUTA = ".csv";
-	private String ruta="garajeGuardado";
-	private Garaje garaje;
-	Controlador controlador;
+	private final Garaje garaje;
+	private final Controlador controlador;
+	private final Partida partida;
+	private String ruta;
 
 	/**
 	 * Cosntructor
 	 * @param ruta ruta del archivo a guardar el garaje+
 	 */
-    public MenuGaraje(String ruta, Garaje garaje, Controlador controlador) {
-        this.ruta = ruta+FORMATO_RUTA;
+    public MenuGaraje(Partida partida, Garaje garaje, Controlador controlador) {
+
 		this.garaje= garaje;
 		this.controlador = controlador;
+		this.partida = partida;
     }
 
 	/** Procesa la opcion elegida
@@ -152,6 +155,7 @@ public class MenuGaraje{
 
 	private void exportarGaraje(){
 		try{
+			ruta = partida.nombre() + FORMATO_RUTA;
 			ArchivoGaraje arch = new ArchivoGaraje(ruta);
 			arch.escribirArchGaraje(garaje);
 		}catch(Exception e){
@@ -161,6 +165,7 @@ public class MenuGaraje{
 	}
 
 	private Garaje importarGaraje(){
+		ruta = partida.nombre() + FORMATO_RUTA;
 		ArchivoGaraje arch= new ArchivoGaraje(ruta);
 		return arch.leerArchGaraje();
 	}
