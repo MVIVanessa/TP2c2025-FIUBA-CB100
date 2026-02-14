@@ -233,7 +233,7 @@ public class Controlador {
             );
         }else{
             mostrarMensaje(
-                "Vehículo no pudo ser cargado por salfo insuficiente.", () -> mostrarMenuGaraje()
+                "Vehículo no pudo ser cargado por saldo insuficiente.", () -> mostrarMenuGaraje()
             );
         }
     }
@@ -349,15 +349,7 @@ public class Controlador {
     private String vectorToString(Vector<Vehiculo> vehiculos) {
         String resultado = "";
         for (int i = 0; i < vehiculos.tamanio(); i++) {
-            resultado += vehiculos.dato(i).informacionVehiculoUI() + "\n";
-        }
-        return resultado;
-    }
-
-    private String[] vectorToStringCadena(Vector<Vehiculo> vehiculos) {
-        String[] resultado = new String[vehiculos.tamanio()];
-        for (int i = 0; i < vehiculos.tamanio(); i++) {
-            resultado[i] = vehiculos.dato(i).informacionVehiculoUI();
+            resultado += i + ":\t " + vehiculos.dato(i).informacionVehiculoUI() + "\n";
         }
         return resultado;
     }

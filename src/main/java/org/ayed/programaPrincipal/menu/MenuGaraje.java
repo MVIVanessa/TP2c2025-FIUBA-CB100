@@ -84,7 +84,7 @@ public class MenuGaraje{
 					new Campo("Indice del Vehiculo(Empieza desde cero):", TipoCampo.ENTERO),
 					new Campo("Cantidad de litros a cargar:", TipoCampo.ENTERO)
 				};
-				controlador.mostrarCargaPorIndice(camposCargar);
+				controlador.mostrarVehiculos(() -> controlador.mostrarCargaPorIndice(camposCargar), garaje.obtenerVehiculo());
 				break;
 			case 10: //Cargar gasolina a todos los vehiculos del garaje
 				
