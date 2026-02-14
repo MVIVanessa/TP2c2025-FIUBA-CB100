@@ -93,12 +93,6 @@ public class Controlador {
         Interfaz.getInstancia().mostrarMenuConcesionario(partida.nombre(), datosJugador);
     }
 
-    public void mostrarMenuCompraConcesionario() {
-        datosJugador = new int[] {partida.diaActual(), partida.dinero(), partida.garaje().obtenerCreditos()};
-        String [] vehiculos = vectorToStringCadena(concesionario.obtenerStock());
-        Interfaz.getInstancia().mostrarMenuCompraConcesionario(partida.nombre(), datosJugador, vehiculos);
-    }
-
     // INGRESO DE DATOS
 
     public void mostrarIngresoNombreJugador(Campo[] campos) {
@@ -119,6 +113,13 @@ public class Controlador {
         Interfaz.getInstancia().mostrarFormulario(
             campos,
             this::procesarEliminacion
+        );
+    }
+
+    public void mostrarFormularioCompraConcesionario(Campo[] campos) {
+        Interfaz.getInstancia().mostrarFormulario(
+            campos,
+            datos -> procesarCompraVehiculo(datos[0])
         );
     }
 
@@ -308,9 +309,8 @@ public class Controlador {
             }
         }
 
-        public void procesarCompraVehiculo(int indiceVehiculo) {
+        public void procesarCompraVehiculo(String nombreVehiculo) {
             
-            String nombreVehiculo = concesionario.obtenerStock().dato(indiceVehiculo-1).nombreVehiculo();
             menuConcesionario.comprar(nombreVehiculo);
 
             if (menuConcesionario.operacionExitosa()) {
@@ -320,7 +320,7 @@ public class Controlador {
                 );
             } else {
                 mostrarMensaje(
-                    "No se pudo completar la compra. Asegúrate de tener suficiente dinero",
+                    "No se pudo completar la compra. Asegúrate de tener suficiente dinero o de ingresar el nombre exacto del vehículo.",
                     this::mostrarMenuConcesionario
                 );
             }

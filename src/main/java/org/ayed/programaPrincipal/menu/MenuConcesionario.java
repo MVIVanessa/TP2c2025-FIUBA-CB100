@@ -44,7 +44,11 @@ public class MenuConcesionario {
 				if (concesionario.obtenerStock().tamanio() == 0) {
 					controlador.mostrarMensaje("No hay vehículos disponibles para comprar.", controlador::mostrarMenuConcesionario);
 				} else {
-				controlador.mostrarMenuCompraConcesionario();
+					Campo[] camposCompra = {
+						new Campo("Ingrese el nombre exacto del vehículo a comprar:", TipoCampo.TEXTO)
+					};
+					busqueda = concesionario.obtenerStock();
+					controlador.mostrarVehiculos(() -> controlador.mostrarFormularioCompraConcesionario(camposCompra), busqueda);
 				}
 				break;
 			case 5: //Salir
@@ -70,7 +74,7 @@ public class MenuConcesionario {
 	 */
 	public void comprar(String nombreVehiculo) {	
 		try {
-			operacionExitosa = concesionario.comprar(nombreVehiculo, partidaJugador);;
+			operacionExitosa = concesionario.comprar(nombreVehiculo, partidaJugador);
 		} catch (Exception e) {
 			operacionExitosa = false;
 		}
