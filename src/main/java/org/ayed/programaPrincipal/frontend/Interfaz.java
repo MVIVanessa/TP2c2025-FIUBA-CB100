@@ -137,19 +137,6 @@ public class Interfaz extends Application {
         cambiarPantalla(menu.getRoot());
     }
 
-    public void mostrarMenuCompraConcesionario(String nombreJugador, int[] datosJugador, String[] vehiculos) {
-        MenuUI menu = new MenuUI(
-            "Autos disponibles para compra",
-            vehiculos,
-            opcion -> controlador.procesarCompraVehiculo(opcion),
-            nombreJugador,
-            datosJugador
-        );
-
-        scene.setOnKeyPressed(menu::manejarTeclas);
-        cambiarPantalla(menu.getRoot());
-    }
-
     // ------------------------ PANTALLAS DE INFORMACIÓN Y FORMULARIOS -------------------------
 
     /**

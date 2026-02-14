@@ -93,12 +93,6 @@ public class Controlador {
         Interfaz.getInstancia().mostrarMenuConcesionario(partida.nombre(), datosJugador);
     }
 
-    public void mostrarMenuCompraConcesionario() {
-        datosJugador = new int[] {partida.diaActual(), partida.dinero(), partida.garaje().obtenerCreditos()};
-        String [] vehiculos = vectorToStringCadena(concesionario.obtenerStock());
-        Interfaz.getInstancia().mostrarMenuCompraConcesionario(partida.nombre(), datosJugador, vehiculos);
-    }
-
     // INGRESO DE DATOS
 
     public void mostrarIngresoNombreJugador(Campo[] campos) {
@@ -119,6 +113,13 @@ public class Controlador {
         Interfaz.getInstancia().mostrarFormulario(
             campos,
             this::procesarEliminacion
+        );
+    }
+
+    public void mostrarFormularioCompraConcesionario(Campo[] campos) {
+        Interfaz.getInstancia().mostrarFormulario(
+            campos,
+            datos -> procesarCompraVehiculo(datos[0])
         );
     }
 
@@ -308,21 +309,37 @@ public class Controlador {
             }
         }
 
-        public void procesarCompraVehiculo(int indiceVehiculo) {
+        public void procesarCompraVehiculo(String nombreVehiculo) {
             
-            String nombreVehiculo = concesionario.obtenerStock().dato(indiceVehiculo-1).nombreVehiculo();
             menuConcesionario.comprar(nombreVehiculo);
 
-            if (menuConcesionario.operacionExitosa()) {
-                mostrarMensaje(
-                    "¡Compra exitosa! " + nombreVehiculo + " ha sido agregado a tu garaje.",
-                    this::mostrarMenuConcesionario
-                );
-            } else {
-                mostrarMensaje(
-                    "No se pudo completar la compra. Asegúrate de tener suficiente dinero",
-                    this::mostrarMenuConcesionario
-                );
+            switch (menuConcesionario.obtenerEstadoOperacion()) {
+                case EXITO:
+                    mostrarMensaje(
+                        "Vehículo comprado exitosamente.",
+                        this::mostrarMenuConcesionario
+                    );
+                    break;
+                case VEHICULO_NO_ENCONTRADO:
+                    mostrarMensaje(
+                        "Vehículo no encontrado.",
+                        this::mostrarMenuConcesionario
+                    );
+                    return;
+                case DINERO_INSUFICIENTE:
+                    mostrarMensaje(
+                        "Dinero insuficiente.",
+                        this::mostrarMenuConcesionario
+                    );
+                    return;
+                case ERROR_DESCONOCIDO:
+                    mostrarMensaje(
+                        "Ocurrió un error desconocido durante la compra.",
+                        this::mostrarMenuConcesionario
+                    );
+                    return;
+                default:
+                    throw new AssertionError();
             }
         }
 
