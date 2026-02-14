@@ -144,12 +144,12 @@ public class Concesionario {
                 // si es exótico, no se puede comprar
                 if (vehiculo instanceof Exotico ||
                         vehiculo.tipoVehiculo().equalsIgnoreCase("EXOTICO")) {
-                    estadoOperacion = TipoOperacion.VEHICULO_NO_ENCONTRADO;
+                    return TipoOperacion.VEHICULO_NO_ENCONTRADO;
                 }
 
                 // si no tiene dinero suficiente, no compra
                 if (jugador.dinero() < vehiculo.precioVehiculo()) {
-                    estadoOperacion = TipoOperacion.DINERO_INSUFICIENTE;
+                    return TipoOperacion.DINERO_INSUFICIENTE;
                 }
                 // descuenta dinero y agrega el vehículo al jugador
                 jugador.restarDinero(vehiculo.precioVehiculo());
@@ -157,7 +157,7 @@ public class Concesionario {
                 // se elimina del stock
                 stock.eliminar(i);
 
-               return estadoOperacion = TipoOperacion.EXITO;
+               return TipoOperacion.EXITO;
             } else {
                 estadoOperacion = TipoOperacion.VEHICULO_NO_ENCONTRADO;
             }
