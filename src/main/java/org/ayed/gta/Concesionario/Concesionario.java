@@ -127,13 +127,14 @@ public class Concesionario {
      * @return true si la compra fue exitosa, false en caso contrario.
      * @throws IllegalArgumentException si nombreExactoVehiculo o jugador son null.
      */
-    public boolean comprar(String nombreExactoVehiculo, Partida jugador) {
+    public TipoOperacion comprar(String nombreExactoVehiculo, Partida jugador) {
         if (nombreExactoVehiculo == null) {
             throw new IllegalArgumentException("El nombre no puede ser null");
         }
         if (jugador == null) {
             throw new IllegalArgumentException("El jugador no puede ser null");
         }
+        TipoOperacion estadoOperacion = TipoOperacion.ERROR_DESCONOCIDO;
         // busco un vehículo con el nombre exacto
         for (int i = 0; i < stock.tamanio(); i++) {
             Vehiculo vehiculo = stock.dato(i);
@@ -143,12 +144,12 @@ public class Concesionario {
                 // si es exótico, no se puede comprar
                 if (vehiculo instanceof Exotico ||
                         vehiculo.tipoVehiculo().equalsIgnoreCase("EXOTICO")) {
-                    return false;
+                    estadoOperacion = TipoOperacion.VEHICULO_NO_ENCONTRADO;
                 }
 
                 // si no tiene dinero suficiente, no compra
                 if (jugador.dinero() < vehiculo.precioVehiculo()) {
-                    return false;
+                    estadoOperacion = TipoOperacion.DINERO_INSUFICIENTE;
                 }
                 // descuenta dinero y agrega el vehículo al jugador
                 jugador.restarDinero(vehiculo.precioVehiculo(), true);
@@ -156,12 +157,13 @@ public class Concesionario {
                 // se elimina del stock
                 stock.eliminar(i);
 
-                return true;
+               return estadoOperacion = TipoOperacion.EXITO;
+            } else {
+                estadoOperacion = TipoOperacion.VEHICULO_NO_ENCONTRADO;
             }
         }
-
-        // no se encontró el vehículo
-        return false;
+        
+        return estadoOperacion;
     }
 
     /**

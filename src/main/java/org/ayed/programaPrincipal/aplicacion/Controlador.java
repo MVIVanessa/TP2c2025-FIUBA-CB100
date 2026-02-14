@@ -313,16 +313,33 @@ public class Controlador {
             
             menuConcesionario.comprar(nombreVehiculo);
 
-            if (menuConcesionario.operacionExitosa()) {
-                mostrarMensaje(
-                    "¡Compra exitosa! " + nombreVehiculo + " ha sido agregado a tu garaje.",
-                    this::mostrarMenuConcesionario
-                );
-            } else {
-                mostrarMensaje(
-                    "No se pudo completar la compra. Asegúrate de tener suficiente dinero o de ingresar el nombre exacto del vehículo.",
-                    this::mostrarMenuConcesionario
-                );
+            switch (menuConcesionario.obtenerEstadoOperacion()) {
+                case EXITO:
+                    mostrarMensaje(
+                        "Vehículo comprado exitosamente.",
+                        this::mostrarMenuConcesionario
+                    );
+                    break;
+                case VEHICULO_NO_ENCONTRADO:
+                    mostrarMensaje(
+                        "Vehículo no encontrado.",
+                        this::mostrarMenuConcesionario
+                    );
+                    return;
+                case DINERO_INSUFICIENTE:
+                    mostrarMensaje(
+                        "Dinero insuficiente.",
+                        this::mostrarMenuConcesionario
+                    );
+                    return;
+                case ERROR_DESCONOCIDO:
+                    mostrarMensaje(
+                        "Ocurrió un error desconocido durante la compra.",
+                        this::mostrarMenuConcesionario
+                    );
+                    return;
+                default:
+                    throw new AssertionError();
             }
         }
 
