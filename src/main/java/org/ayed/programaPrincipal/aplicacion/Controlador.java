@@ -227,14 +227,27 @@ public class Controlador {
     private void procesarCargaPorIndice(String[] datos) {
         int indice = Integer.parseInt(datos[0]);
         int litros = Integer.parseInt(datos[1]);
-        if(menuGaraje.cargarVehiculo(new int[]{indice, litros})){
-            mostrarMensaje(
-                "Vehículo cargado correctamente.", () -> mostrarMenuGaraje()
-            );
-        }else{
-            mostrarMensaje(
-                "Vehículo no pudo ser cargado por saldo insuficiente.", () -> mostrarMenuGaraje()
-            );
+        switch (menuGaraje.cargarVehiculo(new int[] {indice, litros})) {
+            case EXITO:
+                mostrarMensaje(
+                    "Gasolina cargada exitosamente.",
+                    this::mostrarMenuGaraje
+                );
+                break;
+            case VEHICULO_NO_ENCONTRADO:
+                mostrarMensaje(
+                    "Vehículo no encontrado.",
+                    this::mostrarMenuGaraje
+                );
+                break;
+            case DINERO_INSUFICIENTE:
+                mostrarMensaje(
+                    "Créditos insuficientes para cargar gasolina. Créditos actuales: " + garaje.obtenerCreditos(),
+                    this::mostrarMenuGaraje
+                );
+                break;
+            default:
+                throw new AssertionError();
         }
     }
 

@@ -1,5 +1,6 @@
 package org.ayed.programaPrincipal.menu;
 
+import org.ayed.gta.Concesionario.TipoOperacion;
 import org.ayed.gta.Garaje.ArchivoGaraje;
 import org.ayed.gta.Garaje.Garaje;
 import org.ayed.gta.Partida;
@@ -133,21 +134,21 @@ public class MenuGaraje{
 	/** Cargar un vehiculo
 	 *  @param datos [indice, litros]
 	 */
-	public boolean cargarVehiculo(int[] datos){
-		boolean cargado=false;
+	public TipoOperacion cargarVehiculo(int[] datos){
 		if (garaje.obtenerCreditos() >= datos[1] * garaje.precioLitro()) {
 			try {
+				if (datos[0] < 0 || datos[0] >= garaje.obtenerVehiculo().tamanio()) {
+					return TipoOperacion.VEHICULO_NO_ENCONTRADO;
+				}
 				garaje.cargarGasolinaVehiculo(datos[1], datos[0]);
-				cargado=true;
+				garaje.cargarGasolinaVehiculo(datos[1], datos[0]);
 			} catch (Exception e) {
 				controlador.mostrarMensaje("Error al cargar gasolina: " + e.getMessage(),
 				() -> controlador.mostrarMenuGaraje());
 			}
-		} else {
-			controlador.mostrarMensaje("Créditos insuficientes para cargar gasolina. Créditos actuales: " + garaje.obtenerCreditos(), 
-			() -> controlador.mostrarMenuGaraje());
+			return TipoOperacion.EXITO;
 		}
-		return cargado;
+		return TipoOperacion.DINERO_INSUFICIENTE;
 		
 	}
 
