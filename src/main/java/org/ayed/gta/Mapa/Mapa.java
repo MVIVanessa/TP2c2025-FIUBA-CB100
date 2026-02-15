@@ -4,6 +4,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.Random;
 
+import org.ayed.gta.Misiones.TipoDificultad;
 import org.ayed.tda.iterador.Iterador;
 import org.ayed.tda.lista.Lista;
 
@@ -13,15 +14,15 @@ public class Mapa {
     private final int CANTIDAD_FILAS;
     static final int PROBABILIDAD_CONGESTION = 15; // en porcentaje
     static final int PROBABILIDAD_RECOMPENSA = 5; // en porcentaje
-    private final String RUTA_MAPA_BASE = "pruebaMapa.csv";
+    private final String RUTA_MAPAS = "mapas/";
     private final Lista<Lista<TipoCelda>> grillas;
     private Coordenadas entrada;
     private Coordenadas salida;
     /**
      * Constructor de Mapa.
      */
-    public Mapa() {
-        this.grillas = leerMapaDesdeCSV(RUTA_MAPA_BASE);
+    public Mapa(TipoDificultad dificultad) {
+        this.grillas = leerMapaDesdeCSV(dificultad);
         this.CANTIDAD_FILAS = this.grillas.tamanio();
         this.CANTIDAD_COLUMNAS = this.grillas.dato(0).tamanio();
         inicializarGrilla();
@@ -215,7 +216,10 @@ public class Mapa {
      * @param rutaArchivo
      * @return
      */
-    private Lista<Lista<TipoCelda>> leerMapaDesdeCSV(String rutaArchivo){
+    private Lista<Lista<TipoCelda>> leerMapaDesdeCSV(TipoDificultad dificultad) {
+        Random rand = new Random();
+        int numMapa = rand.nextInt(2) + 1;
+        String rutaArchivo = RUTA_MAPAS + dificultad.toString().toLowerCase() + numMapa + ".csv";
         
         Lista<Lista<TipoCelda>> mapa = new Lista<>();
         try (BufferedReader br = new BufferedReader(new FileReader(rutaArchivo))) {

@@ -2,7 +2,6 @@ package org.ayed.programaPrincipal.frontend.utilidades;
 
 public class opcionesMenus {
 
-    private final static String ruta = "garajeGuardado.csv";
     
     public final static String[] opcionesPrincipal = {
 		"Jugar Partida",
@@ -20,8 +19,8 @@ public class opcionesMenus {
 		"Agregar creditos.",
 		"Mostrar el valor total del garaje.",
 		"Mostrar el costo total diario de mantenimiento.",
-		"Exportar la informacion del garaje en archivo " + ruta,
-		"Cargar un garaje a partir de el archivo " + ruta,
+		"Exportar la informacion del garaje en archivo ",
+		"Cargar un garaje a partir de el archivo ",
 		"Cargar gasolina un vehiculo segun su indice",
 		"Cargar gasolina todos los Vehiculos en el garaje.",
 		"Volver al Menu Principal"

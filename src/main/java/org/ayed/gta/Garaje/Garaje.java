@@ -258,4 +258,19 @@ public class Garaje {
         return info;
     }
 
+    public String obtenerZonaEsperaToString(){
+        String info = "";
+        Cola<Vehiculo> copiaEspera = new Cola<>();
+        while (!zonaEspera.vacio()) {
+            Vehiculo vehiculo = zonaEspera.eliminar();
+            info += vehiculo.informacionVehiculo() + "\n";
+            copiaEspera.agregar(vehiculo);
+        }
+        // Restaurar la cola original
+        while (!copiaEspera.vacio()) {
+            zonaEspera.agregar(copiaEspera.eliminar());
+        }
+        return info;
+    }
+
 }

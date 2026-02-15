@@ -24,17 +24,19 @@ public abstract class Mision{
 	protected Vehiculo recompensaExotico;
 	private Vehiculo vehiculoSeleccionado;
 	private Garaje garaje;
+	private TipoDificultad dificultad;
 	
 	/**
 	 * Constructor de Mision
 	 * @param tiempo tiempo de juego limite para jugar
 	 * @param v Vehiculo con el que jugara el jugador
 	 */
-    Mision( double tiempo, Garaje g) {
+    Mision( double tiempo, Garaje g, TipoDificultad dificultad) {
 		this.tiempoJuego= 0;
 		this.transporte=null;
 		this.tiempoMision= tiempo;
-		this.mapa = new Mapa();
+		this.dificultad = dificultad;
+		this.mapa = new Mapa(dificultad);
 		jugador= mapa.posicionInicial();
 		gps= new Gps(mapa);
 		permitidos = new Vector<>();
@@ -131,23 +133,18 @@ public abstract class Mision{
 	private void tomarRecompensaAdicional(Coordenadas c){
 		if( mapa.datoDeCelda(c.obtenerX(), c.obtenerY()) == TipoCelda.RECOMPENSA){	// R = recompensa
 				// borrar el R del mapa
-			mapa.recogerRecompensa(c);	
-			return;
-		}
-		double probabilidad = Math.random();
+			mapa.recogerRecompensa(c);
+			double probabilidad = Math.random();
 		
-		// 95% → créditos
-		if (probabilidad < 0.95) {
-			// recompensa de crédito entre 50 y 200
-			int valor = 50 + (int)(Math.random() * 151);
-			recompensaCreditosExtra += valor;
+			// 95% → créditos
+			if (probabilidad < 0.95) {
+				// recompensa de crédito entre 50 y 200
+				int valor = 50 + (int)(Math.random() * 151);
+				recompensaCreditosExtra += valor;
+			} else {
+				recompensaExotico = generarExotico();// 5% → vehículo exótico
+			}
 		}
-		
-		// 5% → vehículo exótico
-		else {
-			recompensaExotico = generarExotico();
-		}
-		
 	}
 	
 	private Vehiculo generarExotico() {
@@ -181,14 +178,6 @@ public abstract class Mision{
 		transporte = vehiculoSeleccionado;
 	}
 
-	
-	/**
-	 * Reinicia las recompensas.
- 	 */
-	public void descartarRecompensas(){		// agrego este método por si la misión falla
-	    recompensaCreditosExtra = 0;
-	    recompensaExotico = null;
-	}
 	/** devuelve la reconpoensaCredito Extra del casillo rosa 
 	* @retunr valor de la reconpensa recogida del mapa
 	*/
