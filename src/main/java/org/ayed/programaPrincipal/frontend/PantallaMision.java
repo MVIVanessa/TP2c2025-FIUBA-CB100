@@ -8,7 +8,6 @@ import org.ayed.gta.Mapa.Mapa;
 import org.ayed.gta.Mapa.TipoCelda;
 import org.ayed.gta.Misiones.ExcepcionMision;
 import org.ayed.gta.Misiones.Mision;
-import org.ayed.programaPrincipal.aplicacion.Controlador;
 import org.ayed.tda.iterador.Iterador;
 import org.ayed.tda.lista.Lista;
 
@@ -198,7 +197,7 @@ public class PantallaMision {
     private void actualizarHUD() {
         if (mision == null) return;
 
-        labelTiempo.setText("Tiempo: " + mision.devolverTiempo());
+        labelTiempo.setText("Tiempo: " + mision.devolverTiempo() + "/"+ mision.devolverTiempoLim());
         labelGasolina.setText(
             "Gasolina: " +
             mision.transporte().tanque() + "/" +
