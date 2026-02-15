@@ -133,16 +133,19 @@ public abstract class Mision{
 	private void tomarRecompensaAdicional(Coordenadas c){
 		if( mapa.datoDeCelda(c.obtenerX(), c.obtenerY()) == TipoCelda.RECOMPENSA){	// R = recompensa
 				// borrar el R del mapa
-			mapa.recogerRecompensa(c);
-			double probabilidad = Math.random();
+			mapa.recogerRecompensa(c);	
 		
+			double probabilidad = Math.random();
+			
 			// 95% → créditos
 			if (probabilidad < 0.95) {
 				// recompensa de crédito entre 50 y 200
 				int valor = 50 + (int)(Math.random() * 151);
 				recompensaCreditosExtra += valor;
-			} else {
-				recompensaExotico = generarExotico();// 5% → vehículo exótico
+			}
+			// 5% → vehículo exótico
+			else {
+				recompensaExotico = generarExotico();
 			}
 		}
 	}
