@@ -147,10 +147,13 @@ public class Controlador {
 
 	public void mostrarVehiculos(Runnable callback, Vector<Vehiculo> vehiculos) {
 		String autos = vectorToString(vehiculos);
+        if (!garaje.obtenerZonaEsperaToString().equals("")) {
+            autos += "\nVehiculos en zona de espera: \n" + garaje.obtenerZonaEsperaToString();
+        }
 		if (autos.isEmpty()) {
 			mostrarMensaje("No hay vehículos almacenados.", () -> { callback.run(); });
 		} else {
-			mostrarMensaje("Vehículos en el garaje:\n" +
+			mostrarMensaje("Vehículos:\n" +
                             "Nombre \t|\tMarca \t|\tPrecio \t|\tTipo \t|\tCant. Ruedas \t|\tCapacidad de Gasolina \t|\tVelocidad Máxima\n" +
                             autos,
 				() -> callback.run());	
