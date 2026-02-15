@@ -42,3 +42,9 @@ build/
 
 ### Archivos ###
 *.txt
+
+*.csv
+
+# EXCEPCIÓN: permitir los csv dentro de mapas/
+!mapas/
+!mapas/*.csv
