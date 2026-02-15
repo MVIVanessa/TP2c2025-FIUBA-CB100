@@ -80,12 +80,12 @@ public class Partida {
 
 	public void finalizarMision(boolean completada) {
 		if (completada) {
-			System.out.println(misionActual().recompensaDinero());
 			dinero += misionActual.recompensaDinero();
-			garaje.agregarCreditos(misionActual().recompensaCredito());
+
+			garaje.agregarCreditos(misionActual.recompensaCredito() +
+			                       misionActual.recompensaCreditosExtra());
 			if (misionActual.recompensaExotico() != null) {
 				garaje.agregarVehiculo(misionActual.recompensaExotico());
-				garaje.agregarCreditos(misionActual().recompensaCreditosExtra());
 			}
 		} else {
 			noFallo = false; // ← IMPORTANTE
