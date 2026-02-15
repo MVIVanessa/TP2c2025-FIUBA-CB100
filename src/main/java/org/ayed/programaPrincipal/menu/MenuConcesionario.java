@@ -1,6 +1,7 @@
 package org.ayed.programaPrincipal.menu;
 
 import org.ayed.gta.Concesionario.Concesionario;
+import org.ayed.gta.Concesionario.TipoOperacion;
 import org.ayed.gta.Partida;
 import org.ayed.gta.Vehiculos.Vehiculo;
 import org.ayed.programaPrincipal.aplicacion.Controlador;
@@ -13,7 +14,7 @@ public class MenuConcesionario {
 	private final Controlador controlador;
 	private final Concesionario concesionario;
 	private Vector<Vehiculo> busqueda;
-	private Boolean operacionExitosa = false;
+	private TipoOperacion estadoOperacion = TipoOperacion.ERROR_DESCONOCIDO;
 	
 	public MenuConcesionario(Partida p, Concesionario concesionario, Controlador controlador) {
 		partidaJugador=p;
@@ -44,7 +45,11 @@ public class MenuConcesionario {
 				if (concesionario.obtenerStock().tamanio() == 0) {
 					controlador.mostrarMensaje("No hay vehículos disponibles para comprar.", controlador::mostrarMenuConcesionario);
 				} else {
-				controlador.mostrarMenuCompraConcesionario();
+					Campo[] camposCompra = {
+						new Campo("Ingrese el nombre exacto del vehículo a comprar:", TipoCampo.TEXTO)
+					};
+					busqueda = concesionario.obtenerStock();
+					controlador.mostrarVehiculos(() -> controlador.mostrarFormularioCompraConcesionario(camposCompra), busqueda);
 				}
 				break;
 			case 5: //Salir
@@ -70,10 +75,10 @@ public class MenuConcesionario {
 	 */
 	public void comprar(String nombreVehiculo) {	
 		try {
-
-			operacionExitosa = concesionario.comprar(nombreVehiculo, partidaJugador);;
+			estadoOperacion = concesionario.comprar(nombreVehiculo, partidaJugador);
 		} catch (Exception e) {
-			operacionExitosa = false;
+			System.err.println("Error al comprar el vehículo: " + e.getMessage());
+			estadoOperacion = TipoOperacion.ERROR_DESCONOCIDO;
 		}
 	}
 	/**
@@ -86,7 +91,7 @@ public class MenuConcesionario {
 		controlador.mostrarBusquedaPorMarca(camposMarca);
 	}
 
-	public Boolean operacionExitosa() {
-		return operacionExitosa;
+	public TipoOperacion obtenerEstadoOperacion() {
+		return estadoOperacion;
 	}
 }
