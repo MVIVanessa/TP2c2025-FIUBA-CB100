@@ -71,14 +71,19 @@ public class MenuGaraje{
 				break;
 			case 7 : //Exportar informacion del garaje a un archivo
 				exportarGaraje();
-				controlador.mostrarMensaje("Garaje exportado correctamente a archivo.\n", 
+				controlador.mostrarMensaje("Garaje exportado correctamente al archivo:\n" + ruta, 
 				() -> controlador.mostrarMenuGaraje());
 				break;
 			case 8 : //Importar informacion del garaje desde un archivo
-				garaje.copiarGaraje(importarGaraje());
-				if(!garaje.obtenerVehiculo().vacio())
-					controlador.mostrarMensaje("Garaje cargado correctamente desde archivo.\n", 
+				Garaje garajeCargado = importarGaraje();
+				if(garajeCargado != null && !garajeCargado.obtenerVehiculo().vacio()){ 
+					garaje.copiarGaraje(garajeCargado);
+					controlador.mostrarMensaje("Garaje cargado correctamente desde el archivo:\n" + ruta, 
 					() -> controlador.mostrarMenuGaraje());
+				} else {
+					controlador.mostrarMensaje("No se pudo cargar el garaje desde el archivo:\n" + ruta, 
+					() -> controlador.mostrarMenuGaraje());
+				}
 				break;
 			case 9: //Cargar gasolina a un vehiculo segun su indice
 				Campo[] camposCargar = new Campo[]{
