@@ -11,7 +11,7 @@ public class Moderada extends Mision {
     private static final double TIEMPO_MAX = 500;
 
     public Moderada(Garaje g) {
-        super(TIEMPO_MAX,g);
+        super(TIEMPO_MAX,g,TipoDificultad.MODERADA);
     }
 
     @Override

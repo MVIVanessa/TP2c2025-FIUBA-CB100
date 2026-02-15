@@ -11,7 +11,7 @@ public class Facil extends Mision {
     private static final double TIEMPO_MAX = 1000;
 
     public Facil(Garaje g) {
-        super(TIEMPO_MAX,g);
+        super(TIEMPO_MAX,g,TipoDificultad.FACIL);
     }
 
     @Override
