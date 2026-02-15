@@ -227,14 +227,27 @@ public class Controlador {
     private void procesarCargaPorIndice(String[] datos) {
         int indice = Integer.parseInt(datos[0]);
         int litros = Integer.parseInt(datos[1]);
-        if(menuGaraje.cargarVehiculo(new int[]{indice, litros})){
-            mostrarMensaje(
-                "Vehículo cargado correctamente.", () -> mostrarMenuGaraje()
-            );
-        }else{
-            mostrarMensaje(
-                "Vehículo no pudo ser cargado por salfo insuficiente.", () -> mostrarMenuGaraje()
-            );
+        switch (menuGaraje.cargarVehiculo(new int[] {indice, litros})) {
+            case EXITO:
+                mostrarMensaje(
+                    "Gasolina cargada exitosamente.",
+                    this::mostrarMenuGaraje
+                );
+                break;
+            case VEHICULO_NO_ENCONTRADO:
+                mostrarMensaje(
+                    "Vehículo no encontrado.",
+                    this::mostrarMenuGaraje
+                );
+                break;
+            case DINERO_INSUFICIENTE:
+                mostrarMensaje(
+                    "Créditos insuficientes para cargar gasolina. Créditos actuales: " + garaje.obtenerCreditos(),
+                    this::mostrarMenuGaraje
+                );
+                break;
+            default:
+                throw new AssertionError();
         }
     }
 
@@ -349,15 +362,7 @@ public class Controlador {
     private String vectorToString(Vector<Vehiculo> vehiculos) {
         String resultado = "";
         for (int i = 0; i < vehiculos.tamanio(); i++) {
-            resultado += vehiculos.dato(i).informacionVehiculoUI() + "\n";
-        }
-        return resultado;
-    }
-
-    private String[] vectorToStringCadena(Vector<Vehiculo> vehiculos) {
-        String[] resultado = new String[vehiculos.tamanio()];
-        for (int i = 0; i < vehiculos.tamanio(); i++) {
-            resultado[i] = vehiculos.dato(i).informacionVehiculoUI();
+            resultado += i + ":\t " + vehiculos.dato(i).informacionVehiculoUI() + "\n";
         }
         return resultado;
     }

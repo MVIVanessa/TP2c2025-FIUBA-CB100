@@ -4,7 +4,8 @@ import org.ayed.gta.Partida;
 import org.ayed.programaPrincipal.aplicacion.Controlador;
 
 public class MenuPartida {
-	private Partida partida;
+	private final Partida partida;
+	private final String formato = ".txt";
 	
 	public MenuPartida(Partida partida) {
 		this.partida = partida;
@@ -20,7 +21,7 @@ public class MenuPartida {
 				break;
 			case 3:
 				//Guarda la partida en un archivo.
-				controlador.mostrarMensaje("Partida guardada correctamente.", () -> controlador.mostrarMenuPrincipal());
+				controlador.mostrarMensaje("Partida guardada correctamente en el archivo: " + partida.nombre() + formato, () -> controlador.mostrarMenuPrincipal());
 				partida.guardarPartida();
 				break;
 			case 4: // Ir al concesionario.

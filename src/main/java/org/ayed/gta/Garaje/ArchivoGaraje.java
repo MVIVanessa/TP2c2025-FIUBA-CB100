@@ -132,8 +132,7 @@ public class ArchivoGaraje{
 		} catch (IOException e) {
 			System.err.println(e);
 			// creo el archico como no existe
-			g= new Garaje();
-			escribirArchGaraje(g);
+			g= null;
 		}
 		return g;
 	}

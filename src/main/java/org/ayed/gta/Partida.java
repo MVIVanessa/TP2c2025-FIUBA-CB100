@@ -81,7 +81,9 @@ public class Partida {
 	public void finalizarMision(boolean completada) {
 		if (completada) {
 			dinero += misionActual.recompensaDinero();
-			garaje.agregarCreditos(misionActual().recompensaCredito()+misionActual.recompensaCreditosExtra());
+
+			garaje.agregarCreditos(misionActual.recompensaCredito() +
+			                       misionActual.recompensaCreditosExtra());
 			if (misionActual.recompensaExotico() != null) {
 				garaje.agregarVehiculo(misionActual.recompensaExotico());
 			}

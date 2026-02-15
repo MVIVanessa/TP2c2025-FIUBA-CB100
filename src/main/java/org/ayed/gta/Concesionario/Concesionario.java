@@ -134,7 +134,6 @@ public class Concesionario {
         if (jugador == null) {
             throw new IllegalArgumentException("El jugador no puede ser null");
         }
-        TipoOperacion estadoOperacion = TipoOperacion.ERROR_DESCONOCIDO;
         // busco un vehículo con el nombre exacto
         for (int i = 0; i < stock.tamanio(); i++) {
             Vehiculo vehiculo = stock.dato(i);
@@ -144,12 +143,12 @@ public class Concesionario {
                 // si es exótico, no se puede comprar
                 if (vehiculo instanceof Exotico ||
                         vehiculo.tipoVehiculo().equalsIgnoreCase("EXOTICO")) {
-                    estadoOperacion = TipoOperacion.VEHICULO_NO_ENCONTRADO;
+                    return TipoOperacion.VEHICULO_NO_ENCONTRADO;
                 }
 
                 // si no tiene dinero suficiente, no compra
                 if (jugador.dinero() < vehiculo.precioVehiculo()) {
-                    estadoOperacion = TipoOperacion.DINERO_INSUFICIENTE;
+                    return TipoOperacion.DINERO_INSUFICIENTE;
                 }
                 // descuenta dinero y agrega el vehículo al jugador
                 jugador.restarDinero(vehiculo.precioVehiculo());
@@ -157,13 +156,11 @@ public class Concesionario {
                 // se elimina del stock
                 stock.eliminar(i);
 
-               return estadoOperacion = TipoOperacion.EXITO;
-            } else {
-                estadoOperacion = TipoOperacion.VEHICULO_NO_ENCONTRADO;
-            }
+               return TipoOperacion.EXITO;
+            } 
         }
         
-        return estadoOperacion;
+        return TipoOperacion.VEHICULO_NO_ENCONTRADO;
     }
 
     /**

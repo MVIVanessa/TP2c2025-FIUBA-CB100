@@ -24,17 +24,19 @@ public abstract class Mision{
 	protected Vehiculo recompensaExotico;
 	private Vehiculo vehiculoSeleccionado;
 	private Garaje garaje;
+	private TipoDificultad dificultad;
 	
 	/**
 	 * Constructor de Mision
 	 * @param tiempo tiempo de juego limite para jugar
 	 * @param v Vehiculo con el que jugara el jugador
 	 */
-    Mision( double tiempo, Garaje g) {
+    Mision( double tiempo, Garaje g, TipoDificultad dificultad) {
 		this.tiempoJuego= 0;
 		this.transporte=null;
 		this.tiempoMision= tiempo;
-		this.mapa = new Mapa();
+		this.dificultad = dificultad;
+		this.mapa = new Mapa(dificultad);
 		jugador= mapa.posicionInicial();
 		gps= new Gps(mapa);
 		permitidos = new Vector<>();
@@ -179,14 +181,6 @@ public abstract class Mision{
 		transporte = vehiculoSeleccionado;
 	}
 
-	
-	/**
-	 * Reinicia las recompensas.
- 	 */
-	public void descartarRecompensas(){		// agrego este método por si la misión falla
-	    recompensaCreditosExtra = 0;
-	    recompensaExotico = null;
-	}
 	/** devuelve la reconpoensaCredito Extra del casillo rosa 
 	* @retunr valor de la reconpensa recogida del mapa
 	*/
