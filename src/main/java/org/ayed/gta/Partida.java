@@ -17,7 +17,7 @@ public class Partida {
 	private final Vehiculo VEHICULO_BASICO =
 			new Auto("Auto", "clasico", 0, 100, 10);
 
-	private int PARTIDAS_INICIALES = 10;
+	private int PARTIDAS_INICIALES = 2;
 
 	private String nombreJugador;
 	private int dinero;

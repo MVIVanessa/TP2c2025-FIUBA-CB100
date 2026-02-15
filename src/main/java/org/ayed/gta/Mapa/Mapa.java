@@ -9,7 +9,7 @@ import org.ayed.tda.iterador.Iterador;
 import org.ayed.tda.lista.Lista;
 
 public class Mapa {
-    private final int VALOR_CALLE = 1;
+    private final int VALOR_CALLE = 50;
     private final int CANTIDAD_COLUMNAS;
     private final int CANTIDAD_FILAS;
     static final int PROBABILIDAD_CONGESTION = 15; // en porcentaje
@@ -241,6 +241,12 @@ public class Mapa {
         }
     }
     
+    /**
+     * Procesa una linea
+     * @param linea la linea a procesar del archivo
+     * @param tamanio el tamanio
+     * @return Lista<TipoCelda> almacenada de la linea 
+     */
     private Lista<TipoCelda> procesarLinea(String linea, int tamanio) {
     
         String[] celdas = linea.split(",");
