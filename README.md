@@ -1,13 +1,13 @@
-[![Review Assignment Due Date](https://classroom.github.com/assets/deadline-readme-button-22041afd0340ce965d47ae6ef1cefeee28c7c493a6346c4f15d667ab976d596c.svg)](https://classroom.github.com/a/cGHEVCeI)
-# TPG - 2c2025 - Manejando por la ciudad - Grupo Binarias
+
+# TPG - 2c2025 - Manejando por la ciudad - AYED
 
 ## Integrantes:
 
-1. Mariani, Vanessa - 112013 (Delegada)
-2. Salomone, Lucila - 113821
-3. Marca Quispe, Pamela - 112556
-4. Larocca, Lourdes Angela - 112022
-5. Cano, Ivana Abril - 109824
+1. Mariani, Vanessa
+2. Salomone, Lucila
+3. Marca Quispe, Pamela
+4. Larocca, Lourdes Angela
+5. Cano, Ivana Abril
 
 ## Entregables:
 
@@ -37,10 +37,3 @@ mvn package
 ```
 mvn test
 ```
-
-## Aclaraciones para el corrector
-
-Si necesitan aclarar o justificar alguna decisión de implementación,
-lo pueden hacer escribiendo en esta sección del README.
-
-Se decidió implementar el mapa con una matriz de listas doblemente enlazadas, ya que se consideró que sería mucho más eficiente, flexible y práctico al tener un formato de grilla.
